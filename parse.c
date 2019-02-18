@@ -39,18 +39,15 @@ int		is_preflag(char c)
 	return (0);
 }
 
-t_lst	*add_node(t_lst **head)
+void	add_node(t_lst *head)
 {
 	t_lst	*node;
-	t_lst	*tmp;
 	
-	tmp = *head;
 	node = (t_lst*)malloc(sizeof(t_lst));
-	node->next = NULL;
-	while (tmp)
-		tmp = tmp->next;
-	tmp = node;
-	return (node);
+	while (head)
+		head = head->next;
+	head = node;
+	head->next = NULL;
 }
 
 void	error()
@@ -79,7 +76,10 @@ void		check_fill(char *str, int pos,  t_lst **head)
 		preflag[i] = '\0';
 		postflag[i] = '\0';
 	}
-	current = add_node(head);
+	/*add_node(*head);
+	current = *head;
+	while (current->next)
+		current = current->next;
 	current->format->pos = pos;
 	i = 0;
 	while (is_preflag(*str))
@@ -126,7 +126,7 @@ void		check_fill(char *str, int pos,  t_lst **head)
 		free (current->format->flag);
 		free (current);
 		error();
-	}
+	}*/
 }
 
 void	parse_format(char	*str, t_lst **lst)
