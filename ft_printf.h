@@ -15,10 +15,12 @@ typedef struct			s_format
 	int					pos;
 }						t_format;
 
-typedef struct			s_list
+typedef struct			s_lst
 {
 	t_format			*format;
-	struct s_list		next;
-}						t_list;
+	struct s_lst		*next;
+}						t_lst;
+
+void	parse_format(char *str, t_lst **lst);
 
 #endif

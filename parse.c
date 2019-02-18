@@ -3,7 +3,7 @@
 int		is_format(char c)
 {
 	int		i;
-	char	*ref
+	char	*ref;
 	
 	i = 0;
 	ref = "cspdiouxXfegrkb%";
@@ -13,17 +13,15 @@ int		is_format(char c)
 	return (0);
 }
 
-int		is_postflag(char *str)
+int		is_postflag(char c)
 {
 	int		i;
 	char	*ref;
 	
 	i = 0;
 	ref = "lLh$";
-	if (ft_strstr(str, "hh") || ft_strstr(str, "ll"))
-		return (1);
 	while (ref[i])
-		if (*str == ref[i++])
+		if (c == ref[i++])
 			return (1);
 	return (0);
 }
@@ -41,13 +39,13 @@ int		is_preflag(char c)
 	return (0);
 }
 
-t_list	*add_node(t_list **head)
+t_lst	*add_node(t_lst **head)
 {
-	t_list	*node;
-	t_list	*tmp;
+	t_lst	*node;
+	t_lst	*tmp;
 	
 	tmp = *head;
-	node = (t_list*)malloc(sizeof(t_list));
+	node = (t_lst*)malloc(sizeof(t_lst));
 	node->next = NULL;
 	while (tmp)
 		tmp = tmp->next;
@@ -63,13 +61,13 @@ void	error()
 
 int			is_valid(char *str)
 {
-	
+	return (1);	
 }
 
-void		check_fill(char *str, int pos,  t_list **head)
+void		check_fill(char *str, int pos,  t_lst **head)
 {
 	int			i;
-	t_list		*current;
+	t_lst		*current;
 	char		preflag[10];
 	char		postflag[10];
 
@@ -81,9 +79,8 @@ void		check_fill(char *str, int pos,  t_list **head)
 		preflag[i] = '\0';
 		postflag[i] = '\0';
 	}
-	current = *head;
 	current = add_node(head);
-	current->format.pos = pos;
+	current->format->pos = pos;
 	i = 0;
 	while (is_preflag(*str))
 	{
@@ -91,19 +88,19 @@ void		check_fill(char *str, int pos,  t_list **head)
 		i++;
 		str++;
 	}
-	if (is_digit(str))
+	if (ft_isdigit(*str))
 	{
-		current->format.width = ft_atoi(str);
-		while (is_digit(*str))
+		current->format->width = ft_atoi(str);
+		while (ft_isdigit(*str))
 			str++;
 	}
 	if (*str == '.')
 	{
 		str++;
-		if (is_digit(*str))
+		if (ft_isdigit(*str))
 		{
-			current->format.precis = ft_atoi(str);
-			while (is_digit(*str))
+			current->format->precis = ft_atoi(str);
+			while (ft_isdigit(*str))
 				str++;
 		}
 	}
@@ -115,30 +112,28 @@ void		check_fill(char *str, int pos,  t_list **head)
 	}
 	if (is_format(*str))
 	{
-		current->format.convers = *str;
-		current->format.flag = ft_strjoin(preflag, postflag, ft_strlen(preflag) + ft_strlen(postflag));
-		if (!is_valid(current->format.flag))
+		current->format->convers = *str;
+		current->format->flag = ft_strjoin(preflag, postflag);
+		if (!is_valid(current->format->flag))
 		{
-			free (current->format.flag);
+			free (current->format->flag);
 			free (current);
 			error();
 		}
 	}
 	else
 	{
-		free (current->format.flag);
+		free (current->format->flag);
 		free (current);
 		error();
 	}
 }
 
-t_list	*parse_format(char	*str)
+void	parse_format(char	*str, t_lst **lst)
 {
 	int		i;
-	t_list	**lst;
 
 	i = 0;
-	*lst = NULL;
 	while (*str)
 	{
 		if (*str == '%')
@@ -149,5 +144,4 @@ t_list	*parse_format(char	*str)
 		str++;
 		i++;
 	}
-	return (*lst);
 }
