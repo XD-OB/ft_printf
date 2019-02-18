@@ -61,28 +61,93 @@ void	error()
 	exit(-1);
 }
 
-int		check_fill(char *str, t_list **head)
+int			is_valid(char *str)
 {
-	t_list		*current;
-
-	current = *head;
-	if (!*str)
-		return (-1);
-	current = add_node(head);
-	if 
+	
 }
 
-void	parse_format(char	*str)
+void		check_fill(char *str, int pos,  t_list **head)
 {
+	int			i;
+	t_list		*current;
+	char		preflag[10];
+	char		postflag[10];
+
+	i = -1;
+	if (!*str)
+		return (-1);
+	while (++i < 20)
+	{
+		preflag[i] = '\0';
+		postflag[i] = '\0';
+	}
+	current = *head;
+	current = add_node(head);
+	current->format.pos = pos;
+	i = 0;
+	while (is_preflag(*str))
+	{
+		preflag[i] = *str;
+		i++;
+		str++;
+	}
+	if (is_digit(str))
+	{
+		current->format.width = ft_atoi(str);
+		while (is_digit(*str))
+			str++;
+	}
+	if (*str == '.')
+	{
+		str++;
+		if (is_digit(*str))
+		{
+			current->format.precis = ft_atoi(str);
+			while (is_digit(*str))
+				str++;
+		}
+	}
+	while (is_postflag(*str))
+	{
+		postflag[i] = *str;
+		i++;
+		str++;		
+	}
+	if (is_format(*str))
+	{
+		current->format.convers = *str;
+		current->format.flag = ft_strjoin(preflag, postflag, ft_strlen(preflag) + ft_strlen(postflag));
+		if (!is_valid(current->format.flag))
+		{
+			free (current->format.flag);
+			free (current);
+			error();
+		}
+	}
+	else
+	{
+		free (current->format.flag);
+		free (current);
+		error();
+	}
+}
+
+t_list	*parse_format(char	*str)
+{
+	int		i;
 	t_list	**lst;
 
+	i = 0;
 	*lst = NULL;
 	while (*str)
 	{
 		if (*str == '%')
-			if (check_fill(str + 1, lst) == -1)
-				error();
+		{
+			str++;
+			check_fill(str, i, lst);
+		}
 		str++;
+		i++;
 	}
 }
 
