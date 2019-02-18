@@ -75,8 +75,8 @@ void		check_fill(char *str, int pos,  t_list **head)
 
 	i = -1;
 	if (!*str)
-		return (-1);
-	while (++i < 20)
+		error();
+	while (++i < 10)
 	{
 		preflag[i] = '\0';
 		postflag[i] = '\0';
@@ -144,18 +144,10 @@ t_list	*parse_format(char	*str)
 		if (*str == '%')
 		{
 			str++;
-			check_fill(str, i, lst);
+			check_fill(str, i - 1, lst);
 		}
 		str++;
 		i++;
 	}
+	return (*lst);
 }
-
-
-
-
-
-
-
-
-
