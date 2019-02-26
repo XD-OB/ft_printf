@@ -1,34 +1,23 @@
 #include "ft_printf.h"
 
-void	print_lst(t_lst *lst)
+int	eqlst(t_lst *lst, va_list ap)
 {
-	while (lst)
-	{
-		ft_putendl(lst->format->flag);
-		ft_putnbr(lst->format->width);
-		ft_putchar('\n');
-		ft_putnbr(lst->format->precis);
-		ft_putchar(lst->format->convers);
-		lst = lst->next;
-	}
-	ft_putchar('\n');
+	int	len_lst;
+	int	len_ap;
+
+	len_lst = lstlen(lst);
+	return (1);
 }
 
-int ft_printf(const char *format, ...)
+int	ft_printf(const char *format, ...)
 {
-	t_lst		**lst;
-	va_list	ap;
+	t_lst		*lst;
+	va_list		ap;
 
-	lst = (t_lst**)malloc(sizeof(t_lst*));
-	*lst = (t_lst*)malloc(sizeof(t_lst));
-	(*lst)->format = (t_format*)malloc(sizeof(t_format));
-	parse_format((char*)format, lst);
-	//print_lst(*lst);
-	return (0);
-}
-
-int		main(void)
-{
-	ft_printf("%s");
+	va_start(ap, format);
+	lst = parse_format((char*)format);
+	if (!eqlst(lst, ap))
+		error();
+	print_lst(lst);
 	return (0);
 }

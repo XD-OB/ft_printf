@@ -4,7 +4,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdarg.h>
-# include "libft/libft.h"
+# include "./libft/libft.h"
 
 typedef struct			s_format
 {
@@ -21,6 +21,15 @@ typedef struct			s_lst
 	struct s_lst		*next;
 }						t_lst;
 
-void	parse_format(char *str, t_lst **lst);
+void	error(void);
+int	is_format(char c);
+int	is_postflag(char c);
+int	is_preflag(char c);
+int	is_valid(char *str);
+int	lstlen(t_lst *lst);
+void	print_lst(t_lst *lst);
+t_lst	*parse_format(char *str);
+t_lst	*add_node(t_lst *head, t_lst *node);
+int	ft_printf(const char *format, ...);
 
 #endif
