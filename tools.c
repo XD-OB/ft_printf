@@ -67,6 +67,22 @@ int	lstlen(t_lst *lst)
 	return (size);
 }
 
+void	frerrorlst(t_lst *lst)
+{
+	t_lst	*curr;
+
+	curr = lst;
+	while (curr)
+	{
+		lst = curr;
+		free (curr->format->flag);
+		free (curr->format);
+		curr = curr->next;
+		free (lst);
+	}
+	error();
+}
+
 void	print_lst(t_lst *lst)
 {
 	t_lst	*curr;

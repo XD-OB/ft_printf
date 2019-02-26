@@ -1,39 +1,35 @@
 #include "ft_printf.h"
 
-void		check_fill(char *str, int pos,  t_lst *current)
+int		check_fill(char *str, int pos,  t_lst *curr)
 {
 	int			i;
-	char		preflag[10];
-	char		postflag[10];
+	char		preflag[6];
+	char		postflag[6];
 
 	i = -1;
-	if (!*str)
-		error();
-	while (++i < 10)
+	while (++i < 6)
 	{
 		preflag[i] = '\0';
 		postflag[i] = '\0';
 	}
-	current->format->pos = pos;
+	curr->format->pos = pos;
 	i = 0;
 	while (is_preflag(*str))
 	{
-		preflag[i] = *str;
-		i++;
+		preflag[i++] = *str;
 		str++;
 	}
 	if (ft_isdigit(*str))
 	{
-		current->format->width = ft_atoi(str);
+		curr->format->width = ft_atoi(str);
 		while (ft_isdigit(*str))
 			str++;
 	}
 	if (*str == '.')
 	{
-		str++;
-		if (ft_isdigit(*str))
+		if (ft_isdigit(*(++str)))
 		{
-			current->format->precis = ft_atoi(str);
+			curr->format->precis = ft_atoi(str);
 			while (ft_isdigit(*str))
 				str++;
 		}
@@ -41,27 +37,18 @@ void		check_fill(char *str, int pos,  t_lst *current)
 	i = 0;
 	while (is_postflag(*str))
 	{
-		postflag[i] = *str;
-		i++;
+		postflag[i++] = *str;
 		str++;		
 	}
 	if (is_format(*str))
 	{
-		current->format->convers = *str;
-		current->format->flag = ft_strjoin(preflag, postflag);
-		if (!is_valid(current->format->flag))
-		{
-			free (current->format->flag);
-			free (current);
-			error();
-		}
+		curr->format->convers = *str;
+		curr->format->flag = ft_strjoin(preflag, postflag);
+		if (!is_valid(curr->format->flag))
+			return (-1);
 	}
 	else
-	{
-		free (current->format->flag);
-		free (current);
-		error();
-	}
+		return (-1);
 }
 
 t_lst	*parse_format(char	*str)
@@ -76,11 +63,14 @@ t_lst	*parse_format(char	*str)
 	{
 		if (str[i] == '%')
 		{
+			if (!str[i + 1])
+				frerrorlst(head);
 			node = (t_lst*)malloc(sizeof(t_lst));
 			node->format = (t_format*)malloc(sizeof(t_format));
 			node->next = NULL;
 			head = add_node(head, node);
-			check_fill(&str[i], i++, node);
+			if (check_fill(&str[i], i++, node) == -1)
+				frerrorlst(head);
 			node = node->next;
 		}
 		i++;
