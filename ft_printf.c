@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-int	eq_lst(t_lst *lst, va_list ap)
+int		eq_lst(t_lst *lst, va_list ap)
 {
 	int	len_lst;
 	int	len_ap;
@@ -18,7 +18,7 @@ void	engine(t_lst *lst, va_list ap)
 {
 }
 
-int	ft_printf(const char *format, ...)
+int		ft_printf(const char *format, ...)
 {
 	t_lst		*lst;
 	va_list		ap;
@@ -28,6 +28,11 @@ int	ft_printf(const char *format, ...)
 	lst = parse_format((char*)format);
 	eq_lst(lst, ap);
 	print_lst(lst);
+	if (!lst)
+	{
+		ft_putstr((char*)format);
+		return (ft_strlen((char*)format));
+	}
 	va_start(ap, format);
 	engine(lst, ap);
 	return (0);
