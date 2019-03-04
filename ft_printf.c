@@ -253,7 +253,7 @@ static void	zero_p(char **str, int size_nbr, t_format *format)
 	(*str)[i] = '0';
 }
 
-void		conv_p(t_lst *lst, t_chr **mychr, unsigned long int addr)
+void		conv_p(t_lst *lst, t_chr **mychr, unsigned long long int addr)
 {
 	char	*str;
 	char	*nbr;
@@ -375,7 +375,7 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 		if (lst->format->convers == 'c')
 			conv_c(lst, &chr, (char)va_arg(ap, int));
 		if (lst->format->convers == 'p')
-			conv_p(lst, &chr, va_arg(ap, unsigned long int));
+			conv_p(lst, &chr, va_arg(ap, unsigned long long int));
 		if (lst->format->convers == '%')
 			conv_percent(&chr);
 		lst = lst->next;
