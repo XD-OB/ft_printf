@@ -1,8 +1,15 @@
 #include "./ft_printf.h"
+#include <stdio.h>
 
 int	main(void)
 {
-	void *s1, *s2, *s3;
-	ft_printf("My %3.2lf hgfhg %#s jgjkjhgv %#4.2llf", s1, s2, s3);
+	char		*s1;
+	char		s2;
+
+	s1 = "hi";
+	s2 = 'h';
+	ft_printf("Oussama %+020p\n", &s1);
+	printf("Oussama %+020p\n", &s1);
+	//ft_printf("My hillifealing\n");
 	return (0);
 }

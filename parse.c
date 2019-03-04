@@ -1,4 +1,5 @@
 #include "ft_printf.h"
+#include <stdio.h>
 
 int		check_fill(char *str, int pos,  t_lst *curr)
 {
@@ -69,8 +70,10 @@ t_lst	*parse_format(char	*str)
 			node->format = (t_format*)malloc(sizeof(t_format));
 			node->next = NULL;
 			head = add_node(head, node);
-			if (check_fill(&str[i], i++, node) == -1)
+			if (check_fill(&str[i + 1], i, node) == -1)
 				frerrorlst(head);
+			if (str[i + 1] == '%')
+				i++;
 			node = node->next;
 		}
 		i++;

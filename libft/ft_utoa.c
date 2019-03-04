@@ -12,46 +12,21 @@
 
 #include "libft.h"
 
-static long	nbr_val(int nbr)
+char		*ft_utoa(unsigned long int nbr)
 {
-	if (nbr < 0)
-		return (-(long)nbr);
-	return (nbr);
-}
+	unsigned long int	tmp;
+	char			*res;
+	int			size;
 
-static int	sign_val(int nbr)
-{
-	if (nbr < 0)
-		return (1);
-	return (0);
-}
-
-static int	size_val(int nbr)
-{
-	if (nbr < 0)
-		return (2);
-	return (1);
-}
-
-char		*ft_itoa(int nbr)
-{
-	char	*res;
-	long	tmp;
-	int	size;
-	int	sign;
-
-	size = size_val(nbr);
-	sign = sign_val(nbr);
-	tmp = nbr_val(nbr);
+	size = 1;
+	tmp = nbr;
 	while (tmp /= 10)
 		size++;
 	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
 		return (res);
 	res[size] = '\0';
-	if (sign)
-		res[0] = '-';
-	tmp = nbr_val(nbr);
-	while (size-- > sign)
+	tmp = nbr;
+	while (size-- > 0)
 	{
 		res[size] = (tmp % 10) + 48;
 		tmp /= 10;

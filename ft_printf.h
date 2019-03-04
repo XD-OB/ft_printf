@@ -21,6 +21,13 @@ typedef struct			s_lst
 	struct s_lst		*next;
 }						t_lst;
 
+typedef struct		s_chr
+{
+	char		*str;
+	int		len;
+	struct s_chr	*next;
+}			t_chr;
+
 void	error(void);
 int	is_format(char c);
 int	is_postflag(char c);

@@ -1,60 +1,56 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_itoa_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2018/10/08 23:18:27 by obelouch         ###   ########.fr       */
+/*   Created: 2019/02/04 11:37:16 by ishaimou          #+#    #+#             */
+/*   Updated: 2019/02/08 10:17:15 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static long	nbr_val(int nbr)
+static int	affect_sign(int val)
 {
-	if (nbr < 0)
-		return (-(long)nbr);
-	return (nbr);
-}
-
-static int	sign_val(int nbr)
-{
-	if (nbr < 0)
+	if (val < 0)
 		return (1);
 	return (0);
 }
 
-static int	size_val(int nbr)
+static long	affect_nb(int val)
 {
-	if (nbr < 0)
-		return (2);
-	return (1);
+	if (val < 0)
+		return (-(long)val);
+	return ((long)val);
 }
 
-char		*ft_itoa(int nbr)
+char		*ft_itoa_base(int val, int base)
 {
-	char	*res;
-	long	tmp;
+	long	nb;
 	int	size;
 	int	sign;
+	char	*res;
 
-	size = size_val(nbr);
-	sign = sign_val(nbr);
-	tmp = nbr_val(nbr);
-	while (tmp /= 10)
+	sign = affect_sign(val);
+	size = affect_sign(val) + 1;
+	nb = affect_nb(val);
+	while (nb /= base)
 		size++;
 	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
-		return (res);
+		return NULL;
 	res[size] = '\0';
+	nb = affect_nb(val);
 	if (sign)
 		res[0] = '-';
-	tmp = nbr_val(nbr);
 	while (size-- > sign)
 	{
-		res[size] = (tmp % 10) + 48;
-		tmp /= 10;
+		if (nb % base < 10)
+			res[size] = (nb % base) + '0';
+		else
+			res[size] = (nb % base) + 'A' - 10;
+		nb /= base;
 	}
 	return (res);
 }
