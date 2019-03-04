@@ -253,7 +253,7 @@ static void	zero_p(char **str, int size_nbr, t_format *format)
 	(*str)[i] = '0';
 }
 
-void		conv_p(t_lst *lst, t_chr **mychr, unsigned long long int addr)
+void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 {
 	char	*str;
 	char	*nbr;
@@ -273,9 +273,10 @@ void		conv_p(t_lst *lst, t_chr **mychr, unsigned long long int addr)
 		flag_plus(&nbr);
 	while (i < (size - ft_strlen(nbr) + 1))
 		str[i++] = ' ';
-	ft_strcpy(&str[--i], nbr);
-	//if (ft_strchr(lst->format->flag, '0'))
-	//	zero_p(&str, (int)ft_strlen(nbr), lst->format);
+	i--;
+	ft_strcpy(&str[i], nbr);
+	if (ft_strchr(lst->format->flag, '0'))
+		zero_p(&str, (int)ft_strlen(nbr), lst->format);
 	(*mychr)->str = str;
 	(*mychr)->len = size;
 	free(nbr);
@@ -358,7 +359,7 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 {
 	while (lst)
 	{
-		while (chr->str)
+		while (chr && chr->str)
 			chr = chr->next;
 		if (lst->format->convers == 'x' || lst->format->convers == 'X')
 			conv_xx(lst, &chr, va_arg(ap, unsigned int));
@@ -375,7 +376,7 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 		if (lst->format->convers == 'c')
 			conv_c(lst, &chr, (char)va_arg(ap, int));
 		if (lst->format->convers == 'p')
-			conv_p(lst, &chr, va_arg(ap, unsigned long long int));
+			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
 		if (lst->format->convers == '%')
 			conv_percent(&chr);
 		lst = lst->next;
@@ -456,32 +457,31 @@ int		put_chr(t_chr *chr)
 	return (len);
 }
 
-int		print_chr(t_chr *chr)
+static void	print_chr(t_chr *chr)
 {
-	int	len;
-	t_chr	*curr;
-
-	len = 0;
-	curr = chr;
-	while (curr)
+	while (chr)
 	{
-		if (curr->str)
-		{
-			write(1, curr->str, curr->len);
-			ft_putchar('\n');
-		}
+		if (chr->str)
+			write(1, chr->str, chr->len);
 		else
-			ft_putendl("Empty");
-		len += curr->len;
-		ft_putnbr(curr->len);
-		ft_putchar('\n');
-		curr = curr->next;
-		ft_putstr("\nNEXT CHR NODE:\n");
+			write(1, "strO", 4);
+		write(1, " -> ", 4);
+		chr = chr->next;
 	}
+	write(1, "NULL", 4);
 	ft_putchar('\n');
-	ft_putnbr(len);
+}
+
+static void	show_lst(t_lst *lst)
+{
+	while (lst)
+	{
+		write(1, &(lst->format->convers), 1);
+		write(1, " -> ", 4);
+		lst = lst->next;
+	}
+	write(1, "NULL", 4);
 	ft_putchar('\n');
-	return (len);
 }
 
 void		free_chr(t_chr *chr)
@@ -512,11 +512,12 @@ int		ft_printf(const char *format, ...)
 	}
 	print_lst(lst);
 	mychr = load_in((char*)format, lst);
+	print_chr(mychr);
 	ft_putendl((char*)format);
 	va_start(ap, format);
 	engine(lst, mychr, ap);
-	//return (print_chr(mychr));
-	len = put_chr(mychr);
+	show_lst(lst);
+	print_chr(mychr);
 	free_chr(mychr);
-	return (len);
+	return (0);
 }

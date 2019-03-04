@@ -8,8 +8,8 @@ int	main(void)
 
 	s1 = "hi";
 	s2 = 'h';
-	ft_printf("Oussama %20p\n", &s1);
-	printf("Oussama %20p\n", &s1);
+	ft_printf("Oussama %p", &s1);
+	printf("Oussama %p\n", &s1);
 	//ft_printf("My hillifealing\n");
 	return (0);
 }

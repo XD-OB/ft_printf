@@ -12,9 +12,9 @@
 
 #include "libft.h"
 
-char		*ft_utoa_base(unsigned long long int val, int base)
+char		*ft_utoa_base(size_t val, int base)
 {
-	unsigned long long int	nb;
+	size_t			nb;
 	int			size;
 	char			*res;
 

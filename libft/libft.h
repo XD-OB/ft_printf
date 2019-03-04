@@ -49,7 +49,7 @@ char				*ft_itoa(int n);
 char				*ft_btoa(unsigned char binary);
 char				*ft_itoa_base(int val, int base);
 char				*ft_utoa(unsigned long int n);
-char				*ft_utoa_base(unsigned long long int val, int base);
+char				*ft_utoa_base(size_t val, int base);
 void				ft_putchar(char c);
 void				ft_putstr(char const *s);
 void				ft_putendl(char const *s);
