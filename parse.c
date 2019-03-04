@@ -52,6 +52,16 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 		return (-1);
 }
 
+void	init_node(t_lst *node)
+{
+	node->format->precis = 0;
+	node->format->width = 0;
+	node->format->convers = '\0';
+	node->format->flag = "\0";
+	node->format->pos = 0;
+
+}
+
 t_lst	*parse_format(char	*str)
 {
 	t_lst		*head;
@@ -68,6 +78,7 @@ t_lst	*parse_format(char	*str)
 				frerrorlst(head);
 			node = (t_lst*)malloc(sizeof(t_lst));
 			node->format = (t_format*)malloc(sizeof(t_format));
+			init_node(node);
 			node->next = NULL;
 			head = add_node(head, node);
 			if (check_fill(&str[i + 1], i, node) == -1)

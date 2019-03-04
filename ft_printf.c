@@ -244,21 +244,13 @@ void		conv_percent(t_chr **mychr)
 static void	zero_p(char **str, int size_nbr, t_format *format)
 {
 	int	i;
-	int	j;
-	int	prefix;
 
-	i = -1;
-	j = -1;
-	prefix = 2;
-	if (ft_strchr(format->flag, '+'))
-		prefix++;
-	while ((*str)[++i] == ' ');
-	while (++j < prefix)
-		(*str)[j] = (*str)[i++];
-	i = prefix - 1;
-	while (++i < size_nbr + prefix)
-		if ((*str)[i] == ' ' || (*str)[i] == '+' || (*str)[i] == '0' || (*str)[i] == 'x')
-			(*str)[i++] = '0';
+	i = 0;
+	(*str)[i++] = '0';
+	(*str)[i++] = 'x';
+	while ((*str)[i] != 'x')
+		(*str)[i++] = '0';
+	(*str)[i] = '0';
 }
 
 void		conv_p(t_lst *lst, t_chr **mychr, unsigned long int addr)
@@ -273,20 +265,20 @@ void		conv_p(t_lst *lst, t_chr **mychr, unsigned long int addr)
 	nbr = ft_strlowcase(nbr);
 	size = (lst->format->width > lst->format->precis) ? lst->format->width : lst->format->precis;
 	size = (size > ft_strlen(nbr) ? size : ft_strlen(nbr));
-        if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-		return ;
+	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
+			return ;
 	str[size] = '\0';
-	i = -1;
-        if (ft_strchr(lst->format->flag, '+'))
-                flag_plus(&nbr);
-	while (++i < (size - ft_strlen(nbr)))
-		str[i] = ' ';
-	ft_strcpy(&str[i], nbr);
-        if (ft_strchr(lst->format->flag, '0'))
-                zero_p(&str, (int)ft_strlen(nbr), lst->format);
+	i = 0;
+	if (ft_strchr(lst->format->flag, '+') && !ft_strchr(lst->format->flag, '0'))
+		flag_plus(&nbr);
+	while (i < (size - ft_strlen(nbr) + 1))
+		str[i++] = ' ';
+	ft_strcpy(&str[--i], nbr);
+	//if (ft_strchr(lst->format->flag, '0'))
+	//	zero_p(&str, (int)ft_strlen(nbr), lst->format);
 	(*mychr)->str = str;
 	(*mychr)->len = size;
-
+	free(nbr);
 
 /*
         while (++i < lst->format->width && !ft_strpbrk(lst->format->flag, "-+"))
