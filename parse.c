@@ -76,14 +76,16 @@ t_lst	*parse_format(char	*str)
 		if (str[i] == '%')
 		{
 			if (!str[i + 1])
-				frerrorlst(head);
+			{
+				free_lst(head);
+				exit(-1);
+			}
 			node = (t_lst*)malloc(sizeof(t_lst));
 			node->format = (t_format*)malloc(sizeof(t_format));
 			init_node(node);
 			node->next = NULL;
 			if (check_fill(&str[i + 1], i, node) != -1)
 				head = add_node(head, node);
-				//frerrorlst(head);
 			else
 				free(node);
 			if (str[i + 1] == '%')

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 17:43:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 17:59:42 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/05 19:07:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	lstlen(t_lst *lst)
 	return (size);
 }
 
-void	frerrorlst(t_lst *lst)
+void	free_lst(t_lst *lst)
 {
 	t_lst	*curr;
 
@@ -92,7 +92,6 @@ void	frerrorlst(t_lst *lst)
 		curr = curr->next;
 		free (lst);
 	}
-	error();
 }
 
 void	put_spstr(char *str)

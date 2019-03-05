@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 18:42:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/05 19:07:13 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -399,7 +399,9 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 		while (chr && chr->str)
 			chr = chr->next;
 		if (ft_strchr("xXob", lst->format->convers))
+		{
 			conv_xxob(lst, &chr, va_arg(ap, unsigned int));
+		}
 		else if (lst->format->convers == 'p')
 			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
 		else if (lst->format->convers == 'u')
@@ -560,11 +562,11 @@ int		ft_printf(const char *format, ...)
 		return -1;
 	print_chr(mychr);
 	ft_putendl((char*)format);
-	va_start(ap, format);
 	engine(lst, mychr, ap);
 	show_lst(lst);
 	print_chr(mychr);
 	len = put_chr(mychr);
+	free_list(head);
 	free_chr(mychr);
 	return (len);
 }
