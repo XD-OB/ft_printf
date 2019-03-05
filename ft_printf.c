@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 19:07:13 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/05 20:03:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,13 +116,42 @@ void		flags(char **str, char **nb, t_format *fmt)
 		flag_space(nb, fmt->flag);
 }
 
-static void	zero_udi(char **str, t_lst *lst)
+static void		zero_xxob(char **str, t_format *fmt)
 {
 	int	i;
 
 	i = 0;
-	while ((*str)[i] == ' ')
+	while ((*str)[i] != '0')
 		(*str)[i++] = '0';
+	(*str)[i] = '0';
+	if (fmt->convers != 'o')
+		(*str)[++i] = '0';
+	if (fmt->convers == 'b')
+		(*str)[1] = 'b';
+	else if (fmt->convers == 'x' || fmt->convers == 'X')
+		(*str)[1] = 'x';
+}
+
+void		zero_dbiouxx(char **str, t_format *fmt)
+{
+	int		i;
+
+	i = 0;
+	if (ft_strchr("udi", fmt->convers))
+	{
+		while ((*str)[i] == ' ')
+			(*str)[i++] = '\0';
+	}
+	else if (ft_strchr("xxob", fmt->convers))
+		zero_xxob(str, fmt);
+	else if (fmt->convers == 'p')
+	{
+		(*str)[i++] = '0';
+		(*str)[i++] = 'x';
+		while ((*str)[i] != 'x')
+			(*str)[i++] = '0';
+		(*str)[i] = '0';
+	}
 }
 
 static void	precis_o_udi(char **str, int n_zero)
@@ -135,35 +164,6 @@ static void	precis_o_udi(char **str, int n_zero)
 	while ((*str)[++i] == ' ');
 	while (n_zero--)
 		(*str)[--i] = '0';
-}
-
-void		conv_u(t_lst *lst, t_chr **mychr, unsigned int ui)
-{
-	size_t	size;
-	char    *str;
-	char    *nbr;
-	int		i;
-
-	nbr = ft_utoa(ui);
-	size = (lst->format->width);
-	if (lst->format->width < lst->format->precis)
-		size = lst->format->precis;
-	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
-		size = ft_strlen(nbr);
-	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-		return ;
-	str[size] = '\0';
-	i = -1;
-	while (++i < (int)(size - ft_strlen(nbr) + 1))
-		str[i] = ' ';
-	ft_strcpy(&str[--i], nbr);
-	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-		zero_udi(&str, lst);
-	if (lst->format->precis > 0)
-		precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
-	(*mychr)->str = str;
-	(*mychr)->len = size;
-	free(nbr);
 }
 
 void		conv_di(t_lst *lst, t_chr **mychr, int d)
@@ -205,7 +205,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, int d)
 		if (ft_strchr(lst->format->flag, '0')
 				&& lst->format->width > (int)ft_strlen(nbr)
 				&& lst->format->precis == 0)
-			zero_udi(&str, lst);
+			zero_dbiouxx(&str, lst->format);
 		if (lst->format->precis > 0)
 			precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
 		(*mychr)->str = str;
@@ -268,18 +268,6 @@ void		conv_percent(t_chr **mychr)
 	(*mychr)->len = 1;
 }
 
-static void	zero_p(char **str, t_lst *lst)
-{
-	int	i;
-
-	i = 0;
-	(*str)[i++] = '0';
-	(*str)[i++] = 'x';
-	while ((*str)[i] != 'x')
-		(*str)[i++] = '0';
-	(*str)[i] = '0';
-}
-
 static void	precis_zero(char **str, int n_zero)
 {
 	int	i;
@@ -319,7 +307,7 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 	i--;
 	ft_strcpy(&str[i], nbr);
 	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-		zero_p(&str, lst);
+		zero_dbiouxx(&str, lst->format);
 	if (lst->format->precis > 0)
 		precis_zero(&str, lst->format->precis - 12);
 	(*mychr)->str = str;
@@ -327,23 +315,20 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 	free(nbr);
 }
 
-static void		zero_xxob(char **str, t_format *fmt)
+static int				base_detect(char c)
 {
-	int	i;
-
-	i = 0;
-	while ((*str)[i] != '0')
-		(*str)[i++] = '0';
-	(*str)[i] = '0';
-	if (fmt->convers != 'o')
-		(*str)[++i] = '0';
-	if (fmt->convers == 'b')
-		(*str)[1] = 'b';
-	else if (fmt->convers == 'x' || fmt->convers == 'X')
-		(*str)[1] = 'x';
+	if (c == 'x' || c == 'X')
+		return (16);
+	if (c == 'u')
+		return (10);
+	if (c == 'o')
+		return (8);
+	if (c == 'b')
+		return (2);
+	return (0);
 }
 
-void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
+void            conv_xxoub(t_lst *lst, t_chr **mychr, unsigned int x)
 {
 	int     prefix;
 	int     size;
@@ -351,11 +336,12 @@ void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
 	char    *nbr;
 	int		i;
 
-	if (!(i = (lst->format->convers == 'b') ? 2 : 0))
-		i = (lst->format->convers == 'o') ? 8 : 16;
+	//if (strstr(lst->fmt->flag, "hh")
+	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
-	nbr = ft_utoa_base(x, i);
-	if (ft_strchr(lst->format->flag, '#'))
+	if (strstr(lst->fmt->flag, "hh")
+		nbr = ft_utoa_base(x, i);
+	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
 		flag_dash(&nbr, i);
 	else
 		prefix = 0;
@@ -371,11 +357,12 @@ void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
 	str[size] = '\0';
 	i = -1;
 	while (++i < (int)(size - ft_strlen(nbr) + 1))
-		str[i++] = ' ';
-	i--;
-	ft_strcpy(&str[i], nbr);
+		str[i] = ' ';
+	ft_strcpy(&str[--i], nbr);
 	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-		zero_xxob(&str, lst->format);
+			zero_xxob(&str, lst->format);
+	if (lst->format->precis > 0)
+				precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
 	if (lst->format->convers == 'x')
 		str = ft_strlowcase(str);
 	if (lst->format->convers == 'X')
@@ -398,16 +385,29 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 	{
 		while (chr && chr->str)
 			chr = chr->next;
-		if (ft_strchr("xXob", lst->format->convers))
+		if (ft_strchr("xXoub", lst->format->convers))
 		{
-			conv_xxob(lst, &chr, va_arg(ap, unsigned int));
+			//if (ft_strstr(lst->format->flag, "hh"))
+			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned char));
+			//else if (ft_strchr(lst->format->flag, 'h'))
+			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned short int));
+			//else if (ft_strstr(lst->format->flag, "ll"))
+			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned long long int));
+			//else if (ft_strstr(lst->format->flag, "l"))
+			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned long int));
+			//else
+				conv_xxoub(lst, &chr, va_arg(ap, unsigned int));
 		}
 		else if (lst->format->convers == 'p')
 			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
-		else if (lst->format->convers == 'u')
-			conv_u(lst, &chr, va_arg(ap, unsigned int));
+		//else if (lst->format->convers == 'u')
+		//	conv_u(lst, &chr, va_arg(ap, unsigned int));
 		else if (ft_strchr("di", lst->format->convers))
+		{
+			//if (ft_strstr(lst->format->flag, "hh"))
+			//	conv_di(lst, &chr, va_arg(ap, char));
 			conv_di(lst, &chr, va_arg(ap, int));
+		}
 		else if (lst->format->convers == 's')
 			conv_s(lst, &chr, va_arg(ap, const char*));
 		else if (lst->format->convers == 'c')
@@ -566,7 +566,7 @@ int		ft_printf(const char *format, ...)
 	show_lst(lst);
 	print_chr(mychr);
 	len = put_chr(mychr);
-	free_list(head);
+	free_lst(lst);
 	free_chr(mychr);
 	return (len);
 }
