@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 20:03:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/05 20:22:29 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,11 +336,9 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, unsigned int x)
 	char    *nbr;
 	int		i;
 
-	//if (strstr(lst->fmt->flag, "hh")
 	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
-	if (strstr(lst->fmt->flag, "hh")
-		nbr = ft_utoa_base(x, i);
+	nbr = ft_utoa_base(x, i);
 	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
 		flag_dash(&nbr, i);
 	else
@@ -560,11 +558,11 @@ int		ft_printf(const char *format, ...)
 	//print_lst(lst);
 	if (!(mychr = load_in((char*)format, lst)))
 		return -1;
-	print_chr(mychr);
-	ft_putendl((char*)format);
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
 	engine(lst, mychr, ap);
-	show_lst(lst);
-	print_chr(mychr);
+	//show_lst(lst);
+	//print_chr(mychr);
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);
