@@ -44,16 +44,11 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 		postflag[i++] = *str;
 		str++;		
 	}
-	if (is_format(*str))
-	{
-		curr->format->convers = *str;
-		if (*str == 'd' && o == 1)
-			curr->format->precis = -2;
-		curr->format->flag = ft_strjoin(preflag, postflag);
-		if (!is_valid(curr->format->flag))
-			return (-1);
-	}
-	else
+	curr->format->convers = *str;
+	if (*str == 'd' && o == 1)
+		curr->format->precis = -2;
+	curr->format->flag = ft_strjoin(preflag, postflag);
+	if (!is_valid(curr->format->flag))
 		return (-1);
 	return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tools.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/03/05 17:43:57 by obelouch          #+#    #+#             */
+/*   Updated: 2019/03/05 17:59:42 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 int		is_format(char c)
@@ -81,6 +93,16 @@ void	frerrorlst(t_lst *lst)
 		free (lst);
 	}
 	error();
+}
+
+void	put_spstr(char *str)
+{
+	while (*str)
+	{
+		if (*str != '%')
+			ft_putchar(*str);
+		str++;
+	}
 }
 
 void	print_lst(t_lst *lst)

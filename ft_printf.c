@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 17:25:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/05 18:42:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ void		conv_di(t_lst *lst, t_chr **mychr, int d)
 		(*mychr)->str = ft_strdup("\0");
 	else
 	{
+		if (lst->format->precis == -2)
+			lst->format->precis = 0;
 		nbr = ft_itoa(d);
 		if (ft_strchr(lst->format->flag, '+'))
 			flag_plus(&nbr);
@@ -347,7 +349,7 @@ void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
 	int     size;
 	char    *str;
 	char    *nbr;
-	int	i;
+	int		i;
 
 	if (!(i = (lst->format->convers == 'b') ? 2 : 0))
 		i = (lst->format->convers == 'o') ? 8 : 16;
@@ -359,14 +361,16 @@ void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
 		prefix = 0;
 	if (lst->format->precis - prefix > 0)
 		nbr[lst->format->precis + prefix] = '\0';
-	size = (lst->format->width > lst->format->precis) ? lst->format->width : lst->format->precis;
+	size = lst->format->width;
+	if (lst->format->width < lst->format->precis)
+		size = lst->format->precis;
 	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
 		size = ft_strlen(nbr);
 	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
 		return ;
 	str[size] = '\0';
-	i = 0;
-	while (i < (int)(size - ft_strlen(nbr) + 1))
+	i = -1;
+	while (++i < (int)(size - ft_strlen(nbr) + 1))
 		str[i++] = ' ';
 	i--;
 	ft_strcpy(&str[i], nbr);
@@ -381,27 +385,35 @@ void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
 	free(nbr);
 }
 
+void		conv_invalid(t_chr **mychr, char c)
+{
+	(*mychr)->str = ft_strnew(1);
+	(*mychr)->str[0] = c;
+	(*mychr)->len = 1;
+}
+
 void		engine(t_lst *lst, t_chr *chr, va_list ap)
 {
 	while (lst)
 	{
 		while (chr && chr->str)
 			chr = chr->next;
-		if (lst->format->convers == 'x'|| lst->format->convers == 'X'
-				|| lst->format->convers == 'o' || lst->format->convers == 'b')
+		if (ft_strchr("xXob", lst->format->convers))
 			conv_xxob(lst, &chr, va_arg(ap, unsigned int));
-		if (lst->format->convers == 'p')
+		else if (lst->format->convers == 'p')
 			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
-		if (lst->format->convers == 'u')
+		else if (lst->format->convers == 'u')
 			conv_u(lst, &chr, va_arg(ap, unsigned int));
-		if (lst->format->convers == 'd' || lst->format->convers == 'i')
+		else if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, va_arg(ap, int));
-		if (lst->format->convers == 's')
+		else if (lst->format->convers == 's')
 			conv_s(lst, &chr, va_arg(ap, const char*));
-		if (lst->format->convers == 'c')
+		else if (lst->format->convers == 'c')
 			conv_c(lst, &chr, (char)va_arg(ap, int));
-		if (lst->format->convers == '%')
+		else if (lst->format->convers == '%')
 			conv_percent(&chr);
+		else
+			conv_invalid(&chr, lst->format->convers);
 		lst = lst->next;
 		chr = chr->next;
 	}
@@ -540,7 +552,7 @@ int		ft_printf(const char *format, ...)
 	lst = parse_format((char*)format);
 	if (!lst)
 	{
-		ft_putstr((char*)format);
+		put_spstr((char*)format);
 		return (ft_strlen(format));
 	}
 	//print_lst(lst);
