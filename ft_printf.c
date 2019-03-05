@@ -250,6 +250,21 @@ static void	zero_p(char **str)
 	(*str)[i] = '0';
 }
 
+static void	precis_zero(char **str, int n_zero)
+{
+	int	i;
+
+	i = 0;
+	if (n_zero > 0)
+	{
+		while ((*str)[i++] != 'x');
+		while (n_zero--)
+			(*str)[--i] = '0';
+		(*str)[--i] = 'x';
+		(*str)[--i] = '0';
+	}
+}
+
 void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 {
 	char	*str;
@@ -260,8 +275,13 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 	nbr = ft_utoa_base(addr, 16);
 	flag_dash(&nbr, 16);
 	nbr = ft_strlowcase(nbr);
-	size = (lst->format->width > lst->format->precis) ? lst->format->width : lst->format->precis;
-	size = (size > ft_strlen(nbr)) ? size : ft_strlen(nbr);
+        if (ft_strchr(lst->format->flag, ' ') && lst->format->width <= (int)ft_strlen(nbr))
+                flag_space(&nbr, lst->format->flag);
+        if (ft_strchr(lst->format->flag, '+'))
+                flag_plus(&nbr);
+	size = (lst->format->width > lst->format->precis + 2) ? lst->format->width : lst->format->precis + 2;
+	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
+		size = ft_strlen(nbr);
 	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
 			return ;
 	str[size] = '\0';
@@ -272,20 +292,13 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 		str[i++] = ' ';
 	i--;
 	ft_strcpy(&str[i], nbr);
-	if (ft_strchr(lst->format->flag, '0'))
+	if (ft_strchr(lst->format->flag, '0') && lst->format->width == 0)
 		zero_p(&str);
+	if (lst->format->precis)
+		precis_zero(&str, lst->format->precis - 12);
 	(*mychr)->str = str;
 	(*mychr)->len = size;
 	free(nbr);
-
-/*
-        while (++i < lst->format->width && !ft_strpbrk(lst->format->flag, "-+"))
-                str[i] = ' ';
-        if (ft_strchr(lst->format->flag, '+'))
-                flag_plus(&nbr);
-        if (ft_strchr(lst->format->flag, ' '))
-                flag_space(&nbr, lst->format->flag);
-*/
 }
 
 void            conv_xx(t_lst *lst, t_chr **mychr, unsigned int x)

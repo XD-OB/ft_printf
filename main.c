@@ -6,8 +6,8 @@ int	main(void)
 	char		*s1;
 
 	s1 = "hi";
-	ft_printf("%shiwork%d", s1, 20);
-	printf("\n%shiwork%d\n", s1, 20);
+	//ft_printf("%0.2p", &s1);
+	printf("\n%0.2p\n", &s1);
 	//ft_printf("My hillifealing\n");
 	return (0);
 }
