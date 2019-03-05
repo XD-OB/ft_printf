@@ -43,7 +43,7 @@ void		flag_zero(char **str, t_format *format)
 		&& !ft_strchr(format->flag, '+'))
 	{
 		i = -1;
-		while (++i < format->width - ft_strlen(*str))
+		while (++i < (format->width - (int)ft_strlen(*str)))
 			(*str)[i] = '0';
 	}
 }
@@ -68,7 +68,6 @@ static char	*dash_xob(char *nbr, int size, int base)
 void		flag_dash(char **nbr, int base)
 {
 	int	size;
-	char	*str;
 	char	*tmp;
 
 	if (base != 16 && base != 8 && base != 2)
@@ -107,7 +106,7 @@ void		flags(char **str, char **nb, t_format *fmt)
 
 void		conv_u(t_lst *lst, t_chr **mychr, unsigned int u)
 {
-        int     size;
+        size_t	size;
         char    *str;
         char    *nb;
 
@@ -131,7 +130,6 @@ void		conv_u(t_lst *lst, t_chr **mychr, unsigned int u)
 
 void		conv_di(t_lst *lst, t_chr **mychr, int d)
 {
-	int	i;
 	int	size;
 	char	*str;
 	char	*nb;
@@ -163,7 +161,6 @@ void		conv_di(t_lst *lst, t_chr **mychr, int d)
 
 void		conv_b(t_lst *lst, t_chr **mychr, unsigned char bin)
 {
-        int     	i;
         int     	size;
         char    	*str;
         char    	*nb;
@@ -241,7 +238,7 @@ void		conv_percent(t_chr **mychr)
 	(*mychr)->len = 1;
 }
 
-static void	zero_p(char **str, int size_nbr, t_format *format)
+static void	zero_p(char **str)
 {
 	int	i;
 
@@ -257,26 +254,26 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 {
 	char	*str;
 	char	*nbr;
-	int	size;
+	size_t	size;
 	int	i;
 
 	nbr = ft_utoa_base(addr, 16);
 	flag_dash(&nbr, 16);
 	nbr = ft_strlowcase(nbr);
 	size = (lst->format->width > lst->format->precis) ? lst->format->width : lst->format->precis;
-	size = (size > ft_strlen(nbr) ? size : ft_strlen(nbr));
+	size = (size > ft_strlen(nbr)) ? size : ft_strlen(nbr);
 	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
 			return ;
 	str[size] = '\0';
 	i = 0;
 	if (ft_strchr(lst->format->flag, '+') && !ft_strchr(lst->format->flag, '0'))
 		flag_plus(&nbr);
-	while (i < (size - ft_strlen(nbr) + 1))
+	while (i < (int)(size - ft_strlen(nbr) + 1))
 		str[i++] = ' ';
 	i--;
 	ft_strcpy(&str[i], nbr);
 	if (ft_strchr(lst->format->flag, '0'))
-		zero_p(&str, (int)ft_strlen(nbr), lst->format);
+		zero_p(&str);
 	(*mychr)->str = str;
 	(*mychr)->len = size;
 	free(nbr);
@@ -293,7 +290,6 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 
 void            conv_xx(t_lst *lst, t_chr **mychr, unsigned int x)
 {
-        int     i;
         int     size;
         char    *str;
         char    *nb;
@@ -323,7 +319,6 @@ void            conv_xx(t_lst *lst, t_chr **mychr, unsigned int x)
 
 void            conv_o(t_lst *lst, t_chr **mychr, unsigned int o)
 {
-        int     i;
         int     size;
         char    *str;
         char    *nb;
@@ -408,17 +403,25 @@ t_chr		*load_in(char *format, t_lst *lst)
 
 	if (!(mychr = (t_chr*)malloc(sizeof(t_chr))))
 		return NULL;
+	mychr->str = NULL;
+	mychr->len = 0;
 	mychr->next = NULL;
 	p1 = 0;
 	curr = mychr;
 	while (lst)
 	{
 		p2 = lst->format->pos - 1;
-		curr->str = cut_str(format, p1, p2);
-		curr->len = p2 - p1 + 1;
-		curr->next = (t_chr*)malloc(sizeof(t_chr));
-		curr = curr->next;
-		p1 = p2;
+		if (p2 >= p1)
+		{
+			curr->str = cut_str(format, p1, p2);
+			curr->len = p2 - p1 + 1;
+			curr->next = (t_chr*)malloc(sizeof(t_chr));
+			curr = curr->next;
+			curr->str = NULL;
+			curr->len = 0;
+			curr->next = NULL;
+		}
+		p1 = (p2 >= 0) ? p2 : 0;
 		while (format[p1] != lst->format->convers)
 			p1++;
 		p1++;
@@ -427,9 +430,10 @@ t_chr		*load_in(char *format, t_lst *lst)
 		if (lst->next)
 		{
 			curr->next = (t_chr*)malloc(sizeof(t_chr));
+			curr = curr->next;
 			curr->str = NULL;
 			curr->len = 0;
-			curr = curr->next;
+			curr->next = NULL;
 		}
 		lst = lst->next;
 	}
@@ -437,7 +441,7 @@ t_chr		*load_in(char *format, t_lst *lst)
 	{
 		curr->next = (t_chr*)malloc(sizeof(t_chr));
 		curr = curr->next;
-		curr->str = &format[p1];
+		curr->str = ft_strdup(&format[p1]);
 		curr->len = ft_strlen(&format[p1]);
 	}
 	return (mychr);
@@ -510,14 +514,16 @@ int		ft_printf(const char *format, ...)
 		ft_putstr((char*)format);
 		return (ft_strlen(format));
 	}
-	print_lst(lst);
-	mychr = load_in((char*)format, lst);
+	//print_lst(lst);
+	if (!(mychr = load_in((char*)format, lst)))
+		return -1;
 	print_chr(mychr);
 	ft_putendl((char*)format);
 	va_start(ap, format);
 	engine(lst, mychr, ap);
 	show_lst(lst);
 	print_chr(mychr);
+	len = put_chr(mychr);
 	free_chr(mychr);
-	return (0);
+	return (len);
 }

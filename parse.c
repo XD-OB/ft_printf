@@ -50,6 +50,7 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	}
 	else
 		return (-1);
+	return (0);
 }
 
 void	init_node(t_lst *node)
