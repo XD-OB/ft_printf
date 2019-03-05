@@ -12,11 +12,11 @@
 
 #include "libft.h"
 
-char		*ft_utoa(unsigned long int nbr)
+char		*ft_utoa(size_t nbr)
 {
-	unsigned long int	tmp;
-	char			*res;
-	int			size;
+	size_t	tmp;
+	char	*res;
+	int	size;
 
 	size = 1;
 	tmp = nbr;

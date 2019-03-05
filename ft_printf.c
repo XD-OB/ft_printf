@@ -159,31 +159,6 @@ void		conv_di(t_lst *lst, t_chr **mychr, int d)
 	free(nb);
 }
 
-void		conv_b(t_lst *lst, t_chr **mychr, unsigned char bin)
-{
-        int     	size;
-        char    	*str;
-        char    	*nb;
-
-        nb = ft_btoa(bin);
-	if (ft_strchr(lst->format->flag, '#'))
-		flag_dash(&nb, 2);
-        if (lst->format->precis != 0)
-                nb[lst->format->precis] = '\0';
-        size = lst->format->width + ft_strlen(nb);
-        if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-                return ;
-        str[size] = '\0';
-	flags(&str, &nb, lst->format);
-        if (strchr(lst->format->flag, '-'))
-                ft_strcat(str, &nb[lst->format->width]);
-        else
-                ft_strcat(str, nb);
-        (*mychr)->str = str;
-        (*mychr)->len = ft_strlen(str);
-        free(nb);
-}
-
 void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 {
 	int	i;
@@ -238,7 +213,7 @@ void		conv_percent(t_chr **mychr)
 	(*mychr)->len = 1;
 }
 
-static void	zero_p(char **str)
+static void	zero_p(char **str, t_lst *lst)
 {
 	int	i;
 
@@ -292,8 +267,8 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 		str[i++] = ' ';
 	i--;
 	ft_strcpy(&str[i], nbr);
-	if (ft_strchr(lst->format->flag, '0') && lst->format->width == 0)
-		zero_p(&str);
+	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+		zero_p(&str, lst);
 	if (lst->format->precis)
 		precis_zero(&str, lst->format->precis - 12);
 	(*mychr)->str = str;
@@ -301,66 +276,60 @@ void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
 	free(nbr);
 }
 
-void            conv_xx(t_lst *lst, t_chr **mychr, unsigned int x)
+static void		zero_xxob(char **str, t_format *fmt)
 {
+	int	i;
+
+	i = 0;
+	while ((*str)[i] != '0')
+		(*str)[i++] = '0';
+	(*str)[i] = '0';
+	if (fmt->convers != 'o')
+		(*str)[++i] = '0';
+	if (fmt->convers == 'b')
+		(*str)[1] = 'b';
+	else if (fmt->convers == 'x' || fmt->convers == 'X')
+		(*str)[1] = 'x';
+}
+
+void            conv_xxob(t_lst *lst, t_chr **mychr, unsigned int x)
+{
+        int     prefix;
         int     size;
         char    *str;
-        char    *nb;
+        char    *nbr;
+	int	i;
 
-        nb = ft_itoa_base(x, 16);
+	if (!(i = (lst->format->convers == 'b') ? 2 : 0))
+		i = (lst->format->convers == 'o') ? 8 : 16;
+	prefix = (lst->format->convers == 'o') ? 1 : 2;
+        nbr = ft_itoa_base(x, i);
 	if (ft_strchr(lst->format->flag, '#'))
-		flag_dash(&nb, 16);
-        if (lst->format->precis != 0)
-                nb[lst->format->precis] = '\0';
-        size = lst->format->width + ft_strlen(nb);
+		flag_dash(&nbr, i);
+	else
+		prefix = 0;
+        if (lst->format->precis - prefix > 0)
+                nbr[lst->format->precis + prefix] = '\0';
+	size = (lst->format->width > lst->format->precis) ? lst->format->width : lst->format->precis;
+	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
+		size = ft_strlen(nbr);
         if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
                 return ;
         str[size] = '\0';
-	flags(&str, &nb, lst->format);
-        if (strchr(lst->format->flag, '-'))
-                ft_strcat(str, &nb[lst->format->width]);
-        else
-                ft_strcat(str, nb);
+	i = 0;
+        while (i < (int)(size - ft_strlen(nbr) + 1))
+                str[i++] = ' ';
+        i--;
+        ft_strcpy(&str[i], nbr);
+        if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+		zero_xxob(&str, lst->format);
 	if (lst->format->convers == 'x')
 		str = ft_strlowcase(str);
 	if (lst->format->convers == 'X')
 		str = ft_strupcase(str);
         (*mychr)->str = str;
         (*mychr)->len = ft_strlen(str);
-        free(nb);
-}
-
-void            conv_o(t_lst *lst, t_chr **mychr, unsigned int o)
-{
-        int     size;
-        char    *str;
-        char    *nb;
-
-        nb = ft_itoa_base(o, 8);
-        if (ft_strchr(lst->format->flag, '#'))
-                flag_dash(&nb, 8);
-        if (lst->format->precis != 0)
-                nb[lst->format->precis] = '\0';
-        size = lst->format->width + ft_strlen(nb);
-        if (size <= 0 || (o == 0 && lst->format->precis == 0))
-        {
-                (*mychr)->str = ft_strdup("\0");
-                (*mychr)->len = 0;
-                return ;
-        }
-        if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-                return ;
-        str[size] = '\0';
-	flags(&str, &nb, lst->format);
-        if (ft_strchr(lst->format->flag, '-'))
-                ft_strcat(str, &nb[lst->format->width]);
-        else
-                ft_strcat(str, nb);
-        if (ft_strchr(lst->format->flag, 'X'))
-                nb = ft_strupcase(nb);
-        (*mychr)->str = str;
-        (*mychr)->len = ft_strlen(str);
-        free(nb);
+        free(nbr);
 }
 
 void		engine(t_lst *lst, t_chr *chr, va_list ap)
@@ -369,22 +338,19 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 	{
 		while (chr && chr->str)
 			chr = chr->next;
-		if (lst->format->convers == 'x' || lst->format->convers == 'X')
-			conv_xx(lst, &chr, va_arg(ap, unsigned int));
-		if (lst->format->convers == 'o')
-			conv_o(lst, &chr, va_arg(ap, unsigned int));
+		if (lst->format->convers == 'x'|| lst->format->convers == 'X'
+			|| lst->format->convers == 'o' || lst->format->convers == 'b')
+			conv_xxob(lst, &chr, va_arg(ap, unsigned int));
+		if (lst->format->convers == 'p')
+			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
 		if (lst->format->convers == 'u')
 			conv_u(lst, &chr, va_arg(ap, unsigned int));
 		if (lst->format->convers == 'd' || lst->format->convers == 'i')
 			conv_di(lst, &chr, va_arg(ap, int));
-		if (lst->format->convers == 'b')
-			conv_b(lst, &chr, (unsigned char)va_arg(ap, int));
 		if (lst->format->convers == 's')
 			conv_s(lst, &chr, va_arg(ap, const char*));
 		if (lst->format->convers == 'c')
 			conv_c(lst, &chr, (char)va_arg(ap, int));
-		if (lst->format->convers == 'p')
-			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
 		if (lst->format->convers == '%')
 			conv_percent(&chr);
 		lst = lst->next;
