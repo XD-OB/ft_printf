@@ -3,10 +3,12 @@
 
 int		check_fill(char *str, int pos,  t_lst *curr)
 {
+	int			o;
 	int			i;
 	char		preflag[6];
 	char		postflag[6];
 
+	o = 0;
 	i = -1;
 	while (++i < 6)
 	{
@@ -30,7 +32,8 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	{
 		if (ft_isdigit(*(++str)))
 		{
-			curr->format->precis = ft_atoi(str);
+			if (!(curr->format->precis = ft_atoi(str)))
+				o = 1;
 			while (ft_isdigit(*str))
 				str++;
 		}
@@ -44,6 +47,8 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	if (is_format(*str))
 	{
 		curr->format->convers = *str;
+		if (*str == 'd' && o == 1)
+			curr->format->precis = -2;
 		curr->format->flag = ft_strjoin(preflag, postflag);
 		if (!is_valid(curr->format->flag))
 			return (-1);
@@ -81,12 +86,15 @@ t_lst	*parse_format(char	*str)
 			node->format = (t_format*)malloc(sizeof(t_format));
 			init_node(node);
 			node->next = NULL;
-			head = add_node(head, node);
-			if (check_fill(&str[i + 1], i, node) == -1)
-				frerrorlst(head);
+			if (check_fill(&str[i + 1], i, node) != -1)
+				head = add_node(head, node);
+				//frerrorlst(head);
+			else
+				free(node);
 			if (str[i + 1] == '%')
 				i++;
-			node = node->next;
+			if (check_fill(&str[i + 1], i, node) != -1)
+				node = node->next;
 		}
 		i++;
 	}
