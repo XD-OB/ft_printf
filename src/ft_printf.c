@@ -166,13 +166,29 @@ static void	precis_o_udi(char **str, int n_zero)
 		(*str)[--i] = '0';
 }
 
-void		conv_di(t_lst *lst, t_chr **mychr, int d)
+void            cast_di(va_list ap, char *flag, long long int *n)
+{
+        if (ft_strstr(flag, "hh"))
+                *n = (char)va_arg(ap, int);
+        else if (ft_strstr(flag, "h"))
+                *n = (short int)va_arg(ap, int);
+        else if (ft_strstr(flag, "ll"))
+                *n = (long long int)va_arg(ap, long long int);
+        else if (ft_strstr(flag, "l"))
+                *n = (long int)va_arg(ap, long int);
+        else
+                *n = (int)va_arg(ap, int);
+}
+
+void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	int		size;
 	char	*str;
 	char	*nbr;
 	int		i;
+	long long int	d;
 
+	cast_di(ap, lst->format->flag, &d);
 	if (d == 0 && lst->format->precis == -2)
 		(*mychr)->str = ft_strdup("\0");
 	else
@@ -328,17 +344,33 @@ static int				base_detect(char c)
 	return (0);
 }
 
-void            conv_xxoub(t_lst *lst, t_chr **mychr, unsigned int x)
+void		cast_xxoub(va_list ap, char *flag, size_t *n)
+{
+	if (ft_strstr(flag, "hh"))
+		*n = (unsigned char)va_arg(ap, unsigned int);
+	else if (ft_strstr(flag, "h"))
+		*n = (unsigned short int)va_arg(ap, unsigned int);
+	else if (ft_strstr(flag, "ll"))
+		*n = (unsigned long long int)va_arg(ap, unsigned long long int);
+	else if (ft_strstr(flag, "l"))
+		*n = (unsigned long int)va_arg(ap, unsigned long int);
+	else
+		*n = (unsigned int)va_arg(ap, unsigned int);
+}
+
+void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	int     prefix;
 	int     size;
 	char    *str;
 	char    *nbr;
-	int		i;
+	int	i;
+	size_t	n;
 
+	cast_xxoub(ap, lst->format->flag, &n);
 	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
-	nbr = ft_utoa_base(x, i);
+	nbr = ft_utoa_base(n, i);
 	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
 		flag_dash(&nbr, i);
 	else
@@ -384,28 +416,11 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 		while (chr && chr->str)
 			chr = chr->next;
 		if (ft_strchr("xXoub", lst->format->convers))
-		{
-			//if (ft_strstr(lst->format->flag, "hh"))
-			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned char));
-			//else if (ft_strchr(lst->format->flag, 'h'))
-			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned short int));
-			//else if (ft_strstr(lst->format->flag, "ll"))
-			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned long long int));
-			//else if (ft_strstr(lst->format->flag, "l"))
-			//	conv_xxoub(lst, &chr, va_arg(ap, unsigned long int));
-			//else
-				conv_xxoub(lst, &chr, va_arg(ap, unsigned int));
-		}
+			conv_xxoub(lst, &chr, ap);
 		else if (lst->format->convers == 'p')
 			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
-		//else if (lst->format->convers == 'u')
-		//	conv_u(lst, &chr, va_arg(ap, unsigned int));
 		else if (ft_strchr("di", lst->format->convers))
-		{
-			//if (ft_strstr(lst->format->flag, "hh"))
-			//	conv_di(lst, &chr, va_arg(ap, char));
-			conv_di(lst, &chr, va_arg(ap, int));
-		}
+			conv_di(lst, &chr, ap);
 		else if (lst->format->convers == 's')
 			conv_s(lst, &chr, va_arg(ap, const char*));
 		else if (lst->format->convers == 'c')

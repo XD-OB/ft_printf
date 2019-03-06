@@ -12,33 +12,33 @@
 
 #include "libft.h"
 
-static long	nbr_val(int nbr)
+static long long int	nbr_val(long long int nbr)
 {
 	if (nbr < 0)
-		return (-(long)nbr);
+		return (-(long long int)nbr);
 	return (nbr);
 }
 
-static int	sign_val(int nbr)
+static int	sign_val(long long int nbr)
 {
 	if (nbr < 0)
 		return (1);
 	return (0);
 }
 
-static int	size_val(int nbr)
+static int	size_val(long long int nbr)
 {
 	if (nbr < 0)
 		return (2);
 	return (1);
 }
 
-char		*ft_itoa(int nbr)
+char		*ft_itoa(long long int nbr)
 {
-	char	*res;
-	long	tmp;
-	int	size;
-	int	sign;
+	char		*res;
+	long long int	tmp;
+	int		size;
+	int		sign;
 
 	size = size_val(nbr);
 	sign = sign_val(nbr);

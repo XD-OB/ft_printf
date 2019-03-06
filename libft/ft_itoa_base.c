@@ -12,26 +12,26 @@
 
 #include "libft.h"
 
-static int	affect_sign(int val)
+static int	affect_sign(long long int val)
 {
 	if (val < 0)
 		return (1);
 	return (0);
 }
 
-static long	affect_nb(int val)
+static long long int	affect_nb(long long int val)
 {
 	if (val < 0)
-		return (-(long)val);
-	return ((long)val);
+		return (-(long long int)val);
+	return ((long long int)val);
 }
 
-char		*ft_itoa_base(int val, int base)
+char		*ft_itoa_base(long long int val, int base)
 {
-	long	nb;
-	int	size;
-	int	sign;
-	char	*res;
+	long long int	nb;
+	int		size;
+	int		sign;
+	char		*res;
 
 	sign = affect_sign(val);
 	size = affect_sign(val) + 1;

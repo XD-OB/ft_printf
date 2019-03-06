@@ -1,2 +1,2 @@
 #!/bin/bash
-gcc -L./libft -lft -L./ -lftprintf -I libft -I include main.c -o ft_printf
+gcc main.c -L./libft -lft -L./ -lftprintf -I include/ -I libft/ -o ft_printf
