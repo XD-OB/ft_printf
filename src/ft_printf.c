@@ -182,7 +182,7 @@ void            cast_di(va_list ap, char *flag, long long int *n)
 
 void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 {
-	int		size;
+	size_t	size;
 	char	*str;
 	char	*nbr;
 	int		i;
@@ -361,7 +361,7 @@ void		cast_xxoub(va_list ap, char *flag, size_t *n)
 void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	int     prefix;
-	int     size;
+	size_t     size;
 	char    *str;
 	char    *nbr;
 	int	i;
@@ -517,7 +517,7 @@ int		put_chr(t_chr *chr)
 	return (len);
 }
 
-static void	print_chr(t_chr *chr)
+/*static void	print_chr(t_chr *chr)
 {
 	while (chr)
 	{
@@ -543,7 +543,7 @@ static void	show_lst(t_lst *lst)
 	write(1, "NULL", 4);
 	ft_putchar('\n');
 }
-
+*/
 void		free_chr(t_chr *chr)
 {
 	t_chr	*tmp;

@@ -1,51 +1,47 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/03/05 19:04:43 by ishaimou          #+#    #+#              #
-#    Updated: 2019/03/05 20:32:47 by obelouch         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = libftprintf.a
 
-LIBFT = libft/libft.a
+LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
+		 ft_memcmp ft_memalloc ft_memdel ft_strnew ft_strdel ft_strclr\
+		 ft_striter ft_striteri ft_strmap ft_strmapi ft_strequ ft_strnequ\
+		 ft_strsub ft_strjoin ft_strtrim ft_strsplit ft_itoa ft_itoa_base\
+		 ft_utoa ft_utoa_base ft_putchar ft_putstr ft_putendl ft_putnbr\
+		 ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd ft_strlen\
+		 ft_strcpy ft_strncpy ft_strcat ft_strncat ft_strlcat ft_strstr\
+		 ft_strnstr ft_strcmp ft_strncmp ft_strchr ft_strrchr ft_strpbrk\
+		 ft_strdup ft_strndup ft_atoi ft_isalpha ft_isdigit ft_isalnum\
+		 ft_isascii ft_isprint ft_toupper ft_tolower ft_lstnew ft_lstdelone\
+		 ft_lstdel ft_lstadd ft_lstiter ft_lstmap ft_sqrt ft_prime\
+		 ft_strlowcase ft_strupcase ft_swap ft_strrev ft_isblank ft_isxdigit\
+		 ft_strnjoin ft_atoi_base\
 
-LIBFT_SRC_DIR = libft/*.c
+LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 
-LIBFT_OBJ_DIR = *.o
+LIB_FT_PRINTF = ft_printf check parse tools
 
-LIBFT_H = libft/libft.h
+LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 
-LIB_FT_PRINTF_SRC_DIR = src/*.c
+LIB_FT_PRINTF_OBJ = $(addsuffix .o, $(LIB_FT_PRINTF))
 
-LIB_FT_PRINTF_OBJ_DIR = *.o
-
-LIB_FT_PRINTF_H = include/ft_printf.h
-
-LIB = -L./libft/ -lft
+LIBFT_H_DIR = libft/
 
 FLAGS = -Wall -Wextra -Werror
 
-all: $(LIBFT) $(NAME)
+all : $(NAME)
 
-$(LIBFT): $(LIBFT_H)
-		  @cc -c $(FLAG) $(LIBFT_SRC_DIR)
-		  @ar rc $(LIBFT) $(LIBFT_OBJ_DIR)
-		  @ranlib $(LIBFT)
+$(NAME) :
+		make -C libft
+		gcc -c  $(FLAGS) -I ./ -I $(LIBFT_H_DIR) $(LIB_FT_PRINTF_SRC)
+		ar rc $(NAME) $(LIBFT_OBJ) $(LIB_FT_PRINTF_OBJ)
+		ranlib	$(NAME)
 
-$(NAME): $(LIB_FT_PRINTF_H)
-		 @cc -c $(FLAG) -I include/ -I libft/ $(LIB_FT_PRINTF_SRC_DIR)
-		 @ar rc $(NAME) $(LIB_FT_PRINTF_OBJ_DIR)
-		 @ranlib $(NAME)
+clean :
+		make clean -C libft
+		/bin/rm -rf $(LIB_FT_PRINTF_OBJ)
 
-clean:
-		@/bin/rm -f $(LIB_FT_PRINTF_OBJ_DIR) $(LIBFT_OBJ_DIR)
+fclean : clean
+		make fclean -C libft
+		/bin/rm -rf $(NAME)
 
-fclean:
-		@/bin/rm -f $(NAME) $(LIBFT)
+re : fclean all
 
-re:		fclean all
+.PHONY : all clean fclean re
