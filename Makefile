@@ -29,18 +29,18 @@ FLAGS = -Wall -Wextra -Werror
 all : $(NAME)
 
 $(NAME) :
-		make -C libft
-		gcc -c  $(FLAGS) -I ./ -I $(LIBFT_H_DIR) $(LIB_FT_PRINTF_SRC)
-		ar rc $(NAME) $(LIBFT_OBJ) $(LIB_FT_PRINTF_OBJ)
-		ranlib	$(NAME)
+		@make -C libft
+		@gcc -c  $(FLAGS) -I ./ -I $(LIBFT_H_DIR) $(LIB_FT_PRINTF_SRC)
+		@ar rc $(NAME) $(LIBFT_OBJ) $(LIB_FT_PRINTF_OBJ)
+		@ranlib	$(NAME)
 
 clean :
-		make clean -C libft
-		/bin/rm -rf $(LIB_FT_PRINTF_OBJ)
+		@make clean -C libft
+		@/bin/rm -rf $(LIB_FT_PRINTF_OBJ)
 
 fclean : clean
-		make fclean -C libft
-		/bin/rm -rf $(NAME)
+		@make fclean -C libft
+		@/bin/rm -rf $(NAME)
 
 re : fclean all
 
