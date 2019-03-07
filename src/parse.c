@@ -1,12 +1,47 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
+int	take_color(char *str)
+{
+	int	i;
+	//char	color[7];
+
+	i = 0;
+	while (str && *str != '}')
+	{
+	//	color[i] = *str;
+		str++;
+		i++;
+	}
+	//color[i] = '\0';
+	if (!*str)
+		return (0);
+	/*
+	if (!ft_strcmp(color, "red"))
+		return (ft_strdup("red"));
+	if (!ft_strcmp(color, "green"))
+		return (ft_strdup("green"));
+	if (!ft_strcmp(color, "blue"))
+		return (ft_strdup("blue"));
+	if (!ft_strcmp(color, "purple"))
+		return (ft_strdup("purple"));
+	if (!ft_strcmp(color, "yellow"))
+		return (ft_strdup("yellow"));
+	if (!ft_strcmp(color, "cyan"))
+		return (ft_strdup("cyan"));
+	if (!ft_strcmp(color, "eoc"))
+		return (ft_strdup("eoc"));
+	return NULL;*/
+	return (1);
+}
+
 int		check_fill(char *str, int pos,  t_lst *curr)
 {
 	//int			o;
 	int			i;
 	char		preflag[6];
 	char		postflag[6];
+	char		color[7];
 
 	//o = 0;
 	i = -1;
@@ -14,42 +49,71 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	{
 		preflag[i] = '\0';
 		postflag[i] = '\0';
+		color[i] = '\0';
 	}
 	curr->format->pos = pos;
 	i = 0;
-	while (is_preflag(*str))
-	{
-		preflag[i++] = *str;
-		str++;
-	}
-	if (ft_isdigit(*str))
-	{
-		curr->format->width = ft_atoi(str);
-		while (ft_isdigit(*str))
-			str++;
-	}
-	if (*str == '.')
+	if (*str == '{')
 	{
 		str++;
-		//if (!(curr->format->precis = ft_atoi(str)))
-		//	o = 1;
-		curr->format->precis = ft_atoi(str);
-		while (ft_isdigit(*str))
-			str++;
-		//}
+		if (take_color(str))
+		{
+			while (*str != '}' && *str)
+			{
+				color[i] = *str;
+				str++;
+				i++;
+			}
+			color[i] = '\0';
+		}
+		curr->format->flag = ft_strdup(color);
+		curr->format->convers = '}';
 	}
-	i = 0;
-	while (is_postflag(*str))
+	else
 	{
-		postflag[i++] = *str;
-		str++;		
+		i = -1;
+		while (++i < 6)
+		{
+			preflag[i] = '\0';
+			postflag[i] = '\0';
+			color[i] = '\0';
+		}
+		curr->format->pos = pos;
+		i = 0;
+		while (is_preflag(*str))
+		{
+			preflag[i++] = *str;
+			str++;
+		}
+		if (ft_isdigit(*str))
+		{
+			curr->format->width = ft_atoi(str);
+			while (ft_isdigit(*str))
+				str++;
+		}
+		if (*str == '.')
+		{
+			str++;
+			//if (!(curr->format->precis = ft_atoi(str)))
+			//	o = 1;
+			curr->format->precis = ft_atoi(str);
+			while (ft_isdigit(*str))
+				str++;
+			//}
+		}
+		i = 0;
+		while (is_postflag(*str))
+		{
+			postflag[i++] = *str;
+			str++;		
+		}
+		curr->format->convers = *str;
+		//if (*str == 'd' && o == 1)
+		//	curr->format->precis = -2;
+		curr->format->flag = ft_strjoin(preflag, postflag);
 	}
-	curr->format->convers = *str;
-	//if (*str == 'd' && o == 1)
-	//	curr->format->precis = -2;
-	curr->format->flag = ft_strjoin(preflag, postflag);
 	//if (!is_valid(curr->format->flag))
-	//	return (-1);
+		//return (-1);
 	return (0);
 }
 

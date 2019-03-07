@@ -59,7 +59,29 @@ void		flag_zero(char **str, t_format *format)
 			(*str)[i] = '0';
 	}
 }
+/*
+char		*no_print_1(char c)
+{
+}
 
+char		*no_print_2(char c)
+{
+}
+
+char		*no_print_3(char c)
+{
+}
+
+char		*flag_r(char c)
+{
+	if (c >= 0 && c < 10)
+		return (no_print_1(char c));
+	if (c >= 10 && c < 20)
+		return (no_print_2(char c));
+	if (c >= 20 && c <= 30)
+		return (no_print_3(char c));
+}
+*/
 static char	*dash_xob(char *nbr, int size, int base)
 {
 	char	*str;
@@ -90,7 +112,7 @@ void		flag_dash(char **nbr, int base)
 	free (tmp);
 }
 
-void		flags(char **str, char **nb, t_format *fmt)
+/*void		flags(char **str, char **nb, t_format *fmt)
 {
 	int	n;
 	int	i;
@@ -114,7 +136,7 @@ void		flags(char **str, char **nb, t_format *fmt)
 		flag_plus(nb);
 	if (ft_strchr(fmt->flag, ' '))
 		flag_space(nb, fmt->flag);
-}
+}*/
 
 static void		zero_xxob(char **str, t_format *fmt)
 {
@@ -258,12 +280,22 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 				str[i] = ' ';
 		i--;
 		while (++i < len)
-			str[i] = s[i - len + (int)strlen(s)];
+		{
+			//if (ft_is_print(s[i - len + (int)ft_strlen(s)]) || !ft_strchr(lst->format->flag, 'r'))
+				str[i] = s[i - len + (int)ft_strlen(s)];
+			//else
+			//	str[i] = flag_r(s[i - len + (int)ft_strlen(s)]);
+		}
 	}
 	else 
 	{
 		while (++i < (int)ft_strlen(s))
-			str[i] = s[i];
+		{
+			//if (ft_is_print(s[i]) || !ft_strchr(lst->format->flag, 'r'))
+				str[i] = s[i];
+			//else
+			//	str[i] = flag_r(s[i]);
+		}
 		if (len == lst->format->width)
 			while (i < len)
 				str[i++] = ' ';
@@ -422,6 +454,32 @@ void		conv_invalid(t_chr **mychr, char c)
 	(*mychr)->len = 1;
 }
 
+void		conv_color(t_lst *lst, t_chr **mychr)
+{
+	if (lst->format->convers != '}')
+	{
+		conv_invalid(mychr, lst->format->convers);
+		return ;
+	}
+	(*mychr)->len = 0;
+	if (!ft_strcmp(lst->format->flag, "red"))
+		(*mychr)->str = ft_strdup(RED);
+	else if (!ft_strcmp(lst->format->flag, "green"))
+		(*mychr)->str = ft_strdup(GREEN);
+	else if (!ft_strcmp(lst->format->flag, "yellow"))
+		(*mychr)->str = ft_strdup(YELLOW);
+	else if (!ft_strcmp(lst->format->flag, "blue"))
+		(*mychr)->str = ft_strdup(BLUE);
+	else if (!ft_strcmp(lst->format->flag, "purple"))
+		(*mychr)->str = ft_strdup(PURPLE);
+	else if (!ft_strcmp(lst->format->flag, "cyan"))
+		(*mychr)->str = ft_strdup(CYAN);
+	else if (!ft_strcmp(lst->format->flag, "eoc"))
+		(*mychr)->str = ft_strdup(EOC);
+	else
+		conv_invalid(mychr, lst->format->convers);
+}
+
 void		engine(t_lst *lst, t_chr *chr, va_list ap)
 {
 	while (lst)
@@ -430,6 +488,8 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 			chr = chr->next;
 		if (ft_strchr("xXoub", lst->format->convers))
 			conv_xxoub(lst, &chr, ap);
+		else if (lst->format->convers == '}')
+			conv_color(lst, &chr);
 		else if (lst->format->convers == 'p')
 			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
 		else if (ft_strchr("di", lst->format->convers))
@@ -523,7 +583,8 @@ int		put_chr(t_chr *chr)
 	len = 0;
 	while (chr)
 	{
-		write(1, chr->str, chr->len);
+		//write(1, chr->str, chr->len);
+		ft_putstr(chr->str);
 		len += chr->len;
 		chr = chr->next;
 	}

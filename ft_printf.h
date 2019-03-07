@@ -6,13 +6,13 @@
 # include <stdarg.h>
 # include "libft/libft.h"
 
-# define RED	"\033[31m"
-# define GREEN	"\033[32m"
-# define YELLOW	"\033[33m"
-# define BLUE	"\033[34m"
-# define PURPLE	"\033[35m"
-# define CYAN	"\033[36m"
-# define EOC	"\033[0m"
+# define GREEN	"\x1b[32m"
+# define RED	"\x1b[31m"
+# define YELLOW	"\x1b[33m"
+# define BLUE	"\x1b[34m"
+# define PURPLE	"\x1b[35m"
+# define CYAN	"\x1b[36m"
+# define EOC	"\x1b[0m"
 
 typedef struct		s_format
 {
