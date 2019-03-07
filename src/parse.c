@@ -1,49 +1,28 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-int	take_color(char *str)
+int	has_color(char *str)
 {
-	int	i;
-	//char	color[7];
+	int	len;
 
-	i = 0;
+	len = 0;
 	while (str && *str != '}')
 	{
-	//	color[i] = *str;
 		str++;
-		i++;
+		len++;
 	}
-	//color[i] = '\0';
 	if (!*str)
 		return (0);
-	/*
-	if (!ft_strcmp(color, "red"))
-		return (ft_strdup("red"));
-	if (!ft_strcmp(color, "green"))
-		return (ft_strdup("green"));
-	if (!ft_strcmp(color, "blue"))
-		return (ft_strdup("blue"));
-	if (!ft_strcmp(color, "purple"))
-		return (ft_strdup("purple"));
-	if (!ft_strcmp(color, "yellow"))
-		return (ft_strdup("yellow"));
-	if (!ft_strcmp(color, "cyan"))
-		return (ft_strdup("cyan"));
-	if (!ft_strcmp(color, "eoc"))
-		return (ft_strdup("eoc"));
-	return NULL;*/
-	return (1);
+	return (len);
 }
 
 int		check_fill(char *str, int pos,  t_lst *curr)
 {
-	//int			o;
 	int			i;
 	char		preflag[6];
 	char		postflag[6];
 	char		color[7];
 
-	//o = 0;
 	i = -1;
 	while (++i < 6)
 	{
@@ -56,7 +35,7 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	if (*str == '{')
 	{
 		str++;
-		if (take_color(str))
+		if (has_color(str) <= 7 && has_color(str))
 		{
 			while (*str != '}' && *str)
 			{
@@ -71,14 +50,6 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 	}
 	else
 	{
-		i = -1;
-		while (++i < 6)
-		{
-			preflag[i] = '\0';
-			postflag[i] = '\0';
-			color[i] = '\0';
-		}
-		curr->format->pos = pos;
 		i = 0;
 		while (is_preflag(*str))
 		{
@@ -94,12 +65,9 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 		if (*str == '.')
 		{
 			str++;
-			//if (!(curr->format->precis = ft_atoi(str)))
-			//	o = 1;
 			curr->format->precis = ft_atoi(str);
 			while (ft_isdigit(*str))
 				str++;
-			//}
 		}
 		i = 0;
 		while (is_postflag(*str))
@@ -108,12 +76,8 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 			str++;		
 		}
 		curr->format->convers = *str;
-		//if (*str == 'd' && o == 1)
-		//	curr->format->precis = -2;
 		curr->format->flag = ft_strjoin(preflag, postflag);
 	}
-	//if (!is_valid(curr->format->flag))
-		//return (-1);
 	return (0);
 }
 
@@ -122,7 +86,6 @@ void	init_node(t_lst *node)
 	node->format->precis = -1;
 	node->format->width = 0;
 	node->format->convers = '\0';
-	//node->format->flag = ft_strnew(0);
 	node->format->pos = 0;
 
 }

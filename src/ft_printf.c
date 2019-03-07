@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/07 21:35:58 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/07 23:19:34 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,8 @@ char		*flag_r(char c)
 		return (no_print_1(c));
 	if (c >= 12 && c < 23)
 		return (no_print_2(c));
-	if (c >= 23 && c < 32)
+	if (c == 127 || (c >= 23 && c < 32))
 		return (no_print_3(c));
-	if (c == 127)
-		return (ft_strdup("[DEL]"));
 	return (NULL);
 }
 
@@ -178,32 +176,6 @@ void		flag_dash(char **nbr, int base)
 	*nbr = dash_xob(*nbr, size, base);
 	free (tmp);
 }
-
-/*void		flags(char **str, char **nb, t_format *fmt)
-  {
-  int	n;
-  int	i;
-
-  i = -1;
-  n = fmt->precis;
-  while (++i < fmt->width && !ft_strpbrk(fmt->flag, "-+"))
-  (*str)[i] = ' ';
-  if ((fmt->convers == 'd' || fmt->convers == 'u' || fmt->convers == 'i') && fmt->precis)
-  {
-  i = 0;
-  while ((*str)[i] == ' ')
-  i++;
-  i--;
-  while (n--)
-  (*str)[i--] = '0';
-  }
-  if (ft_strchr(fmt->flag, '0'))
-  flag_zero(str, fmt);
-  if (ft_strchr(fmt->flag, '+'))
-  flag_plus(nb);
-  if (ft_strchr(fmt->flag, ' '))
-  flag_space(nb, fmt->flag);
-  }*/
 
 static void		zero_xxob(char **str, t_format *fmt)
 {
@@ -278,13 +250,10 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	long long int	d;
 
 	cast_di(ap, lst->format->flag, &d);
-	//if (d == 0 && lst->format->precis == -2)
 	if (d == 0 && !lst->format->precis)
 		(*mychr)->str = ft_strdup("\0");
 	else
 	{
-		if (lst->format->precis == -2)
-			lst->format->precis = 0;
 		nbr = ft_itoa(d);
 		if (ft_strchr(lst->format->flag, '+'))
 			flag_plus(&nbr);
@@ -529,18 +498,32 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 	free(nbr);
 }
 
-void		conv_invalid(t_chr **mychr, char c)
+void		conv_invalid(t_chr **mychr, t_format *format)
 {
-	(*mychr)->str = ft_strnew(1);
-	(*mychr)->str[0] = c;
-	(*mychr)->len = 1;
+	int		i;
+
+	i = -1;
+	if (!format->width)
+	{
+		(*mychr)->str = ft_strnew(1);
+		(*mychr)->str[0] = format->convers;
+		(*mychr)->len = 1;
+	}
+	else
+	{
+		(*mychr)->str = ft_strnew(format->width);
+		while (++i < format->width - 1)
+			(*mychr)->str[i] = ' ';
+		(*mychr)->str[i] = format->convers;
+		(*mychr)->len = format->width;
+	}
 }
 
 void		conv_color(t_lst *lst, t_chr **mychr)
 {
 	if (lst->format->convers != '}')
 	{
-		conv_invalid(mychr, lst->format->convers);
+		conv_invalid(mychr, lst->format);
 		return ;
 	}
 	(*mychr)->len = 0;
@@ -559,10 +542,10 @@ void		conv_color(t_lst *lst, t_chr **mychr)
 	else if (!ft_strcmp(lst->format->flag, "eoc"))
 		(*mychr)->str = ft_strdup(EOC);
 	else
-		conv_invalid(mychr, lst->format->convers);
+		conv_invalid(mychr, lst->format);
 }
 
-void		engine(t_lst *lst, t_chr *chr, va_list ap)
+void		fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 {
 	while (lst)
 	{
@@ -583,7 +566,7 @@ void		engine(t_lst *lst, t_chr *chr, va_list ap)
 		else if (lst->format->convers == '%')
 			conv_percent(&chr);
 		else
-			conv_invalid(&chr, lst->format->convers);
+			conv_invalid(&chr, lst->format);
 		lst = lst->next;
 		chr = chr->next;
 	}
@@ -611,7 +594,7 @@ void		init_chr(t_chr **chr)
 	(*chr)->next = NULL;
 }
 
-t_chr		*load_in(char *format, t_lst *lst)
+t_chr		*load_chr(char *format, t_lst *lst)
 {
 	t_chr	*mychr;
 	t_chr	*curr;
@@ -665,7 +648,6 @@ int		put_chr(t_chr *chr)
 	len = 0;
 	while (chr)
 	{
-		//write(1, chr->str, chr->len);
 		ft_putstr(chr->str);
 		len += chr->len;
 		chr = chr->next;
@@ -728,11 +710,11 @@ int		ft_printf(const char *format, ...)
 		return (ft_strlen(format));
 	}
 	print_lst(lst);
-	if (!(mychr = load_in((char*)format, lst)))
+	if (!(mychr = load_chr((char*)format, lst)))
 		return -1;
 	print_chr(mychr);
 	ft_putendl((char*)format);
-	engine(lst, mychr, ap);
+	fill_chr(lst, mychr, ap);
 	show_lst(lst);
 	print_chr(mychr);
 	len = put_chr(mychr);
