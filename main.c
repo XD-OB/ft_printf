@@ -10,7 +10,9 @@ int	main(void)
 	s1 = "h\ni";
 	s12 = "hi\t";
 	s2 = 'h';
-	ft_printf("%rs  %d %rs", s1, 10, s12);
+	ft_printf("%%");
+	ft_putchar('\n');
+	printf("%%");
 	ft_putchar('\n');
 	//printf("7string 1 %-012s string 2 %012s\n\n", "toto", "bonjour");
 	//ft_printf("My hillifealing\n");

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 20:22:29 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/03/07 21:35:58 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -738,5 +738,5 @@ int		ft_printf(const char *format, ...)
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);
-	return (len - 1);
+	return (len);
 }
