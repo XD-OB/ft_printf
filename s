@@ -1,2 +1,2 @@
 #!/bin/bash
-gcc main.c -L./ -lftprintf -o ft_printf
+gcc main.c -L./ -lftprintf -o ft_printf -g

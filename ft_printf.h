@@ -6,20 +6,28 @@
 # include <stdarg.h>
 # include "libft/libft.h"
 
-typedef struct			s_format
-{
-	char				convers;
-	char				*flag;
-	int					precis;
-	int					width;
-	int					pos;
-}						t_format;
+# define RED	"\033[31m"
+# define GREEN	"\033[32m"
+# define YELLOW	"\033[33m"
+# define BLUE	"\033[34m"
+# define PURPLE	"\033[35m"
+# define CYAN	"\033[36m"
+# define EOC	"\033[0m"
 
-typedef struct			s_lst
+typedef struct		s_format
 {
-	t_format			*format;
-	struct s_lst		*next;
-}						t_lst;
+	char		convers;
+	char		*flag;
+	int		precis;
+	int		width;
+	int		pos;
+}			t_format;
+
+typedef struct		s_lst
+{
+	t_format	*format;
+	struct s_lst	*next;
+}			t_lst;
 
 typedef struct		s_chr
 {

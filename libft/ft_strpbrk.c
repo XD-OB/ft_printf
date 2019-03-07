@@ -17,6 +17,8 @@ char	*ft_strpbrk(const char *s1, const char *s2)
 	char	*pt1;
 	char	*pt2;
 
+	if (!s1 || !s2)
+		return (NULL);
 	pt1 = (char*)s1;
 	while (*pt1)
 	{
@@ -29,7 +31,5 @@ char	*ft_strpbrk(const char *s1, const char *s2)
 		}
 		pt1++;
 	}
-	if (*pt1 == 0 && *pt2 == '\0')
-		return (pt1);
 	return (NULL);
 }

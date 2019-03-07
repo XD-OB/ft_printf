@@ -121,7 +121,7 @@ static void		zero_xxob(char **str, t_format *fmt)
 	int	i;
 
 	i = 0;
-	while ((*str)[i] != '0')
+	while ((*str)[i] == ' ')
 		(*str)[i++] = '0';
 	(*str)[i] = '0';
 	if (fmt->convers != 'o')
@@ -189,7 +189,8 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	long long int	d;
 
 	cast_di(ap, lst->format->flag, &d);
-	if (d == 0 && lst->format->precis == -2)
+	//if (d == 0 && lst->format->precis == -2)
+	if (d == 0 && !lst->format->precis)
 		(*mychr)->str = ft_strdup("\0");
 	else
 	{
@@ -233,28 +234,40 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 {
 	int	i;
-	int	j;
 	int	len;
-	int	len_s;
 	char	*str;
 
-	len_s = ft_strlen(s);
-	if (lst->format->precis)
-		len_s = lst->format->precis;
-	len = len_s;
+	if (s == NULL)
+	{
+		(*mychr)->str = ft_strdup("(null)");
+		(*mychr)->len = 6;
+		return ;
+	}
+	len = ft_strlen(s);
 	if (lst->format->width > len)
 		len = lst->format->width;
 	if (!(str = (char*)malloc(sizeof(char) * (len + 1))))
 		return ;
 	str[len] = '\0';
-	i = 0;
-	if (len == lst->format->width)
-		while (i < len - len_s)
-			str[i++] = ' ';
-	j = -1;
-	while (++j < len_s)
-		str[i + j] = s[j];
-	str[i + j] = '\0';
+	i = -1;
+	if ((ft_strchr(lst->format->flag, '0') && !ft_strchr(lst->format->flag, '-'))
+			|| !ft_strpbrk(lst->format->flag, "0-+"))
+	{
+		if (len == lst->format->width)
+			while (++i < len - (int)strlen(s))
+				str[i] = ' ';
+		i--;
+		while (++i < len)
+			str[i] = s[i - len + (int)strlen(s)];
+	}
+	else 
+	{
+		while (++i < (int)ft_strlen(s))
+			str[i] = s[i];
+		if (len == lst->format->width)
+			while (i < len)
+				str[i++] = ' ';
+	}
 	(*mychr)->str = str;
 	(*mychr)->len = len;
 }
@@ -270,10 +283,10 @@ void		conv_c(t_lst *lst, t_chr **mychr, char c)
 	if (lst->format->width < 2 || ft_strpbrk(lst->format->flag, "+-0#"))
 		len = 1;
 	str = (char*)malloc(sizeof(char) * (len + 1));
+	str[len] = '\0';
 	while (++i < len - 1)
 		str[i] = ' ';
 	str[i] = c;
-	str[i + 1] = '\0';
 	(*mychr)->str = str;
 	(*mychr)->len = len;
 }
@@ -517,7 +530,7 @@ int		put_chr(t_chr *chr)
 	return (len);
 }
 
-/*static void	print_chr(t_chr *chr)
+static void	print_chr(t_chr *chr)
 {
 	while (chr)
 	{
@@ -543,7 +556,7 @@ static void	show_lst(t_lst *lst)
 	write(1, "NULL", 4);
 	ft_putchar('\n');
 }
-*/
+
 void		free_chr(t_chr *chr)
 {
 	t_chr	*tmp;
@@ -563,6 +576,7 @@ int		ft_printf(const char *format, ...)
 	va_list		ap;
 	int		len;
 
+	len = 0;
 	va_start(ap, format);
 	lst = parse_format((char*)format);
 	if (!lst)
@@ -570,16 +584,16 @@ int		ft_printf(const char *format, ...)
 		put_spstr((char*)format);
 		return (ft_strlen(format));
 	}
-	//print_lst(lst);
+	print_lst(lst);
 	if (!(mychr = load_in((char*)format, lst)))
 		return -1;
-	//print_chr(mychr);
-	//ft_putendl((char*)format);
+	print_chr(mychr);
+	ft_putendl((char*)format);
 	engine(lst, mychr, ap);
-	//show_lst(lst);
-	//print_chr(mychr);
+	show_lst(lst);
+	print_chr(mychr);
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);
-	return (len);
+	return (len - 1);
 }
