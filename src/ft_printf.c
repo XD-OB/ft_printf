@@ -59,29 +59,96 @@ void		flag_zero(char **str, t_format *format)
 			(*str)[i] = '0';
 	}
 }
-/*
+
 char		*no_print_1(char c)
 {
+	if (c == 0)
+		return (ft_strdup("[NUL]"));
+	if (c == 1)
+		return (ft_strdup("[SOH]"));
+	if (c == 2)
+		return (ft_strdup("[STX]"));
+	if (c == 3)
+		return (ft_strdup("[ETX]"));
+	if (c == 4)
+		return (ft_strdup("[EOT]"));
+	if (c == 5)
+		return (ft_strdup("[ENQ]"));
+	if (c == 6)
+		return (ft_strdup("[ACK]"));
+	if (c == 7)
+		return (ft_strdup("[BEL]"));
+	if (c == 8)
+		return (ft_strdup("[BS ]"));
+	if (c == 9)
+		return (ft_strdup("[HT ]"));
+	if (c == 10)
+		return (ft_strdup("[LF ]"));
+	return (ft_strdup("[VT ]"));
 }
+
 
 char		*no_print_2(char c)
 {
+	if (c == 12)
+		return (ft_strdup("[FF ]"));
+	if (c == 13)
+		return (ft_strdup("[CR ]"));
+	if (c == 14)
+		return (ft_strdup("[SO ]"));
+	if (c == 15)
+		return (ft_strdup("[SI ]"));
+	if (c == 16)
+		return (ft_strdup("[DLE]"));
+	if (c == 17)
+		return (ft_strdup("[DC1]"));
+	if (c == 18)
+		return (ft_strdup("[DC2]"));
+	if (c == 19)
+		return (ft_strdup("[DC3]"));
+	if (c == 20)
+		return (ft_strdup("[DC4]"));
+	if (c == 21)
+		return (ft_strdup("[NAK]"));
+	return (ft_strdup("[SYN]"));
 }
 
 char		*no_print_3(char c)
 {
+	if (c == 23)
+		return (ft_strdup("[ETB]"));
+	if (c == 24)
+		return (ft_strdup("[CAN]"));
+	if (c == 25)
+		return (ft_strdup("[EM ]"));
+	if (c == 26)
+		return (ft_strdup("[SUB]"));
+	if (c == 27)
+		return (ft_strdup("[ESC]"));
+	if (c == 28)
+		return (ft_strdup("[FS ]"));
+	if (c == 29)
+		return (ft_strdup("[GS ]"));
+	if (c == 30)
+		return (ft_strdup("[RS ]"));
+	if (c == 31)
+		return (ft_strdup("[US ]"));
+	return (ft_strdup("[DEL]"));
 }
 
 char		*flag_r(char c)
 {
-	if (c >= 0 && c < 10)
-		return (no_print_1(char c));
-	if (c >= 10 && c < 20)
-		return (no_print_2(char c));
-	if (c >= 20 && c <= 30)
-		return (no_print_3(char c));
+	if (c < 12)
+		return (no_print_1(c));
+	if (c >= 12 && c < 23)
+		return (no_print_2(c));
+	if (c >= 23 && c < 32)
+		return (no_print_3(c));
+	if (c == 127)
+		return (ft_strdup("[DEL]"));
+	return (NULL);
 }
-*/
+
 static char	*dash_xob(char *nbr, int size, int base)
 {
 	char	*str;
@@ -113,30 +180,30 @@ void		flag_dash(char **nbr, int base)
 }
 
 /*void		flags(char **str, char **nb, t_format *fmt)
-{
-	int	n;
-	int	i;
+  {
+  int	n;
+  int	i;
 
-	i = -1;
-	n = fmt->precis;
-	while (++i < fmt->width && !ft_strpbrk(fmt->flag, "-+"))
-		(*str)[i] = ' ';
-	if ((fmt->convers == 'd' || fmt->convers == 'u' || fmt->convers == 'i') && fmt->precis)
-	{
-		i = 0;
-		while ((*str)[i] == ' ')
-			i++;
-		i--;
-		while (n--)
-			(*str)[i--] = '0';
-	}
-	if (ft_strchr(fmt->flag, '0'))
-		flag_zero(str, fmt);
-	if (ft_strchr(fmt->flag, '+'))
-		flag_plus(nb);
-	if (ft_strchr(fmt->flag, ' '))
-		flag_space(nb, fmt->flag);
-}*/
+  i = -1;
+  n = fmt->precis;
+  while (++i < fmt->width && !ft_strpbrk(fmt->flag, "-+"))
+  (*str)[i] = ' ';
+  if ((fmt->convers == 'd' || fmt->convers == 'u' || fmt->convers == 'i') && fmt->precis)
+  {
+  i = 0;
+  while ((*str)[i] == ' ')
+  i++;
+  i--;
+  while (n--)
+  (*str)[i--] = '0';
+  }
+  if (ft_strchr(fmt->flag, '0'))
+  flag_zero(str, fmt);
+  if (ft_strchr(fmt->flag, '+'))
+  flag_plus(nb);
+  if (ft_strchr(fmt->flag, ' '))
+  flag_space(nb, fmt->flag);
+  }*/
 
 static void		zero_xxob(char **str, t_format *fmt)
 {
@@ -190,16 +257,16 @@ static void	precis_o_udi(char **str, int n_zero)
 
 void            cast_di(va_list ap, char *flag, long long int *n)
 {
-        if (ft_strstr(flag, "hh"))
-                *n = (char)va_arg(ap, int);
-        else if (ft_strstr(flag, "h"))
-                *n = (short int)va_arg(ap, int);
-        else if (ft_strstr(flag, "ll"))
-                *n = (long long int)va_arg(ap, long long int);
-        else if (ft_strstr(flag, "l"))
-                *n = (long int)va_arg(ap, long int);
-        else
-                *n = (int)va_arg(ap, int);
+	if (ft_strstr(flag, "hh"))
+		*n = (char)va_arg(ap, int);
+	else if (ft_strstr(flag, "h"))
+		*n = (short int)va_arg(ap, int);
+	else if (ft_strstr(flag, "ll"))
+		*n = (long long int)va_arg(ap, long long int);
+	else if (ft_strstr(flag, "l"))
+		*n = (long int)va_arg(ap, long int);
+	else
+		*n = (int)va_arg(ap, int);
 }
 
 void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
@@ -255,6 +322,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 
 void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 {
+	int	count_np;
 	int	i;
 	int	len;
 	char	*str;
@@ -268,7 +336,15 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 	len = ft_strlen(s);
 	if (lst->format->width > len)
 		len = lst->format->width;
-	if (!(str = (char*)malloc(sizeof(char) * (len + 1))))
+	i = 0;
+	count_np = 0;
+	while (s[i])
+	{
+		if ((s[i] >= 0 && s[i] < 32) || s[i] == 127)
+			count_np++;
+		i++;
+	}
+	if (!(str = (char*)malloc(sizeof(char) * (len + (count_np * 5) + 1))))
 		return ;
 	str[len] = '\0';
 	i = -1;
@@ -278,23 +354,29 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 		if (len == lst->format->width)
 			while (++i < len - (int)strlen(s))
 				str[i] = ' ';
-		i--;
+		//i--;
 		while (++i < len)
 		{
-			//if (ft_is_print(s[i - len + (int)ft_strlen(s)]) || !ft_strchr(lst->format->flag, 'r'))
+			if (ft_isprint(s[i - len + (int)ft_strlen(s)]) || !ft_strchr(lst->format->flag, 'r'))
 				str[i] = s[i - len + (int)ft_strlen(s)];
-			//else
-			//	str[i] = flag_r(s[i - len + (int)ft_strlen(s)]);
+			else
+			{
+				ft_strcat(&str[i], flag_r(s[i - len + (int)ft_strlen(s)]));
+				i += 5;
+			}
 		}
 	}
 	else 
 	{
 		while (++i < (int)ft_strlen(s))
 		{
-			//if (ft_is_print(s[i]) || !ft_strchr(lst->format->flag, 'r'))
+			if (ft_isprint(s[i]) || !ft_strchr(lst->format->flag, 'r'))
 				str[i] = s[i];
-			//else
-			//	str[i] = flag_r(s[i]);
+			else
+			{
+				ft_strcat(&str[i], flag_r(s[i]));
+				i += 5;
+			}
 		}
 		if (len == lst->format->width)
 			while (i < len)
@@ -435,9 +517,9 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 		str[i] = ' ';
 	ft_strcpy(&str[--i], nbr);
 	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-			zero_xxob(&str, lst->format);
+		zero_xxob(&str, lst->format);
 	if (lst->format->precis > 0)
-				precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
+		precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
 	if (lst->format->convers == 'x')
 		str = ft_strlowcase(str);
 	if (lst->format->convers == 'X')

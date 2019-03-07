@@ -44,7 +44,7 @@ int		is_preflag(char c)
 	char	*ref;
 
 	i = 0;
-	ref = " 0+-#'*";
+	ref = " 0+-#'*r";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);
