@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/07 23:19:34 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/03/08 16:20:53 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -545,13 +545,28 @@ void		conv_color(t_lst *lst, t_chr **mychr)
 		conv_invalid(mychr, lst->format);
 }
 
+void		conv_k(va_list ap)
+{
+	long int	s;
+	long int	era;
+	long int	nbr_days;
+
+	s = (long int)va_arg(ap, long int);
+	nbr_days = s / 86400 + 719468;
+	if (nbr_days < 0)
+		nbr_days -= 146096;
+	nbr_days /= 146097;
+}
+
 void		fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 {
 	while (lst)
 	{
 		while (chr && chr->str)
 			chr = chr->next;
-		if (ft_strchr("xXoub", lst->format->convers))
+		if (lst->format->convers == 'k')
+			conv_k(ap);
+		else if (ft_strchr("xXoub", lst->format->convers))
 			conv_xxoub(lst, &chr, ap);
 		else if (lst->format->convers == '}')
 			conv_color(lst, &chr);

@@ -12,11 +12,9 @@ int	main(void)
 	s12 = "hi\t";
 	s2 = 'h';
 	str = "This is a test text\n";
-	ft_printf("%rs  %d %rs", s1, 10, s12);
-	ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);
+	ft_printf("%k", 2147554800);
+	//ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);
 	ft_putchar('\n');
-	printf("%78k");
-	ft_printf("%78m");
 	//printf("7string 1 %-012s string 2 %012s\n\n", "toto", "bonjour");
 	//ft_printf("My hillifealing\n");
 	return (0);

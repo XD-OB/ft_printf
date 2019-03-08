@@ -4,6 +4,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdarg.h>
+# include <limits.h>
 # include "libft/libft.h"
 
 # define GREEN	"\x1b[32m"
