@@ -177,6 +177,14 @@ void		flag_dash(char **nbr, int base)
 	free (tmp);
 }
 
+void		flag_star(t_format *format, va_list ap)
+{
+	if (ft_strchr(format->flag, '*'))
+		format->width = va_arg(ap, int);
+	if (format->precis == -2)
+		format->precis = (int)va_arg(ap, int);
+}
+
 static void		zero_xxob(char **str, t_format *fmt)
 {
 	int	i;
@@ -243,12 +251,13 @@ void            cast_di(va_list ap, char *flag, long long int *n)
 
 void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 {
-	size_t	size;
-	char	*str;
-	char	*nbr;
+	size_t		size;
+	char		*str;
+	char		*nbr;
 	int		i;
 	long long int	d;
 
+	flag_star(lst->format, ap);
 	cast_di(ap, lst->format->flag, &d);
 	if (d == 0 && !lst->format->precis)
 		(*mychr)->str = ft_strdup("\0");
@@ -289,22 +298,30 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	(*mychr)->len = ft_strlen(str);
 }
 
-void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
+void		conv_s(t_format *format, t_chr **mychr, va_list ap)
 {
-	int	count_np;
-	int	i;
-	int	len;
-	char	*str;
+	int		count_np;
+	int		i;
+	int		len;
+	int		len_s;
+	char		*s;
+	char		*str;
 
+	flag_star(format, ap);
+	s = va_arg(ap, char*);
 	if (s == NULL)
 	{
 		(*mychr)->str = ft_strdup("(null)");
 		(*mychr)->len = 6;
 		return ;
 	}
-	len = ft_strlen(s);
-	if (lst->format->width > len)
-		len = lst->format->width;
+	if (format->precis != -1)
+		len_s = format->precis;
+	else
+		len_s = ft_strlen(s);
+	len = len_s;
+	if (format->width > len)
+		len = format->width;
 	i = 0;
 	count_np = 0;
 	while (s[i])
@@ -317,29 +334,29 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 		return ;
 	str[len] = '\0';
 	i = -1;
-	if ((ft_strchr(lst->format->flag, '0') && !ft_strchr(lst->format->flag, '-'))
-			|| !ft_strpbrk(lst->format->flag, "0-+"))
+	if ((ft_strchr(format->flag, '0') && !ft_strchr(format->flag, '-'))
+			|| !ft_strpbrk(format->flag, "0-+"))
 	{
-		if (len == lst->format->width)
-			while (++i < len - (int)strlen(s))
+		if (len == format->width)
+			while (++i < len - len_s)
 				str[i] = ' ';
-		//i--;
+		i--;
 		while (++i < len)
 		{
-			if (ft_isprint(s[i - len + (int)ft_strlen(s)]) || !ft_strchr(lst->format->flag, 'r'))
-				str[i] = s[i - len + (int)ft_strlen(s)];
+			if (ft_isprint(s[i - len + len_s]) || !ft_strchr(format->flag, 'r'))
+				str[i] = s[i - len + len_s];
 			else
 			{
-				ft_strcat(&str[i], flag_r(s[i - len + (int)ft_strlen(s)]));
+				ft_strcat(&str[i], flag_r(s[i - len + len_s]));
 				i += 5;
 			}
 		}
 	}
 	else 
 	{
-		while (++i < (int)ft_strlen(s))
+		while (++i < len_s)
 		{
-			if (ft_isprint(s[i]) || !ft_strchr(lst->format->flag, 'r'))
+			if (ft_isprint(s[i]) || !ft_strchr(format->flag, 'r'))
 				str[i] = s[i];
 			else
 			{
@@ -347,7 +364,7 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 				i += 5;
 			}
 		}
-		if (len == lst->format->width)
+		if (len == format->width)
 			while (i < len)
 				str[i++] = ' ';
 	}
@@ -355,21 +372,22 @@ void		conv_s(t_lst *lst, t_chr **mychr, const char *s)
 	(*mychr)->len = len;
 }
 
-void		conv_c(t_lst *lst, t_chr **mychr, char c)
+void		conv_c(t_format *format, t_chr **mychr, va_list ap)
 {
 	int	i;
 	int	len;
 	char	*str;
 
+	flag_star(format, ap);
 	i = -1;
-	len = lst->format->width;
-	if (lst->format->width < 2 || ft_strpbrk(lst->format->flag, "+-0#"))
+	len = format->width;
+	if (format->width < 2 || ft_strpbrk(format->flag, "+-0#"))
 		len = 1;
 	str = (char*)malloc(sizeof(char) * (len + 1));
 	str[len] = '\0';
 	while (++i < len - 1)
 		str[i] = ' ';
-	str[i] = c;
+	str[i] = (char)va_arg(ap, int);
 	(*mychr)->str = str;
 	(*mychr)->len = len;
 }
@@ -395,14 +413,15 @@ static void	precis_zero(char **str, int n_zero)
 	}
 }
 
-void		conv_p(t_lst *lst, t_chr **mychr, size_t addr)
+void		conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	char	*str;
 	char	*nbr;
 	size_t	size;
 	int	i;
 
-	nbr = ft_utoa_base(addr, 16);
+	flag_star(lst->format, ap);
+	nbr = ft_utoa_base((size_t)va_arg(ap, void*), 16);
 	flag_dash(&nbr, 16);
 	nbr = ft_strlowcase(nbr);
 	if (ft_strchr(lst->format->flag, ' ') && lst->format->width <= (int)ft_strlen(nbr))
@@ -463,6 +482,7 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 	int	i;
 	size_t	n;
 
+	flag_star(lst->format, ap);
 	cast_xxoub(ap, lst->format->flag, &n);
 	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
@@ -498,10 +518,11 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 	free(nbr);
 }
 
-void		conv_invalid(t_chr **mychr, t_format *format)
+void		conv_invalid(t_chr **mychr, t_format *format, va_list ap)
 {
 	int		i;
 
+	flag_star(format, ap);
 	i = -1;
 	if (!format->width)
 	{
@@ -519,11 +540,11 @@ void		conv_invalid(t_chr **mychr, t_format *format)
 	}
 }
 
-void		conv_color(t_lst *lst, t_chr **mychr)
+void		conv_color(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	if (lst->format->convers != '}')
 	{
-		conv_invalid(mychr, lst->format);
+		conv_invalid(mychr, lst->format, ap);
 		return ;
 	}
 	(*mychr)->len = 0;
@@ -542,20 +563,113 @@ void		conv_color(t_lst *lst, t_chr **mychr)
 	else if (!ft_strcmp(lst->format->flag, "eoc"))
 		(*mychr)->str = ft_strdup(EOC);
 	else
-		conv_invalid(mychr, lst->format);
+		conv_invalid(mychr, lst->format, ap);
 }
 
-void		conv_k(va_list ap)
+static void	date_conv(long int s, long int *y, unsigned int *date)
 {
-	long int	s;
-	long int	era;
+	int		era;
 	long int	nbr_days;
+	unsigned int	ofey[4];
 
-	s = (long int)va_arg(ap, long int);
 	nbr_days = s / 86400 + 719468;
 	if (nbr_days < 0)
-		nbr_days -= 146096;
-	nbr_days /= 146097;
+		era = (nbr_days - 146096) / 146097;
+	era = (int)(nbr_days / 146097);
+	ofey[0] = (unsigned int)(nbr_days - era * 146097);
+	ofey[2] = (ofey[0] - ofey[0]/1460 + ofey[0]/36524 - ofey[0]/146096) / 365;
+	*y = (int)ofey[2] + era * 400;
+	ofey[1] = ofey[0] - (365 * ofey[2] + ofey[2] / 4 - ofey[2] / 100);
+	ofey[3] = (5 * ofey[1] + 2) / 153;
+	date[1] = ofey[1] - (153 * ofey[3] + 2) / 5 + 1;
+	if (ofey[3] < 10)
+		date[0] = ofey[3] + 3;
+	else
+		date[0] = ofey[3] - 9;
+	*y += (date[0] <= 2);
+	date[2] = (s / 3600) - ((*y - 1970) * 8766) - (date[0] - 1) * 730.5 - (date[1] - 1) * 24;
+	date[3] = (s / 60) - ((*y - 1970) * 525960) - (date[0] - 1) * 43830
+		- (date[1] - 1) * 1440 - date[2] * 60;
+	date[4] = s - ((*y - 1970) * 31557600) - (date[0] - 1) * 2629800
+		- (date[1] - 1) * 86400 - date[2] * 3600 - date[3] * 60;
+}
+
+static unsigned int	fill_times(long int y, char **times, int size, unsigned int *date)
+{
+	int		i;
+	unsigned int	len;
+
+	i = 0;
+	len = 0;
+	times[0] = ft_utoa(y);
+        times[1] = ft_utoa(date[0]);
+        times[2] = ft_utoa(date[1]);
+        times[3] = ft_utoa(date[2]);
+        times[4] = ft_utoa(date[3]);
+        times[5] = ft_utoa(date[4]);
+	while (i < size)
+		len += ft_strlen(times[i++]);
+	return (len);
+}
+
+static char	*c_date(char **times, int len)
+{
+	char	*res;
+
+	len -= ft_strlen(times[5]) - ft_strlen(times[4]) - ft_strlen(times[3]);
+	res = (char*)malloc(sizeof(char) * (len + 1));
+	res[len] = '\0';
+	ft_strcat(res, times[0]);
+	ft_strcat(res, "-");
+	ft_strcat(res, times[1]);
+	ft_strcat(res, "-");
+	ft_strcat(res, times[2]);
+	return (res);
+}
+
+static char	*e_date(char **times, int len)
+{
+	char	*res;
+
+	res = (char*)malloc(sizeof(char) * len + 1);
+	res[len] = '\0';
+	ft_strcat(res, times[0]);
+	ft_strcat(res, "/");
+	ft_strcat(res, times[1]);
+	ft_strcat(res, "/");
+	ft_strcat(res, times[2]);
+	ft_strcat(res, " ");
+	ft_strcat(res, times[3]);
+	ft_strcat(res, ":");
+	ft_strcat(res, times[4]);
+	ft_strcat(res, ":");
+	ft_strcat(res, times[5]);
+	return (res);
+}
+
+void		conv_k(t_format *format, t_chr **mychr, va_list ap)
+{
+	long int	s;
+	long int	y;
+	unsigned int	date[5];
+	char		*res;
+	char		*times[6];
+	unsigned int	len;
+	int		i;
+
+	s = (long int)va_arg(ap, long int);
+	date_conv(s, &y, date);
+	len = fill_times(y, times, 6, date);
+	if (ft_strchr(format->flag, '0'))
+		res = c_date(times, len);
+	else
+		res = e_date(times, len + 5);
+	(*mychr)->str = res;
+	(*mychr)->len = ft_strlen(res);
+	i =  -1;
+	while (++i < 5)
+		free (times[i]);
+	return ;
 }
 
 void		fill_chr(t_lst *lst, t_chr *chr, va_list ap)
@@ -565,23 +679,23 @@ void		fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 		while (chr && chr->str)
 			chr = chr->next;
 		if (lst->format->convers == 'k')
-			conv_k(ap);
+			conv_k(lst->format, &chr, ap);
 		else if (ft_strchr("xXoub", lst->format->convers))
 			conv_xxoub(lst, &chr, ap);
 		else if (lst->format->convers == '}')
-			conv_color(lst, &chr);
+			conv_color(lst, &chr, ap);
 		else if (lst->format->convers == 'p')
-			conv_p(lst, &chr, (size_t)va_arg(ap, void*));
+			conv_p(lst, &chr, ap);
 		else if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, ap);
 		else if (lst->format->convers == 's')
-			conv_s(lst, &chr, va_arg(ap, const char*));
+			conv_s(lst->format, &chr, ap);
 		else if (lst->format->convers == 'c')
-			conv_c(lst, &chr, (char)va_arg(ap, int));
+			conv_c(lst->format, &chr, ap);
 		else if (lst->format->convers == '%')
 			conv_percent(&chr);
 		else
-			conv_invalid(&chr, lst->format);
+			conv_invalid(&chr, lst->format, ap);
 		lst = lst->next;
 		chr = chr->next;
 	}
@@ -730,6 +844,7 @@ int		ft_printf(const char *format, ...)
 	print_chr(mychr);
 	ft_putendl((char*)format);
 	fill_chr(lst, mychr, ap);
+	print_lst(lst);
 	show_lst(lst);
 	print_chr(mychr);
 	len = put_chr(mychr);

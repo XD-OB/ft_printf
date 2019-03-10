@@ -65,7 +65,13 @@ int		check_fill(char *str, int pos,  t_lst *curr)
 		if (*str == '.')
 		{
 			str++;
-			curr->format->precis = ft_atoi(str);
+			if (*str == '*')
+			{
+				curr->format->precis = -2;
+				str++;
+			}
+			else
+				curr->format->precis = ft_atoi(str);
 			while (ft_isdigit(*str))
 				str++;
 		}

@@ -46,6 +46,8 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
 char				*ft_itoa(long long int n);
+char				*ft_ltoa(long int n);
+char				*ft_lltoa(long long int n);
 char				*ft_itoa_base(long long int val, int base);
 char				*ft_utoa(size_t n);
 char				*ft_utoa_base(size_t val, int base);
