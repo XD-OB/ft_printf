@@ -16,7 +16,8 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
 
 LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 
-LIB_FT_PRINTF = ft_printf check parse tools
+LIB_FT_PRINTF = ft_printf check parse tools date noprint flags dash engine\
+			convers_cs delete_me
 
 LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 

@@ -64,6 +64,28 @@ t_lst		*add_node(t_lst *head, t_lst *node)
 	return (head);
 }
 
+char            *cut_str(char *str, int p1, int p2)
+{
+        int     i;
+        char    *ret;
+
+        i = p1 - 1;
+        if (!(ret = (char*)malloc(sizeof(char) * (p2 - p1 + 2))))
+                return NULL;
+        while (++i <= p2)
+                ret[i - p1] = str[i];
+        ret[i - p1] = '\0';
+        return (ret);
+
+}
+
+void            init_chr(t_chr **chr)
+{
+        (*chr)->str = NULL;
+        (*chr)->len = 0;
+        (*chr)->next = NULL;
+}
+
 int	lstlen(t_lst *lst)
 {
 	int	size;
@@ -92,6 +114,18 @@ void	free_lst(t_lst *lst)
 		curr = curr->next;
 		free (lst);
 	}
+}
+
+void	free_chr(t_chr *chr)
+{
+        t_chr   *tmp;
+
+        while (chr)
+        {
+                tmp = chr;
+                chr = chr->next;
+                free (tmp);
+        }
 }
 
 void	put_spstr(char *str)
