@@ -305,13 +305,19 @@ int		ft_printf(const char *format, ...)
 	t_lst		*lst;
 	va_list		ap;
 	int		len;
+	int		len_format;
 
 	len = 0;
+	len_format = 0;
+	while (format[len_format])
+		len_format++;
 	va_start(ap, format);
 	lst = parse_format((char*)format);
 	if (!lst)
 	{
 		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
 		return (ft_strlen(format));
 	}
 	print_lst(lst);

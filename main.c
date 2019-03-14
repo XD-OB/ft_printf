@@ -12,9 +12,9 @@ int	main(void)
 	s12 = "hi\t";
 	s2 = 'h';
 	str = "This is a\t test text\n";
-	ft_printf("%rs", str);
+	ft_printf("%5%");
 	printf("\n");
-	printf("%s", str);
+	printf("%%");
 	printf("\n");
 	//ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);
 	//ft_putchar('\n');

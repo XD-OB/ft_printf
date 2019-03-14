@@ -110,8 +110,9 @@ t_lst	*parse_format(char	*str)
 		{
 			if (!str[i + 1])
 			{
-				free_lst(head);
-				exit(-1);
+				//if (head)
+				//	free_lst(head);
+				return (head);
 			}
 			node = (t_lst*)malloc(sizeof(t_lst));
 			node->format = (t_format*)malloc(sizeof(t_format));
