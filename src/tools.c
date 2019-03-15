@@ -109,10 +109,11 @@ void	free_lst(t_lst *lst)
 	while (curr)
 	{
 		lst = curr;
-		free (curr->format->flag);
-		free (curr->format);
+		free(curr->format->flag);
+		free(curr->format);
+		free(curr->arglist);
 		curr = curr->next;
-		free (lst);
+		free(lst);
 	}
 }
 
@@ -145,6 +146,9 @@ void	print_lst(t_lst *lst)
 	curr = lst;
 	while (curr)
 	{
+		ft_putstr("num argm: ");
+		ft_putnbr(curr->format->argn);
+		ft_putchar('\n');
 		ft_putstr("position: ");
 		ft_putnbr(curr->format->pos);
 		ft_putchar('\n');

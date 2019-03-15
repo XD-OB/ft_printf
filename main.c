@@ -9,12 +9,12 @@ int	main(void)
 	char		*str;
 
 	s1 = "hi there";
-	s12 = "hi\t";
+	s12 = "hi";
 	s2 = 'h';
-	str = "This is a\t test text\n";
-	ft_printf("%5%");
+	str = "This is a test text";
+	ft_printf("%2$d %3$d %1d", 1, 2, 3);
 	printf("\n");
-	printf("%%");
+	printf("%2$d %3$d %1d", 1, 2, 3);
 	printf("\n");
 	//ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);
 	//ft_putchar('\n');

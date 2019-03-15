@@ -64,9 +64,9 @@ void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)
                 else if (ft_strchr("di", lst->format->convers))
                         conv_di(lst, &chr, ap);
                 else if (lst->format->convers == 's')
-                        conv_s(lst->format, &chr, ap);
+                        conv_s(lst, &chr, ap);
                 else if (lst->format->convers == 'c')
-                        conv_c(lst->format, &chr, ap);
+                        conv_c(lst, &chr, ap);
                 else if (lst->format->convers == '%')
                         conv_percent(&chr);
                 else

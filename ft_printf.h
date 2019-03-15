@@ -22,11 +22,13 @@ typedef struct		s_format
 	int		precis;
 	int		width;
 	int		pos;
+	int		argn;
 }			t_format;
 
 typedef struct		s_lst
 {
 	t_format	*format;
+	va_list		*arglist;
 	struct s_lst	*next;
 }			t_lst;
 
@@ -46,17 +48,16 @@ int	lstlen(t_lst *lst);
 void	put_spstr(char *str);
 void	print_lst(t_lst *lst);
 void	free_lst(t_lst *lst);
-t_lst	*parse_format(char *str);
+t_lst	*parse_format(va_list ap, char *str);
 t_lst	*add_node(t_lst *head, t_lst *node);
 void            conv_k(t_format *format, t_chr **mychr, va_list ap);
 void            conv_color(t_lst *lst, t_chr **mychr, va_list ap);
-void            conv_c(t_format *format, t_chr **mychr, va_list ap);
-void            conv_s(t_format *format, t_chr **mychr, va_list ap);
+void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_p(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_percent(t_chr **mychr);
 void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap);
-void            conv_s(t_format *format, t_chr **mychr, va_list ap);
 void            conv_invalid(t_chr **mychr, t_format *format, va_list ap);
 char            *flag_r(char c);
 void            flag_star(t_format *format, va_list ap);
@@ -64,6 +65,7 @@ void            flag_zero(char **str, t_format *format);
 void            flag_space(char **nbr, char *flag);
 void            flag_plus(char **nbr);
 void            flag_dash(char **nbr, int base);
+int		flag_dollar(t_lst *lst);
 char            *cut_str(char *str, int p1, int p2);
 void            init_chr(t_chr **chr);
 void            free_chr(t_chr *chr);

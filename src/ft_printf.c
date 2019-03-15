@@ -85,7 +85,10 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	long long int	d;
 
 	flag_star(lst->format, ap);
-	cast_di(ap, lst->format->flag, &d);
+	if (flag_dollar(lst))
+		cast_di(*(lst->arglist), lst->format->flag, &d);
+	else
+		cast_di(ap, lst->format->flag, &d);
 	if (d == 0 && !lst->format->precis)
 		(*mychr)->str = ft_strdup("\0");
 	else
@@ -154,7 +157,10 @@ void		conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 	int	i;
 
 	flag_star(lst->format, ap);
-	nbr = ft_utoa_base((size_t)va_arg(ap, void*), 16);
+	if (flag_dollar(lst))
+		nbr = ft_utoa_base((size_t)va_arg(*(lst->arglist), void*), 16);
+	else
+		nbr = ft_utoa_base((size_t)va_arg(ap, void*), 16);
 	flag_dash(&nbr, 16);
 	nbr = ft_strlowcase(nbr);
 	if (ft_strchr(lst->format->flag, ' ') && lst->format->width <= (int)ft_strlen(nbr))
@@ -216,7 +222,10 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 	size_t	n;
 
 	flag_star(lst->format, ap);
-	cast_xxoub(ap, lst->format->flag, &n);
+	if (flag_dollar(lst))
+		cast_xxoub(*(lst->arglist), lst->format->flag, &n);
+	else
+		cast_xxoub(ap, lst->format->flag, &n);
 	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
 	nbr = ft_utoa_base(n, i);
@@ -312,7 +321,7 @@ int		ft_printf(const char *format, ...)
 	while (format[len_format])
 		len_format++;
 	va_start(ap, format);
-	lst = parse_format((char*)format);
+	lst = parse_format(ap, (char*)format);
 	if (!lst)
 	{
 		put_spstr((char*)format);
@@ -332,5 +341,6 @@ int		ft_printf(const char *format, ...)
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);
+	va_end(ap);
 	return (len);
 }

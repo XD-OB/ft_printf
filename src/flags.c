@@ -55,3 +55,17 @@ void            flag_star(t_format *format, va_list ap)
         if (format->precis == -2)
                 format->precis = (int)va_arg(ap, int);
 }
+
+int		flag_dollar(t_lst *lst)
+{
+        int     i;
+
+        if (lst->format->argn)
+        {
+                i = 0;
+                while (++i < lst->format->argn)
+                        va_arg(*(lst->arglist), void*);
+                return (1);
+        }
+        return (0);
+}
