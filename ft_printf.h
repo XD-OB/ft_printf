@@ -65,6 +65,7 @@ void            flag_zero(char **str, t_format *format);
 void            flag_space(char **nbr, char *flag);
 void            flag_plus(char **nbr);
 void            flag_dash(char **nbr, int base);
+void		flag_apostrophe(char *str, t_format *fmt);
 int		flag_dollar(t_lst *lst);
 char            *cut_str(char *str, int p1, int p2);
 void            init_chr(t_chr **chr);

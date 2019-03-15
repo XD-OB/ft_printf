@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
 static void		zero_xxob(char **str, t_format *fmt)
 {
@@ -94,6 +95,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	else
 	{
 		nbr = ft_itoa(d);
+		flag_apostrophe(&nbr, lst->format);
 		if (ft_strchr(lst->format->flag, '+'))
 			flag_plus(&nbr);
 		if (d >= 0 && ft_strchr(lst->format->flag, ' '))
@@ -233,6 +235,7 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 		flag_dash(&nbr, i);
 	else
 		prefix = 0;
+	flag_apostrophe(&nbr, lst->format);
 	if (lst->format->precis - prefix > 0)
 		nbr[lst->format->precis + prefix] = '\0';
 	size = lst->format->width;
