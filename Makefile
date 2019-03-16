@@ -12,7 +12,7 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
 		 ft_isascii ft_isprint ft_toupper ft_tolower ft_lstnew ft_lstdelone\
 		 ft_lstdel ft_lstadd ft_lstiter ft_lstmap ft_sqrt ft_prime\
 		 ft_strlowcase ft_strupcase ft_swap ft_strrev ft_isblank ft_isxdigit\
-		 ft_strnjoin ft_atoi_base\
+		 ft_strnjoin ft_atoi_base ft_lltoa ft_ltoa\
 
 LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 

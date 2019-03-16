@@ -311,6 +311,200 @@ void		conv_color(t_lst *lst, t_chr **mychr, va_list ap)
 		conv_invalid(mychr, lst->format, ap);
 }
 
+long		int_exp(long bin_exp, int bias)
+{
+	long	ref;
+	long	int_exp;
+
+	int_exp = 0;
+	if (bias == D_BIAS)
+		ref = 2048;
+	else
+		ref = 32768;
+	while (ref >>= 1)
+		int_exp += (bin_exp & ref);
+	return (int_exp);
+}
+
+long		int_mants(long bin_mants, int bias)
+{
+	long	ref;
+	long	int_mants;
+
+	int_mants = 0;
+	if (bias == D_BIAS)
+		ref = 4503599627370496;
+	else
+		ref = 4611686018427388000;
+	while (ref)
+	{
+		int_mants += (bin_mants & ref);
+		ref >>= 1;
+	}
+	return (int_mants);
+}
+
+char				*int_addone(char *tab, int oldsize, int data)
+{
+	char		*new;
+	int		i;
+
+	i = -1;
+	new = (char*)malloc(sizeof(char) * (oldsize + 1));
+	while (++i < oldsize)
+		new[i] = tab[i];
+	new[i] = data + '0';
+	if (oldsize)
+		free(tab);
+	return (new);
+}
+
+unsigned long		calc_tab(char *tab, int size)
+{
+	long		decimal;
+	int		i;
+
+	i = -1;
+	ft_putstr("size tab: ");
+	ft_putnbr(size);
+	ft_putchar('\n');
+	decimal = 0;
+	i = -1;
+	while (++i < size)
+	{
+		ft_putstr("dank dank: ");
+		ft_putchar(tab[i]);
+		ft_putchar('\n');
+		decimal = (decimal << 1) | (tab[i] - 48);
+		printf("\ndecimal: %ld\n", decimal);
+	}
+	return (decimal);
+}
+
+unsigned long long int		calc_bat(char *bat, int size)
+{
+	unsigned long long	fract;
+	int			i;
+	int			count;
+
+	i = -1;
+	fract = 0;
+	count = 1;
+	while (!bat[++i]);
+	while (i < size)
+	{
+		ft_putstr(" ");
+		ft_putchar(bat[i]);
+		ft_putchar(' ');
+		if (bat[i] == '1')
+			fract += 5 * count;
+		//printf("\nfract: %lld\n", fract);
+		count *= 5;
+		i++;
+	}
+	return (fract);
+}
+
+unsigned long long int		get_decimal(long exp, long bin_mantis, int bias, unsigned long *decimal)
+{
+	int				i;
+	long long			m;
+	long				new_exp;
+	char				*tab;
+	char				*bat;
+	int				size_dec;
+	int				size;
+	//long long			fract;
+
+	tab = NULL;
+	bat = NULL;
+	size = 0;
+	size_dec = 0;
+	if (exp == 0)
+		new_exp = 1 - bias;
+	else
+		new_exp = exp - bias;
+	if (new_exp < 0)
+		return (0);
+	if (exp != 0)
+	{
+		ft_putstr("OUI\n");
+		tab = int_addone(tab, size_dec, 1);
+		size_dec++;
+	}
+	if (bias == D_BIAS)
+		m = 2251799813685248;
+	i = -1;
+	while (++i < new_exp)
+	{
+		if (m & bin_mantis)
+			tab = int_addone(tab, size_dec, 1);
+		else
+			tab = int_addone(tab, size_dec, 0);
+		size_dec++;
+		m >>= 1;
+	}
+	*decimal = calc_tab(tab, size_dec);
+	m = 1;
+	i = -1;
+	while (++i < 52 - new_exp)
+		m <<= 1;
+	m >>= 1;
+	while (m)
+	{
+		printf("m: %lld\n", m);
+		if (m & bin_mantis)
+			bat = int_addone(bat, size, 1);
+		else
+			bat = int_addone(bat, size, 0);
+		size++;
+		m >>= 1;
+	}
+	return  (calc_bat(bat, size));
+}
+
+void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
+{
+	t_double				db;
+	unsigned long int 			entier;
+	unsigned long long int			fract;
+
+	db.d = (double)va_arg(ap, double);
+	if (lst->format->precis == -1)
+		lst->format->precis = 6;
+	if (!db.zone.mantissa && !db.zone.exponent)
+	{
+		if (db.zone.sign)
+			(*mychr)->str = ft_strdup("-0");
+		else
+			(*mychr)->str = ft_strdup("0");
+		(*mychr)->len = db.zone.sign + 1;
+		return ;
+	}
+	if (!db.zone.mantissa && (int_exp(db.zone.exponent, D_BIAS) == 2047))
+	{
+		if  (db.zone.sign)
+			(*mychr)->str = ft_strdup("-inf");
+		else
+			(*mychr)->str = ft_strdup("inf");
+		(*mychr)->len = db.zone.sign + 3;
+		return ;
+	}
+	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) == 2047))
+	{
+		(*mychr)->str = ft_strdup("nan");
+		(*mychr)->len = 3;
+	}
+	fract = get_decimal(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, &entier);
+	printf("%f\n", db.d);
+	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
+	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
+	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
+	ft_printf("decimal: %lu\n", entier);
+	ft_printf("fract  : %lld\n", fract);
+	ft_putchar('\n');
+}
+
 int		ft_printf(const char *format, ...)
 {
 	t_chr		*mychr;
@@ -332,15 +526,15 @@ int		ft_printf(const char *format, ...)
 			return (-1);
 		return (ft_strlen(format));
 	}
-	print_lst(lst);
+	//print_lst(lst);
 	if (!(mychr = load_chr((char*)format, lst)))
 		return -1;
-	print_chr(mychr);
-	ft_putendl((char*)format);
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
 	fill_chr(lst, mychr, ap);
-	print_lst(lst);
-	show_lst(lst);
-	print_chr(mychr);
+	//print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);
