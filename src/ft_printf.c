@@ -381,7 +381,7 @@ unsigned long		calc_tab(char *tab, int size)
 	return (decimal);
 }
 
-unsigned long long int		calc_bat(char *bat, int size)
+unsigned long long		calc_bat(char *bat, int size)
 {
 	unsigned long long	fract;
 	int			i;
@@ -389,19 +389,18 @@ unsigned long long int		calc_bat(char *bat, int size)
 
 	i = -1;
 	fract = 0;
-	count = 1;
-	while (!bat[++i]);
-	while (i < size)
+	count = 5;
+	while (bat[--size] == '0');
+	while (++i <= size)
 	{
-		ft_putstr(" ");
 		ft_putchar(bat[i]);
-		ft_putchar(' ');
+		fract *= 10;
 		if (bat[i] == '1')
-			fract += 5 * count;
-		//printf("\nfract: %lld\n", fract);
+			fract += count;
+		printf("\nfract: %lld\n", fract);
 		count *= 5;
-		i++;
 	}
+	ft_putchar('\n');
 	return (fract);
 }
 
@@ -447,9 +446,8 @@ unsigned long long int		get_decimal(long exp, long bin_mantis, int bias, unsigne
 	*decimal = calc_tab(tab, size_dec);
 	m = 1;
 	i = -1;
-	while (++i < 52 - new_exp)
+	while (++i < 52 - new_exp - 1)
 		m <<= 1;
-	m >>= 1;
 	while (m)
 	{
 		printf("m: %lld\n", m);
@@ -501,7 +499,7 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
 	ft_printf("decimal: %lu\n", entier);
-	ft_printf("fract  : %lld\n", fract);
+	ft_printf("fract  : %llu\n", fract);
 	ft_putchar('\n');
 }
 
