@@ -381,27 +381,130 @@ unsigned long		calc_tab(char *tab, int size)
 	return (decimal);
 }
 
+char				*foisdix(char *str, unsigned int len)
+{
+	char		*new;
+	unsigned int	i;
+
+	i = 0;
+	new = (char*)malloc(sizeof(char) * (len  + 2));
+	new[len + 1] = '\0';
+	while (i < len)
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i] = '0';
+	free(str);
+	return (new);
+}
+
+char				*addonelast(char *str, unsigned int len)
+{
+	unsigned int		i;
+	char			*new;
+
+	new = (char*)malloc(sizeof(char) * (len +  2));
+	new[len + 1] = '\0';
+	new[0] = '1';
+	i = 0;
+	while (++i < len + 1)
+		new[i] = str[i - 1];
+	free(str);
+	return (new);
+}
+
+static char			*addioun_five(char *str, unsigned int len)
+{
+	int		carry;
+	char		*new;
+	int		i;
+	unsigned int	j;
+	int		tssal;
+
+	tssal = 0;
+	new = (char*)malloc(sizeof(char) * (len + 1));
+	new[len] = '\0';
+	i = len;
+	while (--i >= 0)
+	{
+		carry = (str[i] - 48 + 5 + tssal);
+		if (carry < 10)
+		{
+			j = 0;
+			new[i] = carry + 48;
+			while (j < len)
+			{
+				new[j] = str[j];
+				j++;
+			}
+			//ft_fillnew(str, &new, i);
+			tssal = 0;
+			break ;
+		}
+		else
+		{
+			new[i] = carry - 10 + 48;
+			tssal = 1;
+		}
+	}
+	if (tssal == 1)
+		new = addonelast(new, len);
+	free(str);
+	return (new);
+}
+
+char				*addioun(char *str, unsigned int len, int count)
+{
+	int		i;
+	int		size;
+	char		*ret;
+
+	i = 5;
+	size = 0;
+	ret = addioun_five(str, len);
+	while (i < count)
+	{
+		size = ft_strlen(ret);
+		ret = addioun_five(ret, size);
+		i *= 5;
+	}
+	return (ret);
+}
+
 unsigned long long		calc_bat(char *bat, int size)
 {
-	unsigned long long	fract;
-	int			i;
-	int			count;
+	char		*fract;
+	int		i;
+	int		count;
+	unsigned int	len;
+	int		flag = 0;
 
 	i = -1;
-	fract = 0;
+	fract = ft_strdup("0");
+	len = 1;
 	count = 5;
 	while (bat[--size] == '0');
 	while (++i <= size)
 	{
 		ft_putchar(bat[i]);
-		fract *= 10;
+		if (flag == 1)
+		{
+			fract = foisdix(fract, len);
+			len++;
+		}
 		if (bat[i] == '1')
-			fract += count;
-		printf("\nfract: %lld\n", fract);
+		{
+			fract = addioun(fract, len, count);
+			len++;
+			flag = 1;
+		}
 		count *= 5;
 	}
+	ft_putstr("\n fract: ");
+	ft_putstr(fract);
 	ft_putchar('\n');
-	return (fract);
+	return (0);
 }
 
 unsigned long long int		get_decimal(long exp, long bin_mantis, int bias, unsigned long *decimal)
