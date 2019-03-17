@@ -361,10 +361,10 @@ char				*int_addone(char *tab, int oldsize, int data)
 	return (new);
 }
 
-unsigned long		calc_tab(char *tab, int size)
+unsigned long long int			calc_tab(char *tab, int size)
 {
-	long		decimal;
-	int		i;
+	unsigned long long int		decimal;
+	int				i;
 
 	i = -1;
 	//ft_putstr("size tab: ");
@@ -580,7 +580,7 @@ char		*calc_bat(char *bat, int size)
 	return (fract);
 }
 
-unsigned long int		get_decimal(long exp, long bin_mantis, int bias)
+unsigned long long int		get_decimal(long exp, long bin_mantis, int bias)
 {
 	int				i;
 	unsigned long long int		m;
@@ -593,11 +593,6 @@ unsigned long int		get_decimal(long exp, long bin_mantis, int bias)
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	if (new_exp < 0)
 		return (0);
-	if (exp != 0)
-		tab = int_addone(tab, size_dec, 1);
-	else
-		tab = int_addone(tab, size_dec, 0);
-	size_dec++;
 	if (bias == D_BIAS)
 		m = 2251799813685248;
 	if (bias == LD_BIAS)
@@ -619,12 +614,13 @@ unsigned long int		get_decimal(long exp, long bin_mantis, int bias)
 char		*get_fract(long exp, long bin_mantis, int bias)
 {
 	unsigned long long	m;
-	int		len_b;
+	int			len_b;
 	unsigned int		size;
 	int			i;
 	char			*bat;
 	long			new_exp;
 
+	bat = NULL;
 	size = 0;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	m = 1;
@@ -635,6 +631,12 @@ char		*get_fract(long exp, long bin_mantis, int bias)
 	ft_putchar('\n');
 	if (bias == LD_BIAS)
 		len_b = ABS(63 - new_exp - 1);
+	if (new_exp == -1023)
+	{
+		bat = int_addone(bat, size, 0);
+		len_b++;
+		size++;
+	}
 	while (++i < len_b)
 		m <<= 1;
 	while (m)
@@ -650,7 +652,7 @@ char		*get_fract(long exp, long bin_mantis, int bias)
 	return  (calc_bat(bat, size));
 }
 
-char		*fprecis_zero(char *final, int precis)
+/*char		*fprecis_zero(char *final, int precis)
 {
 	int	i;
 	int	j;
@@ -667,19 +669,18 @@ char		*fprecis_zero(char *final, int precis)
 	res[j] = '\0';
 	free(final);
 	return (res);
-}
+}*/
 
 void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	t_double			db;
-	unsigned long int 		entier;
+	unsigned long long int 		part_entier;
 	char				*fract;
-	//char				*part_entier;
+	char				*entier;
 	//char				*tmp;
 	//char				*final;
 	//int				len;
 
-	//final = NULL;
 	db.d = (double)va_arg(ap, double);
 	if (lst->format->precis == -1)
 		lst->format->precis = 6;
@@ -692,7 +693,7 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 		(*mychr)->len = db.zone.sign + 1;
 		return ;
 	}
-	if (!db.zone.mantissa && (int_exp(db.zone.exponent, D_BIAS) == 2047))
+	if (!db.zone.mantissa && (int_exp(db.zone.exponent, D_BIAS) == MAX_D))
 	{
 		if  (db.zone.sign)
 			(*mychr)->str = ft_strdup("-inf");
@@ -701,13 +702,18 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 		(*mychr)->len = db.zone.sign + 3;
 		return ;
 	}
-	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) == 2047))
+	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) == MAX_D))
 	{
 		(*mychr)->str = ft_strdup("nan");
 		(*mychr)->len = 3;
 	}
-	entier = get_decimal(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
-	fract = get_fract(int_exp(db.zone.exponent,  D_BIAS), db.zone.mantissa, D_BIAS);
+	if (db.d < 1 && db.d > 0)
+		db.d++;
+	if (db.d > -1 && db.d < 0)
+		db.d--;
+	part_entier = get_decimal(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	entier = ft_ulltoa(part_entier);
+	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
 	//part_entier = ft_utoa(entier);
 	//tmp = ft_strjoin(part_entier, ".");
 	//len = ft_strlen(final);
@@ -719,11 +725,11 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	//free(part_entier);
 	//(*mychr)->str = fract;
 	//(*mychr)->len = lst->format->precis;
-	printf("%.20f\n", db.d);
+	printf("     %.70f\n", db.d);
 	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
-	ft_printf("decimal: %llu\n", entier);
+	ft_printf("entier: %llu\n", entier);
 	ft_printf("fract  : %s\n", fract);
 	ft_putchar('\n');
 }

@@ -7,9 +7,11 @@
 # include <limits.h>
 # include "libft/libft.h"
 
-# define F_BIAS 127
 # define D_BIAS 1023
 # define LD_BIAS 16383
+
+# define MAX_D 	2047
+# define MAX_LD 32767
 
 # define GREEN	"\x1b[32m"
 # define RED	"\x1b[31m"
