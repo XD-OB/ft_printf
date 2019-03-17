@@ -55,7 +55,7 @@ void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)
                         chr = chr->next;
 		if (lst->format->convers == 'f')
 			conv_lf(lst, &chr, ap);
-                if (lst->format->convers == 'k')
+		else if (lst->format->convers == 'k')
                         conv_k(lst->format, &chr, ap);
                 else if (ft_strchr("xXoub", lst->format->convers))
                         conv_xxoub(lst, &chr, ap);

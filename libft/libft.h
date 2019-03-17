@@ -50,6 +50,7 @@ char				*ft_ltoa(long int n);
 char				*ft_lltoa(long long int n);
 char				*ft_itoa_base(long long int val, int base);
 char				*ft_utoa(size_t n);
+char				*ft_ulltoa(unsigned long long int n);
 char				*ft_utoa_base(size_t val, int base);
 void				ft_putchar(char c);
 void				ft_putstr(char const *s);
