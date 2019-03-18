@@ -12,10 +12,10 @@ int	main(void)
 	s12 = "hi";
 	s2 = 'h';
 	str = "This is a test text";
-	ft_printf("flaot %.1f", 35296.9);
+	ft_printf("flaot:%'9.3f", -35296.998);
 	printf("\n");
-	//printf("%'d", 1000000000);
-	//printf("\n");
+	printf("flaot:%'9.3f", -35296.998);
+	printf("\n");
 	//ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);
 	//ft_putchar('\n');
 	//printf("7string 1 %-012s string 2 %012s\n\n", "toto", "bonjour");

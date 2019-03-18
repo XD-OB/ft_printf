@@ -39,8 +39,7 @@ void            flag_zero(char **str, t_format *format)
 {
         int     i;
 
-        if ((format->precis == 0 || format->convers == 'f')
-                        && !ft_strchr(format->flag, '+'))
+        if (format->precis == 0 && !ft_strchr(format->flag, '+'))
         {
                 i = -1;
                 while (++i < (format->width - (int)ft_strlen(*str)))

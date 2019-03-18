@@ -233,8 +233,9 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 	i = base_detect(lst->format->convers);
 	prefix = (lst->format->convers == 'o') ? 1 : 2;
 	nbr = ft_utoa_base(n, i);
-	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
-		flag_dash(&nbr, i);
+	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u'
+			&& (n != 0 && lst->format->convers != 'o'))
+			flag_dash(&nbr, i);
 	else
 		prefix = 0;
 	flag_apostrophe(&nbr, lst->format);
@@ -449,23 +450,22 @@ char            *calc_tab(char *tab, int size)
 		if (tab[i] == '1')
 		{
 			entier = ft_strsum(entier, count);
-			ft_putstr("\n entierteb: ");
-			ft_putstr(entier);
-			ft_putstr("\n");
+			//ft_putstr("\n entierteb: ");
+			//ft_putstr(entier);
+			//ft_putstr("\n");
 			len = ft_strlen(entier);
 		}
-		ft_putchar('\n');
-                ft_putendl(count);
+	//	ft_putchar('\n');
+          //      ft_putendl(count);
                 count = ft_strmulti("2", count);
-                ft_putstr("\nentini: ");
-                ft_putstr(entier);
-                ft_putstr("\ncount    : ");
-                ft_putstr(count);
-                ft_putchar('\n');
+            //    ft_putstr("\nentini: ");
+              //  ft_putstr(entier);
+              //  ft_putstr("\ncount    : ");
+             //   ft_putstr(count);
+              //  ft_putchar('\n');
                 len++;
         }
 	entier[len] = '\0';
-	i = -1;
         return (entier);
 }
 
@@ -487,30 +487,30 @@ char		*calc_bat(char *bat, int size)
 		if (bat[i] == '1')
 		{
 			fract = ft_strsum(fract, count);
-			ft_putstr("\n fractdteb: ");
-			ft_putstr(fract);
-			ft_putstr("\n");
+			//ft_putstr("\n fractdteb: ");
+			//ft_putstr(fract);
+			//ft_putstr("\n");
 			len = ft_strlen(fract);
 		}
-		ft_putchar('\n');
-		ft_putendl(count);
+		/*ft_putchar('\n');
+		ft_putendl(count);*/
 		count = ft_strmulti("5", count);
-		ft_putstr("\nfractinti: ");
+		/*ft_putstr("\nfractinti: ");
 		ft_putstr(fract);
 		ft_putstr("\ncount    : ");
 		ft_putstr(count);
-		ft_putchar('\n');
+		ft_putchar('\n');*/
 		fract = foisdix(fract, len);
 		len++;
 	}
-	ft_putstr("\nfract: ");
+	/*ft_putstr("\nfract: ");
 	ft_putstr(fract);
 	fract[len] = '\0';
-	ft_putchar('\n');
+	ft_putchar('\n');*/
 	return (fract);
 }
 
-char		*get_decimal(long exp, long bin_mantis, int bias)
+char		*get_entier(long exp, long bin_mantis, int bias)
 {
 	int				i;
 	unsigned long long int		m;
@@ -543,10 +543,10 @@ char		*get_decimal(long exp, long bin_mantis, int bias)
 		m >>= 1;
 	}
 	i = -1;
-	ft_putstr("\ntabinini ");
-	while (++i < size_dec)
-		ft_putchar(tab[i]);
-	ft_putchar('\n');
+	//ft_putstr("\ntabinini ");
+	//while (++i < size_dec)
+	//	ft_putchar(tab[i]);
+	//ft_putchar('\n');
 	return (calc_tab(tab, size_dec));
 }
 
@@ -592,17 +592,34 @@ char		*get_fract(long exp, long bin_mantis, int bias)
 	return  (calc_bat(bat, size));
 }
 
-char		*ft_fprecis(char *fract, int precis)
+int		is_strzero(char *str)
+{
+	unsigned int	i;
+
+	i = 0;
+        while (str[i])
+        {
+                if (str[i] != '0')
+                        return (0);
+                i++;
+        }
+        return (1);
+}
+
+char		*ft_fprecis(char *fract, int precis, int *carry)
 {
 	char		*str;
+	char		*tmp;
 	int		len;
 	int		i;
 
 	str = (char*)malloc(sizeof(char) * (precis + 1));
 	str[precis] = '\0';
+	//{
+	//	free (fract);
+	//	return (str);
+	//}
 	len = ft_strlen(fract);
-	if (len == precis)
-		return (fract);
 	if (precis > len)
 	{
 		i = -1;
@@ -616,23 +633,67 @@ char		*ft_fprecis(char *fract, int precis)
 		i = -1;
 		while (++i < precis)
 			str[i] = fract[i];
-		if (fract[i] > 4 && fract[0] != '9')
-			str = ft_strsum(str, "1");
+		if (fract[i] > '4')
+		{
+			tmp = ft_strsum(str, "1");
+			if (ft_strlen(tmp) > (unsigned int)precis)
+			{
+				i = -1;
+				while (str[++i])
+					str[i] = '0';
+				*carry = 1;
+			}
+			else
+				ft_strswap(&tmp, &str);
+			ft_putstr("\n    CARYY: ");
+			ft_putnbr(*carry);
+			ft_putchar('\n');
+		}
 	}
+	free(tmp);
 	free(fract);
 	return (str);
 }
 
-char		*ft_fwidth(char *str, unsigned int size_str, unsigned int len)
+char		*ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned int len_f)
 {
-	char	*res;
+	unsigned int	i;
+	unsigned int	len;
+	char		*res;
+	char		c;
 
-	res = (char*)malloc(sizeof(char) * len);
+	c = (ft_strchr(format->flag, '0')) ? '0' : ' ';
+	len = format->width - len_f;
+	if (format->precis != 0 || ft_strchr(format->flag, '#'))
+		len--;
+	res = (char*)malloc(sizeof(char) * (len + 1));
+	ft_putstr("\nlen: ");
+	ft_putnbr(len);
+	ft_putchar('\n');
 	res[len] = '\0';
-	while (size_str--)
-		res[--len] = str[size_str];
-	while (len--)
-		res[len] = ' ';
+	i = 0;
+	while (i < len - size_str)
+		res[i++] = c;
+	i--;
+	while (++i < len)
+		res[i] = str[i - (len - size_str)];
+	free(str);
+	return (res);
+}
+
+char		*add_sign(char *str)
+{
+	char		*res;
+	unsigned int	len;
+	unsigned int	i;
+
+	len = ft_strlen(str) + 1;
+	res = (char*)malloc(sizeof(char) * (len + 1));
+	res[len] = '\0';
+	res[0] = '-';
+	i = 0;
+	while (++i < len)
+		res[i] = str[i - 1];
 	free(str);
 	return (res);
 }
@@ -647,8 +708,11 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	unsigned int			len;
 	char				*tmp;
 	char				*final;
+	int				carry;
 
-	db.d = (double)va_arg(ap, double);
+	carry = 0;
+	flag_star(lst->format, ap);
+	db.d = (flag_dollar(lst)) ? va_arg(*(lst->arglist), double) : va_arg(ap, double);
 	if (lst->format->precis == -1)
 		lst->format->precis = 6;
 	if (!db.zone.mantissa && !db.zone.exponent)
@@ -678,24 +742,40 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 		db.d++;
 	if (db.d > -1 && db.d < 0)
 		db.d--;
-	entier = get_decimal(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	if (db.zone.sign)
+		entier = add_sign(entier);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	printf("\nfract before: %s\n", fract);
+	fract = ft_fprecis(fract, lst->format->precis, &carry);
+	if (ft_strchr(lst->format->flag, '+'))
+		flag_plus(&entier);
+	else if (ft_strchr(lst->format->flag, ' '))
+		flag_space(&entier, lst->format->flag);
+	ft_putchar('\n');
+	if (carry == 1)
+		entier = ft_strsum(entier, "1");
 	len_e = ft_strlen(entier);
-	fract = ft_fprecis(fract, lst->format->precis);
 	len_f = ft_strlen(fract);
 	len = len_e + len_f + 1;
 	if (lst->format->width > (int)len)
 	{
-		ft_fwidth(entier, len - len_f, lst->format->width - len_f);
+		entier = ft_fwidth(entier, len_e, lst->format, len_f);
 		len = lst->format->width;
 	}
-	tmp = ft_strjoin(entier, ".");
-	final = ft_strjoin(tmp, fract);
-	ft_printf("entier: %s\n", entier);
-	ft_printf("fract  : %s\n", fract);
+	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
+		tmp = ft_strjoin(entier, ".");
+	else
+		tmp = ft_strjoin(entier, "");
+	if (lst->format->precis > 0)
+		final = ft_strjoin(tmp, fract);
+	else
+		final = ft_strjoin(tmp, "");
+	printf("fract  : %s\n", fract);
 	free(tmp);
-	free(entier);
 	free(fract);
+	printf("entier: %s\n", entier);
+	free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = len;
 	printf("%.70f\n", db.d);
@@ -732,7 +812,7 @@ int		ft_printf(const char *format, ...)
 	//print_chr(mychr);
 	//ft_putendl((char*)format);
 	fill_chr(lst, mychr, ap);
-	//print_lst(lst);
+	print_lst(lst);
 	//show_lst(lst);
 	//print_chr(mychr);
 	len = put_chr(mychr);
