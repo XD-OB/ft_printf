@@ -592,7 +592,7 @@ char		*get_fract(long exp, long bin_mantis, int bias)
 	return  (calc_bat(bat, size));
 }
 
-char		*ft_lfprecis(char *fract, int precis)
+char		*ft_fprecis(char *fract, int precis)
 {
 	char		*str;
 	int		len;
@@ -616,17 +616,25 @@ char		*ft_lfprecis(char *fract, int precis)
 		i = -1;
 		while (++i < precis)
 			str[i] = fract[i];
-		if (fract[i] > 4)
+		if (fract[i] > 4 && fract[0] != '9')
 			str = ft_strsum(str, "1");
-		if ((int)ft_strlen(str) > precis)
-		{
-			i = -1;
-			while (++i < precis)
-				str[i] = '0';
-		}
 	}
 	free(fract);
 	return (str);
+}
+
+char		*ft_fwidth(char *str, unsigned int size_str, unsigned int len)
+{
+	char	*res;
+
+	res = (char*)malloc(sizeof(char) * len);
+	res[len] = '\0';
+	while (size_str--)
+		res[--len] = str[size_str];
+	while (len--)
+		res[len] = ' ';
+	free(str);
+	return (res);
 }
 
 void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
@@ -637,8 +645,8 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	unsigned int			len_e;
 	unsigned int			len_f;
 	unsigned int			len;
-	//char				*tmp;
-	//char				*final;
+	char				*tmp;
+	char				*final;
 
 	db.d = (double)va_arg(ap, double);
 	if (lst->format->precis == -1)
@@ -673,30 +681,27 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	entier = get_decimal(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
 	len_e = ft_strlen(entier);
-	fract = ft_lfprecis(fract, lst->format->precis);
+	fract = ft_fprecis(fract, lst->format->precis);
 	len_f = ft_strlen(fract);
-	len = len_e + len_f;
-	if (lst->format->width > len)
+	len = len_e + len_f + 1;
+	if (lst->format->width > (int)len)
 	{
-		ft_lfwidth(fract, lst->format->width);
+		ft_fwidth(entier, len - len_f, lst->format->width - len_f);
 		len = lst->format->width;
 	}
-	//tmp = ft_strjoin(part_entier, ".");
-	//len = ft_strlen(final);
-	//if (len >=lst->format->precis)
-	//	final = ft_strnjoin(tmp, fract, lst->format->precis);
-	//else
-	//	final = fprecis_zero(final, lst->format->precis);
-	//free(tmp);
-	//free(part_entier);
-	//(*mychr)->str = fract;
-	//(*mychr)->len = lst->format->precis;
+	tmp = ft_strjoin(entier, ".");
+	final = ft_strjoin(tmp, fract);
+	ft_printf("entier: %s\n", entier);
+	ft_printf("fract  : %s\n", fract);
+	free(tmp);
+	free(entier);
+	free(fract);
+	(*mychr)->str = final;
+	(*mychr)->len = len;
 	printf("%.70f\n", db.d);
 	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
-	ft_printf("entier: %s\n", entier);
-	ft_printf("fract  : %s\n", fract);
 	ft_putchar('\n');
 }
 
