@@ -379,54 +379,6 @@ char				*foisdix(char *str, unsigned int len)
 	return (new);
 }
 
-char				*addonelast(char *str, unsigned int len)
-{
-	unsigned int		i;
-	char			*new;
-
-	new = (char*)malloc(sizeof(char) * (len +  2));
-	new[len + 1] = '\0';
-	new[0] = '1';
-	i = 0;
-	while (++i < len + 1)
-		new[i] = str[i - 1];
-	free(str);
-	return (new);
-}
-
-char		*adit(char *a, char *b)
-{
-	int	i;
-	int	j;
-	int	sum;
-	char	*res;
-
-	sum = 0;
-	i = ft_strlen(a) - 1;
-	j = ft_strlen(b) - 1;
-	res = ft_strnew(i);
-	ft_memset(res, 0, i + 1);
-	while(i >= 0)
-	{
-		if (j >= 0)
-			sum += (a[i] - '0') + (b[j] - '0');
-		else
-			sum += (a[i] - '0');
-		res[i + 1] = (sum % 10) + '0';
-		sum /= 10;
-		i--;
-		j--;
-	}
-	res[i + 1] = (sum % 10) + '0';
-	i = ft_strlen(a);
-	if (res[0] == '0')
-	{
-		ft_memmove(res, res + 1, i);
-		res[i] = '\0';
-	}
-	return (res);
-}
-
 static int	*ft_strmulti1(char *num1, char *num2, int *k)
 {
 	int		len[2];
@@ -478,69 +430,6 @@ char		*ft_strmulti(char *num1, char *num2)
 	return (num1);
 }
 
-/*void				ft_calibrate(char *fract, int size, int new_exp, int bias)
-{
-	int	i;
-	int	j;
-	char	*res;
-
-	j = size;
-	res = fract;
-	if (bias == D_BIAS)
-	{
-		if (size > 52 - new_exp && fract[0] == '0')
-		{
-			res = (char*)malloc(sizeof(char) * (52 - new_exp + 1));
-			i = 52 - new_exp;
-			res[i] = '\0';
-			while (--i >= 0)
-				res[i] = fract[--j];
-			free(fract);
-			fract = res;
-		}
-	}
-	else if (bias == LD_BIAS)
-	{
-		if (size > 63 - new_exp && fract[0] == '0')
-		{
-			res = (char*)malloc(sizeof(char) * (53 - new_exp + 1));
-			i = 63 - new_exp;
-			res[i] = '\0';
-			while (--i >= 0)
-				res[i] = fract[--j];
-			free(fract);
-			fract = res;
-		}
-	}
-}
-*/
-
-char		*hyed_zero(char *entier)
-{
-	unsigned int	begin;
-	unsigned int	len;
-	unsigned int	i;
-	char		*new;
-
-	i = 0;
-	begin = 0;
-	while (entier[begin] == '0')
-		begin++;
-	len = begin;
-	while (entier[len])
-		len++;
-	new = (char*)malloc(sizeof(char) * (len - begin + 1));
-	i = 0;
-	while (i < len - begin)
-	{
-		new[i] = entier[i + begin];
-		i++;
-	}
-	new[i] = '\0';
-	free(entier);
-	return (new);
-}
-
 char            *calc_tab(char *tab, int size)
 {
         char		*entier;
@@ -549,8 +438,8 @@ char            *calc_tab(char *tab, int size)
         int 		i;
         int 		debut;
 
-        entier = ft_strdup("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-	count = ft_strdup("0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001");
+        entier = ft_strdup("0");
+	count = ft_strdup("1");
 	len =  1;
 	debut = -1;
 	while(tab[++debut] == '0');
@@ -559,7 +448,7 @@ char            *calc_tab(char *tab, int size)
         {
 		if (tab[i] == '1')
 		{
-			entier = adit(entier, count);
+			entier = ft_strsum(entier, count);
 			ft_putstr("\n entierteb: ");
 			ft_putstr(entier);
 			ft_putstr("\n");
@@ -577,7 +466,6 @@ char            *calc_tab(char *tab, int size)
         }
 	entier[len] = '\0';
 	i = -1;
-	entier = hyed_zero(entier);
         return (entier);
 }
 
@@ -593,15 +481,12 @@ char		*calc_bat(char *bat, int size)
 	len = 1;
 	count = ft_strdup("5");
 	while (bat[--size] == '0');
-	ft_putchar('\n');
-	ft_putnbr(size);
-	ft_putchar('\n');
 	while (++i <= size)
 	{
 		ft_putchar(bat[i]);
 		if (bat[i] == '1')
 		{
-			fract = adit(fract, count);
+			fract = ft_strsum(fract, count);
 			ft_putstr("\n fractdteb: ");
 			ft_putstr(fract);
 			ft_putstr("\n");
@@ -618,7 +503,6 @@ char		*calc_bat(char *bat, int size)
 		fract = foisdix(fract, len);
 		len++;
 	}
-	//ft_calibrate(fract, ft_strlen(fract), new_exp, bias);
 	ft_putstr("\nfract: ");
 	ft_putstr(fract);
 	fract[len] = '\0';
@@ -725,13 +609,21 @@ char		*ft_lfprecis(char *fract, int precis)
 		while (++i < len)
 			str[i] = fract[i];
 		while (i < precis)
-			str[i] = '0';
+			str[i++] = '0';
 	}
 	else
 	{
 		i = -1;
 		while (++i < precis)
 			str[i] = fract[i];
+		if (fract[i] > 4)
+			str = ft_strsum(str, "1");
+		if ((int)ft_strlen(str) > precis)
+		{
+			i = -1;
+			while (++i < precis)
+				str[i] = '0';
+		}
 	}
 	free(fract);
 	return (str);
@@ -744,9 +636,9 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	char				*entier;
 	unsigned int			len_e;
 	unsigned int			len_f;
+	unsigned int			len;
 	//char				*tmp;
 	//char				*final;
-	//int				len;
 
 	db.d = (double)va_arg(ap, double);
 	if (lst->format->precis == -1)
@@ -783,7 +675,12 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	len_e = ft_strlen(entier);
 	fract = ft_lfprecis(fract, lst->format->precis);
 	len_f = ft_strlen(fract);
-	len_f += len_e;
+	len = len_e + len_f;
+	if (lst->format->width > len)
+	{
+		ft_lfwidth(fract, lst->format->width);
+		len = lst->format->width;
+	}
 	//tmp = ft_strjoin(part_entier, ".");
 	//len = ft_strlen(final);
 	//if (len >=lst->format->precis)
@@ -794,7 +691,7 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	//free(part_entier);
 	//(*mychr)->str = fract;
 	//(*mychr)->len = lst->format->precis;
-	printf("%10f\n", db.d);
+	printf("%.70f\n", db.d);
 	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));

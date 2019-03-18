@@ -12,7 +12,7 @@ int	main(void)
 	s12 = "hi";
 	s2 = 'h';
 	str = "This is a test text";
-	ft_printf("flaot %f",  50.945);
+	ft_printf("flaot %.70f", 3520000.000000014521215451209);
 	printf("\n");
 	//printf("%'d", 1000000000);
 	//printf("\n");

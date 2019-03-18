@@ -99,5 +99,8 @@ int					ft_isblank(int c);
 int					ft_isxdigit(int c);
 char				*ft_strnjoin(char *s1, char *s2, size_t len);
 int					ft_atoibase(char *str, char *base_from);
+void 				ft_strswap(char **s1, char **s2);
+char				*ft_str_pushback(char *str, char c);
+char				*ft_strsum(char *str1, char *str2);
 
 #endif
