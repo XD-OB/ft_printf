@@ -615,6 +615,9 @@ char		*ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned in
 	len = format->width - len_f;
 	if (format->precis != 0 || ft_strchr(format->flag, '#'))
 		len--;
+	if (ft_strpbrk(format->flag, "#+")
+			|| (ft_strchr(format->flag, ' ') && !ft_strchr(format->flag, '-')))
+		len--;
 	res = (char*)malloc(sizeof(char) * (len + 1));
 	ft_putstr("\nlen: ");
 	ft_putnbr(len);
