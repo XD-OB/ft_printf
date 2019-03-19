@@ -380,57 +380,6 @@ char				*foisdix(char *str, unsigned int len)
 	return (new);
 }
 
-static int	*ft_strmulti1(char *num1, char *num2, int *k)
-{
-	int		len[2];
-	int		*prod;
-	int		i;
-	int		j;
-
-	len[0] = ft_strlen(num1);
-	len[1] = ft_strlen(num2);
-	prod = (int *)ft_strnew((len[0] + len[1] + 1) * sizeof(int));
-	*k = 0;
-	i = len[0];
-	while (--i >= 0)
-	{
-		(*k) = len[0] - 1 - i;
-		j = len[1];
-		while (--j >= 0)
-			prod[(*k)++] += (num1[i] - '0') * (num2[j] - '0');
-	}
-	(*k)++;
-	return (prod);
-}
-
-char		*ft_strmulti(char *num1, char *num2)
-{
-	int		c;
-	int		i;
-	int		k;
-	int		*prod;
-
-	if (num1 == NULL || num2 == NULL)
-		return (NULL);
-	i = -1;
-	prod = ft_strmulti1(num1, num2, &k);
-	while (++i < k - 1)
-	{
-		c = prod[i] / 10;
-		prod[i] = prod[i] % 10;
-		prod[i + 1] += c;
-	}
-	while (k > 1 && prod[k - 1] == 0)
-		k--;
-	num1 = ft_strnew((k + 1));
-	i = -1;
-	while (++i < k)
-		num1[i] = prod[k - 1 - i] + '0';
-	num1[k] = '\0';
-	free(prod);
-	return (num1);
-}
-
 char            *calc_tab(char *tab, int size)
 {
         char		*entier;
@@ -457,7 +406,7 @@ char            *calc_tab(char *tab, int size)
 		}
 	//	ft_putchar('\n');
           //      ft_putendl(count);
-                count = ft_strmulti("2", count);
+                count = ft_strmult("2", count);
             //    ft_putstr("\nentini: ");
               //  ft_putstr(entier);
               //  ft_putstr("\ncount    : ");
@@ -494,7 +443,7 @@ char		*calc_bat(char *bat, int size)
 		}
 		/*ft_putchar('\n');
 		ft_putendl(count);*/
-		count = ft_strmulti("5", count);
+		count = ft_strmult("5", count);
 		/*ft_putstr("\nfractinti: ");
 		ft_putstr(fract);
 		ft_putstr("\ncount    : ");
@@ -743,26 +692,28 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	if (db.d > -1 && db.d < 0)
 		db.d--;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	flag_apostrophe(&entier, lst->format);
 	if (db.zone.sign)
 		entier = add_sign(entier);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
 	printf("\nfract before: %s\n", fract);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	if (ft_strchr(lst->format->flag, '+'))
-		flag_plus(&entier);
-	else if (ft_strchr(lst->format->flag, ' '))
-		flag_space(&entier, lst->format->flag);
 	ft_putchar('\n');
 	if (carry == 1)
 		entier = ft_strsum(entier, "1");
 	len_e = ft_strlen(entier);
 	len_f = ft_strlen(fract);
 	len = len_e + len_f + 1;
-	if (lst->format->width > (int)len)
+	if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
 	{
 		entier = ft_fwidth(entier, len_e, lst->format, len_f);
 		len = lst->format->width;
 	}
+	if (ft_strchr(lst->format->flag, '+'))
+                flag_plus(&entier);
+        else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
+                flag_space(&entier, lst->format->flag);	
+	len_e = ft_strlen(entier);
 	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
 		tmp = ft_strjoin(entier, ".");
 	else

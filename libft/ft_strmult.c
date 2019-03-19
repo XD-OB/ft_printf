@@ -1,35 +1,4 @@
-#include <stdlib.h>
-
-typedef struct	s_mult
-{
-	int			i;
-	int			j;
-	int 		n1;
-	int 		n2;
-	int			i_n1;
-	int			i_n2;
-	int			carry;
-	int			sum;
-	int			*result;
-	char		*s;
-}				t_mult;
-
-int		ft_strlen(char *s);
-void	ft_bzero(void *s, size_t n);
-void	*ft_memalloc(size_t size);
-int		ft_atoi(const char *str);
-char	*ft_strnew(size_t size);
-char	*ft_str_pushback(char *str, char c);
-
-char	*ft_strcnew(size_t size, char c)
-{
-	char	*str;
-
-	str = ft_strnew(size);
-	while (size--)
-		str[size] = c;
-	return (str);
-}
+#include "libft.h"
 
 static char		*ft_put_into_s(int *result, int n1, int n2)
 {
