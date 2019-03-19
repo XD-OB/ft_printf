@@ -420,14 +420,16 @@ char            *calc_tab(char *tab, int size, t_format *format)
         return (entier);
 }
 
-char		*calc_bat(char *bat, int size)
+char		*calc_bat(char *bat, int size, t_format *format)
 {
 	char		*fract;
 	int		i;
 	char		*count;
 	unsigned int	len;
+	int		base;
 
 	i = -1;
+	base = (format->convers == 'H') ? 16 : 10;
 	fract = ft_strdup("0");
 	len = 1;
 	count = ft_strdup("5");
@@ -437,7 +439,7 @@ char		*calc_bat(char *bat, int size)
 		ft_putchar(bat[i]);
 		if (bat[i] == '1')
 		{
-			fract = ft_strsum(fract, count, 10);
+			fract = ft_strsum(fract, count, base);
 			//ft_putstr("\n fractdteb: ");
 			//ft_putstr(fract);
 			//ft_putstr("\n");
@@ -445,7 +447,7 @@ char		*calc_bat(char *bat, int size)
 		}
 		/*ft_putchar('\n');
 		ft_putendl(count);*/
-		count = ft_strmult("5", count, 10);
+		count = ft_strmult("5", count, base);
 		/*ft_putstr("\nfractinti: ");
 		ft_putstr(fract);
 		ft_putstr("\ncount    : ");
@@ -502,7 +504,7 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 }
 
 
-char		*get_fract(long exp, long bin_mantis, int bias)
+char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 {
 	unsigned long long	m;
 	int			len_b;
@@ -540,7 +542,7 @@ char		*get_fract(long exp, long bin_mantis, int bias)
 		size++;
 		m >>= 1;
 	}
-	return  (calc_bat(bat, size));
+	return  (calc_bat(bat, size, format));
 }
 
 int		is_strzero(char *str)
@@ -697,8 +699,10 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	if (db.d > -1 && db.d < 0)
 		db.d--;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
+	if (lst->format->convers == 'H')
+		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);
-	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	printf("\nfract before: %s\n", fract);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	ft_putchar('\n');
@@ -739,6 +743,97 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
 	ft_putchar('\n');
+}
+
+void            conv_e(t_lst *lst, t_chr **mychr, va_list ap)
+{
+        t_double                        db;
+        char                            *fract;
+        char                            *entier;
+        unsigned int                    len_e;
+        unsigned int                    len_f;
+        unsigned int                    len;
+        char                            *tmp;
+        char                            *final;
+        int                             carry;
+
+        carry = 0;
+        flag_star(lst->format, ap);
+        db.d = (flag_dollar(lst)) ? va_arg(*(lst->arglist), double) : va_arg(ap, double);
+        if (lst->format->precis == -1)
+                lst->format->precis = 6;
+        if (!db.zone.mantissa && !db.zone.exponent)
+        {
+                if (db.zone.sign)
+                        (*mychr)->str = ft_strdup("-0");
+                else
+                        (*mychr)->str = ft_strdup("0");
+                (*mychr)->len = db.zone.sign + 1;
+                return ;
+        }
+        if (!db.zone.mantissa && (int_exp(db.zone.exponent, D_BIAS) == MAX_D))
+        {
+                if  (db.zone.sign)
+                        (*mychr)->str = ft_strdup("-inf");
+                else
+                        (*mychr)->str = ft_strdup("inf");
+                (*mychr)->len = db.zone.sign + 3;
+                return ;
+        }
+        if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) == MAX_D))
+        {
+                (*mychr)->str = ft_strdup("nan");
+                (*mychr)->len = 3;
+        }
+        if (db.d < 1 && db.d > 0)
+                db.d++;
+        if (db.d > -1 && db.d < 0)
+                db.d--;
+        entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
+        if (lst->format->convers == 'H')
+                flag_dash(&entier, 16);
+        flag_apostrophe(&entier, lst->format);
+        fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
+        printf("\nfract before: %s\n", fract);
+        fract = ft_fprecis(fract, lst->format->precis, &carry);
+        ft_putchar('\n');
+        if (carry == 1)
+                entier = ft_strsum(entier, "1", 10);
+        if (db.zone.sign)
+                entier = add_sign(entier);
+        len_e = ft_strlen(entier);
+        len_f = ft_strlen(fract);
+        len = len_e + len_f + 1;
+        if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
+        {
+                entier = ft_fwidth(entier, len_e, lst->format, len_f);
+                len = lst->format->width;
+        }
+        if (ft_strchr(lst->format->flag, '+'))
+                flag_plus(&entier);
+        else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
+                flag_space(&entier, lst->format->flag);
+        len_e = ft_strlen(entier);
+        if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
+                tmp = ft_strjoin(entier, ".");
+        else
+                tmp = ft_strjoin(entier, "");
+        if (lst->format->precis > 0)
+                final = ft_strjoin(tmp, fract);
+        else
+                final = ft_strjoin(tmp, "");
+        printf("fract  : %s\n", fract);
+        free(tmp);
+        free(fract);
+        printf("entier: %s\n", entier);
+        free(entier);
+        (*mychr)->str = final;
+        (*mychr)->len = len;
+        printf("%.70f\n", db.d);
+        printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
+        printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
+        printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
+        ft_putchar('\n');
 }
 
 int		ft_printf(const char *format, ...)
