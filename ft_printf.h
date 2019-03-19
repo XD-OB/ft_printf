@@ -88,6 +88,7 @@ void            conv_color(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_p(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_e(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_lf(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_percent(t_chr **mychr);
 void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
