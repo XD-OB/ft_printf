@@ -115,8 +115,8 @@ char				*ft_strnjoin(char *s1, char *s2, size_t len);
 int					ft_atoibase(char *str, char *base_from);
 void 				ft_strswap(char **s1, char **s2);
 char				*ft_str_pushback(char *str, char c);
-char				*ft_strsum(char *str1, char *str2);
+char				*ft_strsum(char *str1, char *str2, int base);
 char				*ft_strcnew(size_t size, char c);
-char				*ft_strmult(char *num1, char *num2);
+char				*ft_strmult(char *num1, char *num2, int base);
 
 #endif

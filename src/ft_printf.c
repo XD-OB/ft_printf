@@ -380,14 +380,16 @@ char				*foisdix(char *str, unsigned int len)
 	return (new);
 }
 
-char            *calc_tab(char *tab, int size)
+char            *calc_tab(char *tab, int size, t_format *format)
 {
         char		*entier;
 	char		*count;
 	unsigned int	len;
-        int 		i;
         int 		debut;
+        int 		i;
+	int		base;
 
+	base = (format->convers == 'H') ? 16 : 10;
         entier = ft_strdup("0");
 	count = ft_strdup("1");
 	len =  1;
@@ -398,20 +400,20 @@ char            *calc_tab(char *tab, int size)
         {
 		if (tab[i] == '1')
 		{
-			entier = ft_strsum(entier, count);
-			//ft_putstr("\n entierteb: ");
-			//ft_putstr(entier);
-			//ft_putstr("\n");
+			entier = ft_strsum(entier, count, base);
+			ft_putstr("\n entierteb: ");
+			ft_putstr(entier);
+			ft_putstr("\n");
 			len = ft_strlen(entier);
 		}
-	//	ft_putchar('\n');
-          //      ft_putendl(count);
-                count = ft_strmult("2", count);
-            //    ft_putstr("\nentini: ");
-              //  ft_putstr(entier);
-              //  ft_putstr("\ncount    : ");
-             //   ft_putstr(count);
-              //  ft_putchar('\n');
+		ft_putchar('\n');
+         	ft_putendl(count);
+                count = ft_strmult("2", count, base);
+            	ft_putstr("\nentini: ");
+              	ft_putstr(entier);
+              	ft_putstr("\ncount    : ");
+             	ft_putstr(count);
+             	ft_putchar('\n');
                 len++;
         }
 	entier[len] = '\0';
@@ -435,7 +437,7 @@ char		*calc_bat(char *bat, int size)
 		ft_putchar(bat[i]);
 		if (bat[i] == '1')
 		{
-			fract = ft_strsum(fract, count);
+			fract = ft_strsum(fract, count, 10);
 			//ft_putstr("\n fractdteb: ");
 			//ft_putstr(fract);
 			//ft_putstr("\n");
@@ -443,7 +445,7 @@ char		*calc_bat(char *bat, int size)
 		}
 		/*ft_putchar('\n');
 		ft_putendl(count);*/
-		count = ft_strmult("5", count);
+		count = ft_strmult("5", count, 10);
 		/*ft_putstr("\nfractinti: ");
 		ft_putstr(fract);
 		ft_putstr("\ncount    : ");
@@ -459,7 +461,7 @@ char		*calc_bat(char *bat, int size)
 	return (fract);
 }
 
-char		*get_entier(long exp, long bin_mantis, int bias)
+char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 {
 	int				i;
 	unsigned long long int		m;
@@ -492,11 +494,11 @@ char		*get_entier(long exp, long bin_mantis, int bias)
 		m >>= 1;
 	}
 	i = -1;
-	//ft_putstr("\ntabinini ");
-	//while (++i < size_dec)
-	//	ft_putchar(tab[i]);
-	//ft_putchar('\n');
-	return (calc_tab(tab, size_dec));
+	ft_putstr("\ntabinini ");
+	while (++i < size_dec)
+		ft_putchar(tab[i]);
+	ft_putchar('\n');
+	return (calc_tab(tab, size_dec, format));
 }
 
 
@@ -584,7 +586,7 @@ char		*ft_fprecis(char *fract, int precis, int *carry)
 			str[i] = fract[i];
 		if (fract[i] > '4')
 		{
-			tmp = ft_strsum(str, "1");
+			tmp = ft_strsum(str, "1", 10);
 			if (ft_strlen(tmp) > (unsigned int)precis)
 			{
 				i = -1;
@@ -694,16 +696,16 @@ void		conv_lf(t_lst *lst, t_chr **mychr, va_list ap)
 		db.d++;
 	if (db.d > -1 && db.d < 0)
 		db.d--;
-	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
+	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	flag_apostrophe(&entier, lst->format);
-	if (db.zone.sign)
-		entier = add_sign(entier);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS);
 	printf("\nfract before: %s\n", fract);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	ft_putchar('\n');
 	if (carry == 1)
-		entier = ft_strsum(entier, "1");
+		entier = ft_strsum(entier, "1", 10);
+	if (db.zone.sign)
+		entier = add_sign(entier);
 	len_e = ft_strlen(entier);
 	len_f = ft_strlen(fract);
 	len = len_e + len_f + 1;

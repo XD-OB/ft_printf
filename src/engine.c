@@ -53,7 +53,7 @@ void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)
         {
                 while (chr && chr->str)
                         chr = chr->next;
-		if (lst->format->convers == 'f')
+		if (ft_strchr("fH", lst->format->convers))
 			conv_lf(lst, &chr, ap);
 		else if (lst->format->convers == 'k')
                         conv_k(lst->format, &chr, ap);
