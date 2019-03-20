@@ -53,17 +53,10 @@ void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)
         {
                 while (chr && chr->str)
                         chr = chr->next;
-		if (ft_strchr("fH", lst->format->convers))
-		{
-			if (ft_strchr(lst->format->flag, 'L'))
-				conv_llf(lst, &chr, ap);
-			else
-				conv_lf(lst, &chr, ap);
-		}
-		else if (ft_strchr("eE", lst->format->convers))
-			conv_e(lst, &chr, ap);
-		else if (lst->format->convers == 'g')
-			conv_g(lst, &chr, ap);
+		if (ft_strchr("f", lst->format->convers) && ft_strchr(lst->format->flag, 'L'))
+			conv_llf(lst, &chr, ap);
+		else if (ft_strchr("fHeEgG", lst->format->convers))
+				conv_d_efgh(lst, &chr, ap);
 		else if (lst->format->convers == 'k')
                         conv_k(lst->format, &chr, ap);
                 else if (ft_strchr("xXoub", lst->format->convers))
