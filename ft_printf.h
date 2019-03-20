@@ -89,7 +89,9 @@ void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_p(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_e(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_g(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_lf(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_percent(t_chr **mychr);
 void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap);
@@ -108,6 +110,10 @@ void            free_chr(t_chr *chr);
 t_chr           *load_chr(char *format, t_lst *lst);
 void            fill_chr(t_lst *lst, t_chr *chr, va_list ap);
 int             put_chr(t_chr *chr);
+int             pre_d_calc(t_double db, t_chr **mychr);
+int             pre_ld_calc(t_ldouble db, t_chr **mychr);
+long            int_exp(long bin_exp, int bias);
+long            int_mants(long bin_mants, int bias);
 
 int	ft_printf(const char *format, ...);
 
