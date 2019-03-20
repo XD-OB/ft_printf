@@ -910,21 +910,24 @@ double		ft_dpow(int a, int b)
 
 void		gclean(t_chr **mychr)
 {
-	char	*clean;
-	int	size;
-	int	i;;
+	char		*clean;
+	unsigned int	size;
+	unsigned int	i;
 
 	size = (*mychr)->len;
-	while (--size >= 0 && ((*mychr)->str)[size] == '0');
+	while (size-- && ((*mychr)->str)[size] == '0');
 	if (((*mychr)->str)[size] == '.')
 		size--;
 	if (size != (*mychr)->len)
 	{
 		clean = (char*)malloc(sizeof(char) * size + 2);
 		clean[size + 1] = '\0';
-		i = -1;
-		while (++i <= size)
+		i = 0;
+		while (i <= size)
+		{
 			clean[i] = ((*mychr)->str)[i];
+			i++;
+		}
 		free((*mychr)->str);
 		(*mychr)->str = clean;
 		(*mychr)->len = size + 1;
@@ -993,4 +996,116 @@ int		ft_printf(const char *format, ...)
 	free_chr(mychr);
 	va_end(ap);
 	return (len);
+}
+
+unsigned int	get_chr_len(t_chr *mychr)
+{
+	unsigned int	len;
+
+	len = 0;
+	while (mychr)
+	{
+		len += mychr->len;
+		mychr = mychr->next;
+	}
+	return (len);
+}
+
+char	*str_chr(t_chr *mychr, unsigned int len_str)
+{
+	char		*str;
+	unsigned int	i;
+	unsigned int	j;
+
+	str = (char*)malloc(sizeof(char) * len_str + 1);
+	str[len_str] = '\0';
+	i = 0;
+	while (mychr)
+	{
+		j = 0;
+		while (j < mychr->len)
+		{
+			str[i] = (mychr->str)[j];
+			j++;
+			i++;
+		}
+		mychr = mychr->next;
+	}
+	return (str);
+}
+
+int             ft_sprintf(char *str, const char *format, ...)
+{
+        t_chr           *mychr;
+        t_lst           *lst;
+        va_list         ap;
+        unsigned int	len;
+        unsigned int	len_format;
+
+        len_format = 0;
+        while (format[len_format++]);
+        va_start(ap, format);
+        lst = parse_format(ap, (char*)format);
+        if (!lst)
+        {
+                put_spstr((char*)format);
+                if (format[len_format - 1] == '%')
+                        return (-1);
+                return (ft_strlen(format));
+        }
+        //print_lst(lst);
+        if (!(mychr = load_chr((char*)format, lst)))
+                return -1;
+        //print_chr(mychr);
+        //ft_putendl((char*)format);
+        fill_chr(lst, mychr, ap);
+        print_lst(lst);
+        //show_lst(lst);
+        //print_chr(mychr);
+        len = get_chr_len(mychr);
+	str = str_chr(mychr, len);
+        free_lst(lst);
+        free_chr(mychr);
+        va_end(ap);
+	ft_putstr("\nstr fstory: ");
+	ft_putstr(str);
+	ft_putstr("\n");
+        return (len);
+}
+
+int             ft_fprintf(int fd, const char *format, ...)
+{
+        t_chr           *mychr;
+        t_lst           *lst;
+        va_list         ap;
+        int             len;
+        int             len_format;
+
+        len = 0;
+        len_format = 0;
+        while (format[len_format])
+                len_format++;
+        va_start(ap, format);
+        lst = parse_format(ap, (char*)format);
+        if (!lst)
+        {
+                put_spstr((char*)format);
+                if (format[len_format - 1] == '%')
+                        return (-1);
+                return (ft_strlen(format));
+        }
+        //print_lst(lst);
+        if (!(mychr = load_chr((char*)format, lst)))
+                return -1;
+        //print_chr(mychr);
+        //ft_putendl((char*)format);
+        fill_chr(lst, mychr, ap);
+        print_lst(lst);
+        //show_lst(lst);
+        //print_chr(mychr);
+        len = put_chr_fd(fd, mychr);
+        free_lst(lst);
+        free_chr(mychr);
+        va_end(ap);
+        return (len);
 }

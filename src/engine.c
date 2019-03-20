@@ -93,3 +93,17 @@ int             put_chr(t_chr *chr)
         }
         return (len);
 }
+
+int             put_chr_fd(int fd, t_chr *chr)
+{
+        int     len;
+
+        len = 0;
+        while (chr)
+        {
+                ft_putstr_fd(chr->str, fd);
+                len += chr->len;
+                chr = chr->next;
+        }
+        return (len);
+}

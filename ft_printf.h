@@ -68,7 +68,7 @@ typedef struct		s_lst
 typedef struct		s_chr
 {
 	char		*str;
-	int		len;
+	unsigned int		len;
 	struct s_chr	*next;
 }			t_chr;
 
@@ -108,6 +108,7 @@ void            free_chr(t_chr *chr);
 t_chr           *load_chr(char *format, t_lst *lst);
 void            fill_chr(t_lst *lst, t_chr *chr, va_list ap);
 int             put_chr(t_chr *chr);
+int             put_chr_fd(int fd, t_chr *chr);
 int             pre_d_calc(t_double db, t_chr **mychr);
 int             pre_ld_calc(t_ldouble db, t_chr **mychr);
 long            int_exp(long bin_exp, int bias);

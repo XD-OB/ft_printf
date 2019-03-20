@@ -7,12 +7,17 @@ int	main(void)
 	char		*s12;
 	char		s2;
 	char		*str;
+	char		*zaza;
+	char		*zaza2;
 
 	s1 = "hi there";
 	s12 = "hi";
 	s2 = 'h';
 	str = "This is a test text";
-	ft_printf("flaot:%g", 0.314);
+	ft_sprintf(zaza, "flaot:%g", 0.314);
+	printf("%s", zaza);
+	//sprintf(zaza2, "flaot:%g", 0.314);
+	//printf("%s", zaza2);
 	printf("\n");
 	printf("flaot:%g", 0.314);
 	printf("\n");
