@@ -79,31 +79,3 @@ void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)
                 chr = chr->next;
         }
 }
-
-int             put_chr(t_chr *chr)
-{
-        int     len;
-
-        len = 0;
-        while (chr)
-        {
-                ft_putstr(chr->str);
-                len += chr->len;
-                chr = chr->next;
-        }
-        return (len);
-}
-
-int             put_chr_fd(int fd, t_chr *chr)
-{
-        int     len;
-
-        len = 0;
-        while (chr)
-        {
-                ft_putstr_fd(chr->str, fd);
-                len += chr->len;
-                chr = chr->next;
-        }
-        return (len);
-}

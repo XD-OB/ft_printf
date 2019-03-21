@@ -109,12 +109,19 @@ t_chr           *load_chr(char *format, t_lst *lst);
 void            fill_chr(t_lst *lst, t_chr *chr, va_list ap);
 int             put_chr(t_chr *chr);
 int             put_chr_fd(int fd, t_chr *chr);
+int             put_chr_nfd(int fd, size_t n, t_chr *chr);
 int             pre_d_calc(t_double db, t_chr **mychr);
 int             pre_ld_calc(t_ldouble db, t_chr **mychr);
 long            int_exp(long bin_exp, int bias);
 long            int_mants(long bin_mants, int bias);
 
 int	ft_printf(const char *format, ...);
+int	ft_sprintf(char **str, const char *format, ...);
+int	ft_vprintf(const char *format, va_list ap);
+int	ft_dprintf(int fd, const char *format, ...);
+int	ft_dnprintf(int fd, size_t n, const char *format, ...);
+int	ft_snprintf(char **str, size_t n, const char *format, ...);
+
 
 void    show_lst(t_lst *lst);
 void     print_chr(t_chr *chr);
