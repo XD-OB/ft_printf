@@ -24,9 +24,9 @@ t_chr           *load_chr(char *format, t_lst *lst)
                         init_chr(&curr);
                 }
                 p1 = (p2 >= 0) ? p2 : 0;
-                while (format[p1] != lst->format->convers)
+                if (format[p1] == '%')
                         p1++;
-                if (format[++p1] == '%')
+                while (format[p1] != lst->format->convers)
                         p1++;
                 if (lst->next)
                 {
@@ -35,8 +35,9 @@ t_chr           *load_chr(char *format, t_lst *lst)
                         init_chr(&curr);
                 }
                 lst = lst->next;
+		p1++;
         }
-        if (format[p1])
+        if (format[p1] && format[p1] != '%')
         {
                 curr->next = (t_chr*)malloc(sizeof(t_chr));
                 curr = curr->next;

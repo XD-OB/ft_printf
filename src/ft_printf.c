@@ -13,22 +13,26 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-# define ABS(x) (x < 0) ? -x : x
-
 static void		zero_xxob(char **str, t_format *fmt)
 {
 	int	i;
 
 	i = 0;
+	if ((*str)[i] == '0')
+		i++;
+	if (ft_strchr("xb", (*str)[i]))
+		i++;
 	while ((*str)[i] == ' ')
 		(*str)[i++] = '0';
-	(*str)[i] = '0';
-	if (fmt->convers != 'o')
-		(*str)[++i] = '0';
-	if (fmt->convers == 'b')
-		(*str)[1] = 'b';
-	else if (fmt->convers == 'x' || fmt->convers == 'X')
-		(*str)[1] = 'x';
+	if (ft_strchr(fmt->flag, '#'))
+	{
+		if (fmt->convers != 'o')
+			(*str)[++i] = '0';
+		if (fmt->convers == 'b')
+			(*str)[1] = 'b';
+		else if (fmt->convers == 'x' || fmt->convers == 'X')
+			(*str)[1] = 'x';
+	}
 }
 
 void		zero_dbiouxx(char **str, t_format *fmt)
@@ -53,15 +57,17 @@ void		zero_dbiouxx(char **str, t_format *fmt)
 	}
 }
 
-static void	precis_o_udi(char **str, int n_zero)
+static void	precis_o_udi(char **str, int precis, size_t nbr_len)
 {
 	int	i;
+	int	n_z;
 
 	i = -1;
-	if (n_zero <= 0)
+	n_z = (precis > (int)nbr_len) ? precis : (int)nbr_len;
+	if (n_z <= 0)
 		return ;
 	while ((*str)[++i] == ' ');
-	while (n_zero--)
+	while (n_z--)
 		(*str)[--i] = '0';
 }
 
@@ -125,7 +131,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 				&& lst->format->precis == 0)
 			zero_dbiouxx(&str, lst->format);
 		if (lst->format->precis > 0)
-			precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
+			precis_o_udi(&str, lst->format->precis, ft_strlen(nbr));
 		(*mychr)->str = str;
 		free(nbr);
 	}
@@ -218,7 +224,6 @@ void		cast_xxoub(va_list ap, char *flag, size_t *n)
 
 void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 {
-	int     prefix;
 	size_t     size;
 	char    *str;
 	char    *nbr;
@@ -230,40 +235,51 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 		cast_xxoub(*(lst->arglist), lst->format->flag, &n);
 	else
 		cast_xxoub(ap, lst->format->flag, &n);
-	i = base_detect(lst->format->convers);
-	prefix = (lst->format->convers == 'o') ? 1 : 2;
-	nbr = ft_utoa_base(n, i);
-	if (ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u'
-			&& (n != 0 && lst->format->convers != 'o'))
-		flag_dash(&nbr, i);
+	if (n == 0 && !lst->format->precis)
+		(*mychr)->str = ft_strnew(0);
 	else
-		prefix = 0;
-	flag_apostrophe(&nbr, lst->format);
-	if (lst->format->precis - prefix > 0)
-		nbr[lst->format->precis + prefix] = '\0';
-	size = lst->format->width;
-	if (lst->format->width < lst->format->precis)
-		size = lst->format->precis;
-	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
-		size = ft_strlen(nbr);
-	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-		return ;
-	str[size] = '\0';
-	i = -1;
-	while (++i < (int)(size - ft_strlen(nbr) + 1))
-		str[i] = ' ';
-	ft_strcpy(&str[--i], nbr);
-	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-		zero_xxob(&str, lst->format);
-	if (lst->format->precis > 0)
-		precis_o_udi(&str, lst->format->precis - ft_strlen(nbr));
-	if (lst->format->convers == 'x')
-		str = ft_strlowcase(str);
-	if (lst->format->convers == 'X')
-		str = ft_strupcase(str);
-	(*mychr)->str = str;
+	{
+		i = base_detect(lst->format->convers);
+		nbr = ft_utoa_base(n, i);
+		if (n && ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
+			flag_dash(&nbr, i);
+		flag_apostrophe(&nbr, lst->format);
+		size = lst->format->width;
+		if (lst->format->width < lst->format->precis)
+			size = lst->format->precis;
+		if (size <= ft_strlen(nbr))
+			size = ft_strlen(nbr);
+		str = ft_strnew(size);
+		str[size] = '\0';
+		if (ft_strchr(lst->format->flag, '-'))
+		{
+			ft_strcpy(str, nbr);
+			i = ft_strlen(nbr) - 1;
+			while (++i < (int)size)
+				str[i] = ' ';
+		}
+		else
+		{
+			i = -1;
+			while (++i < (int)(size - ft_strlen(nbr) + 1))
+				str[i] = ' ';
+			ft_strcpy(&str[--i], nbr);
+			if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+				zero_xxob(&str, lst->format);
+		}
+		ft_putstr("\nstr atabi: ");
+		ft_putstr(str);
+		ft_putstr("\n");
+		//if (lst->format->precis > 0)
+	//	precis_o_udi(&str, lst->format->precis, ft_strlen(nbr));
+		if (lst->format->convers == 'x')
+			str = ft_strlowcase(str);
+		if (lst->format->convers == 'X')
+			str = ft_strupcase(str);
+		(*mychr)->str = str;
+		free(nbr);
+	}
 	(*mychr)->len = ft_strlen(str);
-	free(nbr);
 }
 
 void		conv_invalid(t_chr **mychr, t_format *format, va_list ap)
@@ -320,7 +336,7 @@ char				*int_addone(char *tab, int oldsize, int data)
 	int		i;
 
 	i = -1;
-	new = (char*)malloc(sizeof(char) * (oldsize + 1));
+	new = ft_strnew(oldsize + 1);
 	while (++i < oldsize)
 		new[i] = tab[i];
 	new[i] = data + '0';
@@ -335,8 +351,7 @@ char				*foisdix(char *str, unsigned int len)
 	unsigned int	i;
 
 	i = 0;
-	new = (char*)malloc(sizeof(char) * (len  + 2));
-	new[len + 1] = '\0';
+	new = ft_strnew(len  + 1);
 	while (i < len)
 	{
 		new[i] = str[i];
@@ -518,8 +533,7 @@ char		*ft_fprecis(char *fract, int precis, int *carry)
 	int		len;
 	int		i;
 
-	str = (char*)malloc(sizeof(char) * (precis + 1));
-	str[precis] = '\0';
+	str = ft_strnew(precis);
 	len = ft_strlen(fract);
 	i = -1;
 	if (precis > len)
@@ -566,11 +580,10 @@ char		*ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned in
 	if (ft_strpbrk(format->flag, "#+")
 			|| (ft_strchr(format->flag, ' ') && !ft_strchr(format->flag, '-')))
 		len--;
-	res = (char*)malloc(sizeof(char) * (len + 1));
+	res = ft_strnew(len);
 	ft_putstr("\nlen: ");
 	ft_putnbr(len);
 	ft_putchar('\n');
-	res[len] = '\0';
 	i = 0;
 	while (i < len - size_str)
 		res[i++] = c;
@@ -588,8 +601,7 @@ char		*add_sign(char *str)
 	unsigned int	i;
 
 	len = ft_strlen(str) + 1;
-	res = (char*)malloc(sizeof(char) * (len + 1));
-	res[len] = '\0';
+	res = ft_strnew(len);
 	res[0] = '-';
 	i = 0;
 	while (++i < len)
@@ -750,217 +762,6 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	ft_putchar('\n');
 }
 
-/*	len[3]:
- **		i => 0 ; len_e = 1; len_f = 2;
- */
-
-int		addjust_e(char **entier, char **fract)
-{
-	char	*new_entier;
-	char	*new_fract;
-	int	len[3];
-
-	len[1] = ft_strlen(*entier);
-	if ((*entier)[0] != '0' && len[1] == 1)
-		return (0);
-	len[2] = ft_strlen(*fract);
-	if (len[1] > 1)
-	{
-		new_entier = ft_strcnew(1, (*entier)[0]);
-		new_fract = ft_strjoin(&(*entier)[1], *fract);
-	}
-	else
-	{
-		len[0] = -1;
-		while ((*fract)[++len[0]] == '0');
-		new_entier = ft_strcnew(1, (*fract)[len[0]]);
-		new_fract = ft_strdup(&(*fract)[++len[0]]);
-	}
-	ft_strswap(entier, &new_entier);
-	ft_strswap(fract, &new_fract);
-	free(new_entier);
-	free(new_fract);
-	return ((len[1] > 1) ? (len[1] - 1) : ((int)ft_strlen(*fract) - len[2]));
-}
-
-
-void		ft_scum(char **entier, char **fract, int *p)
-{
-	char	*new_entier;
-	char	*new_fract;
-
-	new_entier = ft_strcnew(1, *entier[0]);
-	new_fract = ft_strnjoin(*fract, "", ft_strlen(*fract) - 1);
-	ft_strswap(entier, &new_entier);
-	ft_strswap(fract, &new_fract);
-	free(new_entier);
-	free(new_fract);
-	(*p)++;
-}
-
-char		*ft_finish_e(char *final, int p, char c)
-{
-	char	*new_final;
-	char	*tmp;
-	char	*tmp_tmp;
-	char	*sc_e;
-
-	tmp = ft_utoa(ABS(p));
-	if (p > 9)
-		sc_e = ft_strjoin("e+", tmp);
-	else if (p < -9)
-		sc_e = ft_strjoin("e-", tmp);
-	else
-	{
-		tmp_tmp = ft_strjoin("0", tmp);
-		sc_e = (p >= 0) ? ft_strjoin("e+", tmp_tmp) : ft_strjoin("e-", tmp_tmp);
-		free(tmp_tmp);
-	}
-	new_final = ft_strjoin(final, sc_e);
-	(c == 'E') ? ft_strupcase(new_final) : 0;
-	free(tmp);
-	free(final);
-	return (new_final);
-}
-
-void			conv_ee(t_lst *lst, t_chr **mychr, t_double db)
-{
-	char		*fract;
-	char                            *entier;
-	unsigned int                    len_e;
-	unsigned int                    len_f;
-	unsigned int                    len;
-	char                            *tmp;
-	char                            *final;
-	int                             carry;
-	int				p;
-
-	carry = 0;
-	if (pre_d_calc(db, mychr))
-		return ;
-	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	if (db.d < 1 && db.d > 0)
-		db.d++;
-	if (db.d > -1 && db.d < 0)
-		db.d--;
-	printf("entier before: %s\n", entier);
-	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	printf("\nfract before: %s\n", fract);
-	ft_putchar('\n');
-	p = addjust_e(&entier, &fract);
-	printf("entier after addjust: %s\n", entier);
-	printf("fract after addjust : %s\n", fract);
-	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	if (carry == 1)
-		entier = ft_strsum(entier, "1", 10);
-	if (ft_strlen(entier) > 1)
-		ft_scum(&entier, &fract, &p);
-	flag_apostrophe(&fract, lst->format);
-	printf("entier after*: %s\n", entier);
-	printf("fract after*: %s\n", fract);
-	if (db.zone.sign)
-		entier = add_sign(entier);
-	len_e = ft_strlen(entier);
-	len_f = ft_strlen(fract);
-	len = len_e + len_f + 1;
-	if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
-	{
-		entier = ft_fwidth(entier, len_e, lst->format, len_f);
-		len = lst->format->width;
-	}
-	if (ft_strchr(lst->format->flag, '+'))
-		flag_plus(&entier);
-	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
-		flag_space(&entier, lst->format->flag);
-	len_e = ft_strlen(entier);
-	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
-		tmp = ft_strjoin(entier, ".");
-	else
-		tmp = ft_strjoin(entier, "");
-	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
-	printf("fract  : %s\n", fract);
-	final = ft_finish_e(final, p, lst->format->convers);
-	free(tmp);
-	free(fract);
-	printf("entier: %s\n", entier);
-	free(entier);
-	(*mychr)->str = final;
-	(*mychr)->len = len;
-	printf("%.70f\n", db.d);
-	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
-	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
-	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
-	ft_putchar('\n');
-}
-
-double		ft_dpow(int a, int b)
-{
-	long long	res;
-
-	res = 1;
-	if (a == 0)
-		return (0);
-	if (b > 0)
-	{
-		while (b-- >= 0)
-			res *= a;
-	}
-	return (res);
-}
-
-void		gclean(t_chr **mychr)
-{
-	char		*clean;
-	unsigned int	size;
-	unsigned int	i;
-
-	size = (*mychr)->len;
-	while (size-- && ((*mychr)->str)[size] == '0');
-	if (((*mychr)->str)[size] == '.')
-		size--;
-	if (size != (*mychr)->len)
-	{
-		clean = (char*)malloc(sizeof(char) * size + 2);
-		clean[size + 1] = '\0';
-		i = 0;
-		while (i <= size)
-		{
-			clean[i] = ((*mychr)->str)[i];
-			i++;
-		}
-		free((*mychr)->str);
-		(*mychr)->str = clean;
-		(*mychr)->len = size + 1;
-	}	
-}
-
-void            conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
-{
-	t_double	db;
-
-	flag_star(lst->format, ap);
-	db.d = (flag_dollar(lst)) ? va_arg(*(lst->arglist), double) : va_arg(ap, double);
-	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
-	if (ft_strchr("fH", lst->format->convers))
-		conv_lfh(lst, mychr, db);
-	else if (ft_strchr("eE", lst->format->convers))
-		conv_ee(lst, mychr, db);
-	else
-	{
-		if (lst->format->precis == 0)
-			lst->format->precis++;
-		if (db.d < 0.001 || db.d >= ft_dpow(10, lst->format->precis))
-		{
-			if (lst->format->convers == 'G')
-				lst->format->convers = 'E';
-			conv_ee(lst, mychr, db);
-		}
-		else
-			conv_lfh(lst, mychr, db);
-		gclean(mychr);
-	}
-}
-
 int		ft_printf(const char *format, ...)
 {
 	t_chr		*mychr;
@@ -982,15 +783,14 @@ int		ft_printf(const char *format, ...)
 			return (-1);
 		return (ft_strlen(format));
 	}
-	//print_lst(lst);
+	print_lst(lst);
 	if (!(mychr = load_chr((char*)format, lst)))
 		return -1;
-	//print_chr(mychr);
-	//ft_putendl((char*)format);
+	print_chr(mychr);
+	ft_putendl((char*)format);
 	fill_chr(lst, mychr, ap);
-	print_lst(lst);
-	//show_lst(lst);
-	//print_chr(mychr);
+	show_lst(lst);
+	print_chr(mychr);
 	len = put_chr(mychr);
 	free_lst(lst);
 	free_chr(mychr);

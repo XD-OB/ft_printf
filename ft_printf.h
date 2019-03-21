@@ -1,76 +1,24 @@
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
+
+# include <stdio.h>
+
+
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdarg.h>
 # include <limits.h>
 # include "libft/libft.h"
+# include "structs.h"
+
+# define ABS(x) (x < 0) ? -x : x
 
 # define D_BIAS 1023
 # define LD_BIAS 16383
 
 # define MAX_D 	2047
 # define MAX_LD 32767
-
-# define GREEN	"\x1b[32m"
-# define RED	"\x1b[31m"
-# define YELLOW	"\x1b[33m"
-# define BLUE	"\x1b[34m"
-# define PURPLE	"\x1b[35m"
-# define CYAN	"\x1b[36m"
-# define EOC	"\x1b[0m"
-
-typedef struct			s_64
-{
-	size_t		mantissa:52;
-	long			exponent:11;
-	long			sign:1;
-}				t_64;
-
-typedef struct		s_80
-{
-	size_t		mantissa:63;
-	long		int_b:1;
-	long		exponent:15;
-	long		sign:1;
-}			t_80;
-
-typedef union		u_double
-{
-	t_64		zone;
-	double		d;
-}			t_double;
-
-typedef union		u_ldouble
-{
-	t_80		zone;
-	long double	ld;
-}			t_ldouble;
-
-typedef struct		s_format
-{
-	char		convers;
-	char		*flag;
-	int		precis;
-	int		width;
-	int		pos;
-	int		argn;
-}			t_format;
-
-typedef struct		s_lst
-{
-	t_format	*format;
-	va_list		*arglist;
-	struct s_lst	*next;
-}			t_lst;
-
-typedef struct		s_chr
-{
-	char		*str;
-	unsigned int		len;
-	struct s_chr	*next;
-}			t_chr;
 
 void	error(void);
 int	is_format(char c);
@@ -88,6 +36,8 @@ void            conv_color(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_p(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_lfh(t_lst *lst, t_chr **mychr, t_double db);
+void		conv_ee(t_lst *lst, t_chr **mychr, t_double db);
 void            conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_percent(t_chr **mychr);
@@ -114,6 +64,11 @@ int             pre_d_calc(t_double db, t_chr **mychr);
 int             pre_ld_calc(t_ldouble db, t_chr **mychr);
 long            int_exp(long bin_exp, int bias);
 long            int_mants(long bin_mants, int bias);
+char            *get_entier(long exp, long bin_mantis, int bias, t_format *format);
+char            *get_fract(long exp, long bin_mantis, int bias, t_format *format);
+char            *ft_fprecis(char *fract, int precis, int *carry);
+char            *ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned int len_f);
+char            *add_sign(char *str);
 
 int	ft_printf(const char *format, ...);
 int	ft_sprintf(char **str, const char *format, ...);

@@ -16,9 +16,10 @@ int	main(void)
 	s12 = "hi";
 	s2 = 'h';
 	str = "This is a test text";
-	ft_snprintf(&zaza, 3, "flaot:%g", 0.314);
-	printf("%s\n", zaza);
-	//printf("\n");
+	ft_printf("%#-08x", 5427);
+	printf("\n");
+	printf("%#-08x", 5427);
+	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");
 	//ft_printf("Le fichier %{cyanmnnnnnnnnnnnnnnnn} %s %{eoc} contient : %{red}%s%{eoc}", s1, str);

@@ -7,9 +7,9 @@ void            flag_plus(char **nbr)
 
         len = ft_strlen(*nbr) + 1;
         str = (char*)malloc(sizeof(char) * (len + 1));
-        if (ft_atoi(*nbr) < 0)
-                str[0] = '-';
-        else
+        if (ft_atoi(*nbr) > 0)
+       //         str[0] = '-';
+        //else
                 str[0] = '+';
         str[len] = '\0';
         ft_strcpy(&str[1], *nbr);

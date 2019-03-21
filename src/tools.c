@@ -18,7 +18,7 @@ int		is_format(char c)
 	char	*ref;
 	
 	i = 0;
-	ref = "%cspdiouxXfegrkb}";
+	ref = "cspdiouxXfegrkb}%";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);
@@ -31,7 +31,7 @@ int		is_postflag(char c)
 	char	*ref;
 	
 	i = 0;
-	ref = "lLh$";
+	ref = "lLh$0+-";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);

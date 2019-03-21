@@ -56,6 +56,11 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 			preflag[i++] = *str;
 			str++;
 		}
+		if (!*str)
+		{
+			free(curr);
+			return -1;
+		}
 		if (ft_isdigit(*str))
 		{
 			curr->format->width = ft_atoi(str);
@@ -69,6 +74,11 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 				curr->format->width = 0;
 				str++;
 			}
+		}
+		if (!*str)
+		{
+			free(curr);
+			return -1;
 		}
 		if (*str == '.')
 		{
@@ -88,6 +98,11 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 		{
 			postflag[i++] = *str;
 			str++;		
+		}
+		if (!*str)
+		{
+			free(curr);
+			return -1;
 		}
 		curr->format->convers = *str;
 		curr->format->flag = ft_strjoin(preflag, postflag);
@@ -118,23 +133,19 @@ t_lst	*parse_format(va_list ap, char	*str)
 		if (str[i] == '%')
 		{
 			if (!str[i + 1])
-			{
-				//if (head)
-				//	free_lst(head);
 				return (head);
-			}
 			node = (t_lst*)malloc(sizeof(t_lst));
 			node->format = (t_format*)malloc(sizeof(t_format));
 			init_node(node);
 			node->next = NULL;
 			if (check_fill(ap, &str[i + 1], i, node) != -1)
+			{
 				head = add_node(head, node);
+				while (str[++i] != node->format->convers);
+			}
 			else
 				free(node);
-			if (str[i + 1] == '%')
-				i++;
-			if (check_fill(ap, &str[i + 1], i, node) != -1)
-				node = node->next;
+			node = node->next;
 		}
 		i++;
 	}
