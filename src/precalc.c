@@ -3,7 +3,7 @@
 
 int             pre_d_calc(t_double db, t_chr **mychr)
 {
-	ft_printf("\nexponent: %b\n", db.zone.exponent);
+	printf("\nexponent: %d\n", db.zone.exponent);
 	ft_printf("\nmantissa: %b\n", db.zone.mantissa);
         if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
         {
@@ -61,7 +61,7 @@ long            int_exp(long bin_exp, int bias)
         int_exp = 0;
         ref = (bias == D_BIAS) ? 2048 : 32768;
         while (ref >>= 1)
-                int_exp += (bin_exp & ref);
+		int_exp += (bin_exp & ref);
         return (int_exp);
 }
 

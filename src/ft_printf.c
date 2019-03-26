@@ -472,10 +472,10 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 		m >>= 1;
 	}
 	i = -1;
-	//ft_putstr("\ntabinini ");
-	//while (++i < size_dec)
-	//	ft_putchar(tab[i]);
-	//ft_putchar('\n');
+	ft_putstr("\ntabinini ");
+	while (++i < size_dec)
+		ft_putchar(tab[i]);
+	ft_putchar('\n');
 	return (calc_tab(tab, size_dec, format));
 }
 
@@ -672,10 +672,6 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	else
 		tmp = ft_strjoin(entier, "");
 	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
-	//if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
-	//{
-	//	final = ft_ft_ft(final, lst->format);
-	//}
 	printf("fract  : %s\n", fract);
 	free(tmp);
 	free(fract);

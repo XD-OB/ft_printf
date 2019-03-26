@@ -31,7 +31,7 @@ int		is_postflag(char c)
 	char	*ref;
 	
 	i = 0;
-	ref = "lLh$0+-";
+	ref = "lLh$0+-r";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);
