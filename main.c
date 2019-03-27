@@ -8,17 +8,17 @@ int	main(void)
 {
 	char		*s1;
 	char		*s12;
-	char		s2;
 	char		*str;
 	char		*zaza;
+	char		c;
 
 	s1 = "hi there";
 	s12 = "hi";
-	s2 = 'h';
+	c = 'h';
 	str = "This is a test text";
-	ft_printf("%8.2rs", s1);
+	ft_printf("%s", s1);
 	printf("\n");
-	printf("%8.2s", s1);
+	printf("%s", s1);
 	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");

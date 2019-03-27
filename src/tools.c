@@ -12,45 +12,6 @@
 
 #include "ft_printf.h"
 
-int		is_format(char c)
-{
-	int		i;
-	char	*ref;
-	
-	i = 0;
-	ref = "cspdiouxXfegrkb}%";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
-}
-
-int		is_postflag(char c)
-{
-	int		i;
-	char	*ref;
-	
-	i = 0;
-	ref = "lLh$0+-r";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
-}
-
-int		is_preflag(char c)
-{
-	int	i;
-	char	*ref;
-
-	i = 0;
-	ref = " 0+-#'*r";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
-}
-
 t_lst		*add_node(t_lst *head, t_lst *node)
 {
 	t_lst	*current;
@@ -127,47 +88,4 @@ void	free_chr(t_chr *chr)
                 chr = chr->next;
                 free (tmp);
         }
-}
-
-void	put_spstr(char *str)
-{
-	while (*str)
-	{
-		if (*str != '%')
-			ft_putchar(*str);
-		str++;
-	}
-}
-
-void	print_lst(t_lst *lst)
-{
-	t_lst	*curr;
-
-	curr = lst;
-	while (curr)
-	{
-		ft_putstr("num argm: ");
-		ft_putnbr(curr->format->argn);
-		ft_putchar('\n');
-		ft_putstr("position: ");
-		ft_putnbr(curr->format->pos);
-		ft_putchar('\n');
-		ft_putstr("flags   : ");
-		ft_putstr(curr->format->flag);
-		ft_putchar('\n');
-		ft_putstr("precision: ");
-		ft_putnbr(curr->format->precis);
-		ft_putchar('\n');
-		ft_putstr("width    : ");
-		ft_putnbr(curr->format->width);
-		ft_putchar('\n');
-		ft_putstr("conversion: ");
-		ft_putchar(curr->format->convers);
-		ft_putchar('\n');
-		ft_putstr("\nNEXT_NODE\n\n");
-		curr = curr->next;
-	}
-	ft_putstr("Size of list:\t");
-	ft_putnbr(lstlen(lst));
-	ft_putchar('\n');
 }
