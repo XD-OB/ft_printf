@@ -57,13 +57,13 @@ void		zero_dbiouxx(char **str, t_format *fmt)
 	}
 }
 
-static void	precis_o_udi(char **str, int precis, size_t nbr_len)
+void		precis_o_udi(char **str, t_format *fmt, size_t nbr_len)
 {
 	int	i;
 	int	n_z;
 
 	i = -1;
-	n_z = (precis > (int)nbr_len) ? precis : (int)nbr_len;
+	n_z = (fmt->precis > (int)nbr_len) ? fmt->precis - (int)nbr_len : (int)nbr_len;
 	if (n_z <= 0)
 		return ;
 	while ((*str)[++i] == ' ');
@@ -105,7 +105,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 		nbr = ft_itoa(d);
 		flag_apostrophe(&nbr, lst->format);
 		if (ft_strchr(lst->format->flag, '+'))
-			flag_plus(&nbr);
+			flag_plus(&nbr, lst->format->convers);
 		if (d >= 0 && ft_strchr(lst->format->flag, ' '))
 			flag_space(&nbr, lst->format->flag);
 		size = (lst->format->width);
@@ -131,7 +131,7 @@ void		conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 				&& lst->format->precis == 0)
 			zero_dbiouxx(&str, lst->format);
 		if (lst->format->precis > 0)
-			precis_o_udi(&str, lst->format->precis, ft_strlen(nbr));
+			precis_o_udi(&str, lst->format, ft_strlen(nbr));
 		(*mychr)->str = str;
 		free(nbr);
 	}
@@ -159,12 +159,38 @@ static void	precis_zero(char **str, int n_zero)
 	}
 }
 
+static char	*fill_p_str(char *nbr, size_t nbr_size, t_format *fmt)
+{
+	char		*str;
+	size_t		size;
+	size_t		i;
+
+	i = 0;
+	size = (fmt->width > (fmt->precis + 2)) ? fmt->width : fmt->precis + 2;
+	(size < nbr_size) ? size = nbr_size : 0;
+	if (!(str = ft_strnew(size)))
+		return 0;
+	if (!ft_strchr(fmt->flag, '-'))
+	{
+		while (i < (size - nbr_size + 1))
+			str[i++] = ' ';
+		ft_strcpy(&str[--i], nbr);
+	}
+	else
+	{
+		ft_strcpy(str, nbr);
+		i = ft_strlen(str) - 1;
+		while (++i < size)
+			str[i] = ' ';
+	}
+	return (str);
+}
+
 void		conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	char	*str;
 	char	*nbr;
-	size_t	size;
-	int	i;
+	size_t	size_nbr;
 
 	flag_star(lst->format, ap);
 	if (flag_dollar(lst))
@@ -172,114 +198,20 @@ void		conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 	else
 		nbr = ft_utoa_base((size_t)va_arg(ap, void*), 16);
 	flag_dash(&nbr, 16);
+	if (ft_strchr(lst->format->flag, '+'))
+		flag_plus(&nbr, lst->format->convers);
 	nbr = ft_strlowcase(nbr);
-	if (ft_strchr(lst->format->flag, ' ') && lst->format->width <= (int)ft_strlen(nbr))
+	size_nbr = ft_strlen(nbr);
+	if (ft_strchr(lst->format->flag, ' ') && lst->format->width <= (int)size_nbr)
 		flag_space(&nbr, lst->format->flag);
-	size = (lst->format->width > lst->format->precis + 2) ? lst->format->width : lst->format->precis + 2;
-	if (size <= ft_strlen(nbr) || ft_strchr(lst->format->flag, '-'))
-		size = ft_strlen(nbr);
-	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-		return ;
-	str[size] = '\0';
-	i = 0;
-	while (i < (int)(size - ft_strlen(nbr) + 1))
-		str[i++] = ' ';
-	i--;
-	ft_strcpy(&str[i], nbr);
-	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+	str = fill_p_str(nbr, size_nbr, lst->format);
+	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)size_nbr)
 		zero_dbiouxx(&str, lst->format);
 	if (lst->format->precis > 0)
 		precis_zero(&str, lst->format->precis - 12);
 	(*mychr)->str = str;
-	(*mychr)->len = size;
+	(*mychr)->len = (int)ft_strlen(str);
 	free(nbr);
-}
-
-static int				base_detect(char c)
-{
-	if (c == 'x' || c == 'X')
-		return (16);
-	if (c == 'u')
-		return (10);
-	if (c == 'o')
-		return (8);
-	if (c == 'b')
-		return (2);
-	return (0);
-}
-
-void		cast_xxoub(va_list ap, char *flag, size_t *n)
-{
-	if (ft_strstr(flag, "hh"))
-		*n = (unsigned char)va_arg(ap, unsigned int);
-	else if (ft_strstr(flag, "h"))
-		*n = (unsigned short int)va_arg(ap, unsigned int);
-	else if (ft_strstr(flag, "ll"))
-		*n = (unsigned long long int)va_arg(ap, unsigned long long int);
-	else if (ft_strstr(flag, "l"))
-		*n = (unsigned long int)va_arg(ap, unsigned long int);
-	else
-		*n = (unsigned int)va_arg(ap, unsigned int);
-}
-
-void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
-{
-	size_t     size;
-	char    *str;
-	char    *nbr;
-	int	i;
-	size_t	n;
-
-	flag_star(lst->format, ap);
-	if (flag_dollar(lst))
-		cast_xxoub(*(lst->arglist), lst->format->flag, &n);
-	else
-		cast_xxoub(ap, lst->format->flag, &n);
-	if (n == 0 && !lst->format->precis)
-		(*mychr)->str = ft_strnew(0);
-	else
-	{
-		i = base_detect(lst->format->convers);
-		nbr = ft_utoa_base(n, i);
-		if (n && ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
-			flag_dash(&nbr, i);
-		flag_apostrophe(&nbr, lst->format);
-		size = lst->format->width;
-		if (lst->format->width < lst->format->precis)
-			size = lst->format->precis;
-		if (size <= ft_strlen(nbr))
-			size = ft_strlen(nbr);
-		str = ft_strnew(size);
-		str[size] = '\0';
-		if (ft_strchr(lst->format->flag, '-'))
-		{
-			ft_strcpy(str, nbr);
-			i = ft_strlen(nbr) - 1;
-			while (++i < (int)size)
-				str[i] = ' ';
-		}
-		else
-		{
-			i = -1;
-			while (++i < (int)(size - ft_strlen(nbr) + 1))
-				str[i] = ' ';
-			ft_strcpy(&str[--i], nbr);
-			if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
-				zero_xxob(&str, lst->format);
-		}
-		ft_putstr("\nstr atabi: ");
-		ft_putstr(str);
-		ft_putstr("\n");
-		//if (lst->format->precis > 0)
-	//	precis_o_udi(&str, lst->format->precis, ft_strlen(nbr));
-		if (lst->format->convers == 'x')
-			str = ft_strlowcase(str);
-		if (lst->format->convers == 'X')
-			str = ft_strupcase(str);
-		(*mychr)->str = str;
-		free(nbr);
-	}
-	(*mychr)->len = ft_strlen(str);
 }
 
 void		conv_invalid(t_chr **mychr, t_format *format, va_list ap)
@@ -664,7 +596,7 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
 		entier = ft_fwidth(entier, len_e, lst->format, len_f);
 	if (ft_strchr(lst->format->flag, '+'))
-		flag_plus(&entier);
+		flag_plus(&entier, lst->format->convers);
 	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
 		flag_space(&entier, lst->format->flag);	
 	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
@@ -735,7 +667,7 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 		len = lst->format->width;
 	}
 	if (ft_strchr(lst->format->flag, '+'))
-		flag_plus(&entier);
+		flag_plus(&entier, lst->format->convers);
 	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
 		flag_space(&entier, lst->format->flag);
 	len_e = ft_strlen(entier);
@@ -832,183 +764,183 @@ char	*str_chr(t_chr *mychr, unsigned int len_str)
 
 int             ft_sprintf(char **str, const char *format, ...)
 {
-        t_chr           *mychr;
-        t_lst           *lst;
-        va_list         ap;
-        unsigned int	len;
-        unsigned int	len_format;
+	t_chr           *mychr;
+	t_lst           *lst;
+	va_list         ap;
+	unsigned int	len;
+	unsigned int	len_format;
 
-        len_format = 0;
-        while (format[len_format++]);
-        va_start(ap, format);
-        lst = parse_format(ap, (char*)format);
-        if (!lst)
-        {
-                put_spstr((char*)format);
-                if (format[len_format - 1] == '%')
-                        return (-1);
-                return (ft_strlen(format));
-        }
-        //print_lst(lst);
-        if (!(mychr = load_chr((char*)format, lst)))
-                return -1;
-        //print_chr(mychr);
-        //ft_putendl((char*)format);
-        fill_chr(lst, mychr, ap);
-        print_lst(lst);
-        //show_lst(lst);
-        //print_chr(mychr);
-        len = get_chr_len(mychr);
+	len_format = 0;
+	while (format[len_format++]);
+	va_start(ap, format);
+	lst = parse_format(ap, (char*)format);
+	if (!lst)
+	{
+		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
+		return (ft_strlen(format));
+	}
+	//print_lst(lst);
+	if (!(mychr = load_chr((char*)format, lst)))
+		return -1;
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
+	fill_chr(lst, mychr, ap);
+	print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
+	len = get_chr_len(mychr);
 	*str = str_chr(mychr, len);
-        free_lst(lst);
-        free_chr(mychr);
-        va_end(ap);
-        return (len);
+	free_lst(lst);
+	free_chr(mychr);
+	va_end(ap);
+	return (len);
 }
 
 int             ft_snprintf(char **str, size_t n, const char *format, ...)
 {
-        t_chr           *mychr;
-        t_lst           *lst;
-        va_list         ap;
-        unsigned int    len;
-        unsigned int    len_format;
+	t_chr           *mychr;
+	t_lst           *lst;
+	va_list         ap;
+	unsigned int    len;
+	unsigned int    len_format;
 
-        len_format = 0;
-        while (format[len_format++]);
-        va_start(ap, format);
-        lst = parse_format(ap, (char*)format);
-        if (!lst)
-        {
-                put_spstr((char*)format);
-                if (format[len_format - 1] == '%')
-                        return (-1);
-                return (ft_strlen(format));
-        }
-        //print_lst(lst);
-        if (!(mychr = load_chr((char*)format, lst)))
-                return -1;
-        //print_chr(mychr);
-        //ft_putendl((char*)format);
-        fill_chr(lst, mychr, ap);
-        print_lst(lst);
-        //show_lst(lst);
-        //print_chr(mychr);
-        len = get_chr_len(mychr);
+	len_format = 0;
+	while (format[len_format++]);
+	va_start(ap, format);
+	lst = parse_format(ap, (char*)format);
+	if (!lst)
+	{
+		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
+		return (ft_strlen(format));
+	}
+	//print_lst(lst);
+	if (!(mychr = load_chr((char*)format, lst)))
+		return -1;
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
+	fill_chr(lst, mychr, ap);
+	print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
+	len = get_chr_len(mychr);
 	if (len > n)
 		len = n;
-        *str = str_chr(mychr, n);
-        free_lst(lst);
-        free_chr(mychr);
-        va_end(ap);
-        return (len);
+	*str = str_chr(mychr, n);
+	free_lst(lst);
+	free_chr(mychr);
+	va_end(ap);
+	return (len);
 }
 
 int             ft_dprintf(int fd, const char *format, ...)
 {
-        t_chr           *mychr;
-        t_lst           *lst;
-        va_list         ap;
-        int             len;
-        int             len_format;
+	t_chr           *mychr;
+	t_lst           *lst;
+	va_list         ap;
+	int             len;
+	int             len_format;
 
-        len = 0;
-        len_format = 0;
-        while (format[len_format])
-                len_format++;
-        va_start(ap, format);
-        lst = parse_format(ap, (char*)format);
-        if (!lst)
-        {
-                put_spstr((char*)format);
-                if (format[len_format - 1] == '%')
-                        return (-1);
-                return (ft_strlen(format));
-        }
-        //print_lst(lst);
-        if (!(mychr = load_chr((char*)format, lst)))
-                return -1;
-        //print_chr(mychr);
-        //ft_putendl((char*)format);
-        fill_chr(lst, mychr, ap);
-        print_lst(lst);
-        //show_lst(lst);
-        //print_chr(mychr);
-        len = put_chr_fd(fd, mychr);
-        free_lst(lst);
-        free_chr(mychr);
-        va_end(ap);
-        return (len);
+	len = 0;
+	len_format = 0;
+	while (format[len_format])
+		len_format++;
+	va_start(ap, format);
+	lst = parse_format(ap, (char*)format);
+	if (!lst)
+	{
+		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
+		return (ft_strlen(format));
+	}
+	//print_lst(lst);
+	if (!(mychr = load_chr((char*)format, lst)))
+		return -1;
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
+	fill_chr(lst, mychr, ap);
+	print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
+	len = put_chr_fd(fd, mychr);
+	free_lst(lst);
+	free_chr(mychr);
+	va_end(ap);
+	return (len);
 }
 
 int             ft_dnprintf(int fd, size_t n, const char *format, ...)
 {
-        t_chr           *mychr;
-        t_lst           *lst;
-        va_list         ap;
-        int             len;
-        int             len_format;
+	t_chr           *mychr;
+	t_lst           *lst;
+	va_list         ap;
+	int             len;
+	int             len_format;
 
-        len = 0;
-        len_format = 0;
-        while (format[len_format])
-                len_format++;
-        va_start(ap, format);
-        lst = parse_format(ap, (char*)format);
-        if (!lst)
-        {
-                put_spstr((char*)format);
-                if (format[len_format - 1] == '%')
-                        return (-1);
-                return (ft_strlen(format));
-        }
-        //print_lst(lst);
-        if (!(mychr = load_chr((char*)format, lst)))
-                return -1;
-        //print_chr(mychr);
-        //ft_putendl((char*)format);
-        fill_chr(lst, mychr, ap);
-        print_lst(lst);
-        //show_lst(lst);
-        //print_chr(mychr);
-        len = put_chr_nfd(fd, n, mychr);
-        free_lst(lst);
-        free_chr(mychr);
-        va_end(ap);
-        return (len);
+	len = 0;
+	len_format = 0;
+	while (format[len_format])
+		len_format++;
+	va_start(ap, format);
+	lst = parse_format(ap, (char*)format);
+	if (!lst)
+	{
+		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
+		return (ft_strlen(format));
+	}
+	//print_lst(lst);
+	if (!(mychr = load_chr((char*)format, lst)))
+		return -1;
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
+	fill_chr(lst, mychr, ap);
+	print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
+	len = put_chr_nfd(fd, n, mychr);
+	free_lst(lst);
+	free_chr(mychr);
+	va_end(ap);
+	return (len);
 }
 
 int             ft_vprintf(const char *format, va_list ap)
 {
-        t_chr           *mychr;
-        t_lst           *lst;
-        int             len;
-        int             len_format;
+	t_chr           *mychr;
+	t_lst           *lst;
+	int             len;
+	int             len_format;
 
-        len = 0;
-        len_format = 0;
-        while (format[len_format])
-                len_format++;
-        lst = parse_format(ap, (char*)format);
-        if (!lst)
-        {
-                put_spstr((char*)format);
-                if (format[len_format - 1] == '%')
-                        return (-1);
-                return (ft_strlen(format));
-        }
-        //print_lst(lst);
-        if (!(mychr = load_chr((char*)format, lst)))
-                return -1;
-        //print_chr(mychr);
-        //ft_putendl((char*)format);
-        fill_chr(lst, mychr, ap);
-        print_lst(lst);
-        //show_lst(lst);
-        //print_chr(mychr);
-        len = put_chr(mychr);
-        free_lst(lst);
-        free_chr(mychr);
-        va_end(ap);
-        return (len);
+	len = 0;
+	len_format = 0;
+	while (format[len_format])
+		len_format++;
+	lst = parse_format(ap, (char*)format);
+	if (!lst)
+	{
+		put_spstr((char*)format);
+		if (format[len_format - 1] == '%')
+			return (-1);
+		return (ft_strlen(format));
+	}
+	//print_lst(lst);
+	if (!(mychr = load_chr((char*)format, lst)))
+		return -1;
+	//print_chr(mychr);
+	//ft_putendl((char*)format);
+	fill_chr(lst, mychr, ap);
+	print_lst(lst);
+	//show_lst(lst);
+	//print_chr(mychr);
+	len = put_chr(mychr);
+	free_lst(lst);
+	free_chr(mychr);
+	va_end(ap);
+	return (len);
 }

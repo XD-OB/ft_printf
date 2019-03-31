@@ -16,9 +16,9 @@ int	main(void)
 	s12 = "hi";
 	c = 'h';
 	str = "This is a test text";
-	ft_printf("%s", s1);
+	ft_printf("%5.3u", 15);
 	printf("\n");
-	printf("%s", s1);
+	printf("%5.3u", 15);
 	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");

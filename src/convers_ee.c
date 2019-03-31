@@ -118,7 +118,7 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
                 len = lst->format->width;
         }
         if (ft_strchr(lst->format->flag, '+'))
-                flag_plus(&entier);
+                flag_plus(&entier, lst->format->convers);
         else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
                 flag_space(&entier, lst->format->flag);
         len_e = ft_strlen(entier);

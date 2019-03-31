@@ -40,7 +40,6 @@ void            flag_apostrophe(char **str, t_format *fmt)
 
         if (ft_strchr(fmt->flag, '\'') && ft_strchr("udif", fmt->convers))
         {
-                ft_putstr("hi\n");
                 prev_len = ft_strlen(*str);
                 i = prev_len;
                 j = prev_len + (prev_len - 1) / 3;

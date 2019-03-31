@@ -22,6 +22,17 @@ static int	is_repeat(char *str, char c)
 	return (0);
 }
 
+static int	ret_val(int c, int cc)
+{
+	if (c == 0 && cc == 1)
+		return (cc);
+	if (cc == 0 && c == 1)
+		return (c);
+	if (cc == 0 && c == 0)
+		return (-1);
+	return (0);
+}
+
 static int	not_repstr(char *str, char c)
 {
 	int	countc;
@@ -45,13 +56,7 @@ static int	not_repstr(char *str, char c)
 		}
 		str++;
 	}
-	if (countc == 0 && countcc == 1)
-		return (countcc);
-	if (countcc == 0 && countc == 1)
-		return (countc);
-	if (countcc == 0 && countc == 0)
-		return (-1);
-	return (0);
+	return (ret_val(countc, countcc));
 }
 
 int		is_valid(char *str)

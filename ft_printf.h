@@ -44,11 +44,12 @@ void            conv_percent(t_chr **mychr);
 void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_invalid(t_chr **mychr, t_format *format, va_list ap);
+void            zero_dbiouxx(char **str, t_format *fmt);
 char            *flag_r(char c);
 void            flag_star(t_format *format, va_list ap);
 void            flag_zero(char **str, t_format *format);
 void            flag_space(char **nbr, char *flag);
-void            flag_plus(char **nbr);
+void            flag_plus(char **nbr, char conv);
 void            flag_dash(char **nbr, int base);
 void		flag_apostrophe(char **str, t_format *fmt);
 int		flag_dollar(t_lst *lst);
@@ -69,6 +70,7 @@ char            *get_fract(long exp, long bin_mantis, int bias, t_format *format
 char            *ft_fprecis(char *fract, int precis, int *carry);
 char            *ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned int len_f);
 char            *add_sign(char *str);
+void            precis_o_udi(char **str, t_format *fmt, size_t nbr_len);
 
 int	ft_printf(const char *format, ...);
 int	ft_sprintf(char **str, const char *format, ...);
