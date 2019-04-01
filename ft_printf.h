@@ -36,6 +36,7 @@ void            conv_color(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_p(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_lfh(t_lst *lst, t_chr **mychr, t_double db);
 void		conv_ee(t_lst *lst, t_chr **mychr, t_double db);
 void            conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap);

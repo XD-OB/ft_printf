@@ -12,13 +12,15 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
 		 ft_isascii ft_isprint ft_toupper ft_tolower ft_lstnew ft_lstdelone\
 		 ft_lstdel ft_lstadd ft_lstiter ft_lstmap ft_sqrt ft_prime\
 		 ft_strlowcase ft_strupcase ft_swap ft_strrev ft_isblank ft_isxdigit\
-		 ft_strnjoin ft_atoi_base ft_strswap ft_strsum ft_str_pushback ft_ulltoa ft_lltoa ft_strmult ft_strcnew ft_ltoa\
+		 ft_strnjoin ft_atoi_base ft_strswap ft_strsum ft_str_pushback ft_ulltoa\
+		 ft_lltoa ft_strmult ft_strcnew ft_ltoa ft_maxmin\
 
 LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 
 LIB_FT_PRINTF = ft_printf check parse tools tools2 date noprint flags flags2 engine\
 			convers_cs precalc delete_me put_chr convers_efgh convers_ee\
-			convers_xxoub
+			convers_xxoub convers_di convers_pcolinv ssnprintf\
+			vddnprintf
 
 LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 
