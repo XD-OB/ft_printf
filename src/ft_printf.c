@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 01:09:32 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/03 04:54:06 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -409,7 +409,7 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	int				carry;
 
 	carry = 0;
-	if (pre_d_calc(db, mychr))
+	if (pre_d_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	if (db.d < 1 && db.d > 0)
@@ -471,7 +471,7 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	flag_star(lst->format, ap);
 	db.ld = (flag_dollar(lst)) ? va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
-	if (pre_ld_calc(db, mychr) == 1)
+	if (pre_ld_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, LD_BIAS), db.zone.mantissa, LD_BIAS, lst->format);
 	if (db.ld < 1 && db.ld > 0)

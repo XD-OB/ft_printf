@@ -85,7 +85,7 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
         int                             p;
 
         carry = 0;
-        if (pre_d_calc(db, mychr))
+        if (pre_d_calc(db, mychr, lst))
                 return ;
         entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
         if (db.d < 1 && db.d > 0)

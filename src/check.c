@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/03 03:16:14 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/03 03:20:17 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void	error(void)
+void			error(void)
 {
 	write(1, "Invalid format\n", 15);
 	exit(-1);
 }
 
-static int	is_repeat(char *str, char c)
+static int		is_repeat(char *str, char c)
 {
-	int	count;
+	int			count;
 
 	count = 0;
 	while (*str)
@@ -22,7 +34,7 @@ static int	is_repeat(char *str, char c)
 	return (0);
 }
 
-static int	ret_val(int c, int cc)
+static int		ret_val(int c, int cc)
 {
 	if (c == 0 && cc == 1)
 		return (cc);
@@ -33,10 +45,10 @@ static int	ret_val(int c, int cc)
 	return (0);
 }
 
-static int	not_repstr(char *str, char c)
+static int		not_repstr(char *str, char c)
 {
-	int	countc;
-	int	countcc;
+	int			countc;
+	int			countcc;
 
 	countc = 0;
 	countcc = 0;
@@ -59,10 +71,10 @@ static int	not_repstr(char *str, char c)
 	return (ret_val(countc, countcc));
 }
 
-int		is_valid(char *str)
+int				is_valid(char *str)
 {
-	int	i;
-	char	*ndbl;
+	char		*ndbl;
+	int			i;
 
 	i = 0;
 	ndbl = " 0+-#'*L$";
@@ -73,7 +85,8 @@ int		is_valid(char *str)
 		return (0);
 	if (not_repstr(str, 'h') != -1 && not_repstr(str, 'l') != -1)
 		return (0);
-	if ((not_repstr(str, 'h') != -1 || not_repstr(str, 'l') != -1) && ft_strchr(str, 'L'))
+	if ((not_repstr(str, 'h') != -1 || not_repstr(str, 'l') != -1)
+			&& ft_strchr(str, 'L'))
 		return (0);
 	return (1);
 }

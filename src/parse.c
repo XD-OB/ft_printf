@@ -34,45 +34,22 @@ char	*ft_strcolor(char *str)
 
 int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 {
-	int		i;
-	char		preflag[6];
-	char		postflag[6];
-	//char		color[7];
+	char		*preflag;
+	char		*postflag;
 
-	i = -1;
-	while (++i < 6)
-	{
-		preflag[i] = '\0';
-		postflag[i] = '\0';
-		//color[i] = '\0';
-	}
+	preflag = ft_strnew(0);
+	postflag = ft_strnew(0);
 	curr->format->pos = pos;
-	i = 0;
 	if (*str == '{')
 	{
 		str++;
-		//if (has_color(str) <= 7 && has_color(str))
-		//{
-		//	while (*str != '}' && *str)
-		//	{
-		//		color[i] = *str;
-		//		str++;
-		//		i++;
-		//	}
-		//	color[i] = '\0';
-		//}
-		//curr->format->flag = ft_strdup(color);
 		curr->format->flag = ft_strcolor(str);
 		curr->format->convers = '}';
 	}
 	else
 	{
-		i = 0;
 		while (is_preflag(*str))
-		{
-			preflag[i++] = *str;
-			str++;
-		}
+			ft_str_pushback(preflag, *str++);
 		if (!*str)
 		{
 			free(curr);
@@ -110,12 +87,8 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 			while (ft_isdigit(*str))
 				str++;
 		}
-		i = 0;
 		while (is_postflag(*str))
-		{
-			postflag[i++] = *str;
-			str++;		
-		}
+			ft_str_pushback(postflag, *str++);
 		if (!*str)
 		{
 			free(curr);
@@ -124,6 +97,8 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 		curr->format->convers = *str;
 		curr->format->flag = ft_strjoin(preflag, postflag);
 	}
+	//free(preflag);
+	//free(postflag);
 	return (0);
 }
 

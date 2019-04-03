@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 17:43:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/05 19:51:21 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/03 04:16:34 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,17 @@ t_lst		*add_node(t_lst *head, t_lst *node)
 	return (head);
 }
 
-char            *cut_str(char *str, int p1, int p2)
+void		init_chr(t_chr **chr)
 {
-        int     i;
-        char    *ret;
-
-        i = p1 - 1;
-        if (!(ret = (char*)malloc(sizeof(char) * (p2 - p1 + 2))))
-                return NULL;
-        while (++i <= p2)
-                ret[i - p1] = str[i];
-        ret[i - p1] = '\0';
-        return (ret);
-
+	(*chr)->str = NULL;
+	(*chr)->len = 0;
+	(*chr)->next = NULL;
 }
 
-void            init_chr(t_chr **chr)
+int			lstlen(t_lst *lst)
 {
-        (*chr)->str = NULL;
-        (*chr)->len = 0;
-        (*chr)->next = NULL;
-}
-
-int	lstlen(t_lst *lst)
-{
-	int	size;
 	t_lst	*curr;
+	int		size;
 
 	size = 0;
 	curr = lst;
@@ -62,7 +47,7 @@ int	lstlen(t_lst *lst)
 	return (size);
 }
 
-void	free_lst(t_lst *lst)
+void		free_lst(t_lst *lst)
 {
 	t_lst	*curr;
 
@@ -78,14 +63,14 @@ void	free_lst(t_lst *lst)
 	}
 }
 
-void	free_chr(t_chr *chr)
+void		free_chr(t_chr *chr)
 {
-        t_chr   *tmp;
+	t_chr	*tmp;
 
-        while (chr)
-        {
-                tmp = chr;
-                chr = chr->next;
-                free (tmp);
-        }
+	while (chr)
+	{
+		tmp = chr;
+		chr = chr->next;
+		free(tmp);
+	}
 }

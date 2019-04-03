@@ -16,9 +16,11 @@ int	main(void)
 	s12 = "hi";
 	c = 'h';
 	str = "This is a test text";
-	ft_printf("%+#020X", -42);
+	//ft_printf("%                           %");
+	ft_printf("%+10lf", 0);
 	printf("\n");
-	printf("%+#020X", -42);
+	printf("%+10lf", 0);
+	//printf("%                           %");
 	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");
