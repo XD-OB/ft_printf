@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:57:10 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:59:56 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/03 19:29:31 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,25 +29,22 @@ double			ft_dpow(int a, int b)
 
 void			gclean(t_chr **mychr)
 {
-	char			*clean;
-	unsigned int	size;
-	unsigned int	i;
+	char	*clean;
+	int		size;
+	int		i;
 
 	size = (*mychr)->len - 1;
 	while (size >= 0 && ((*mychr)->str)[size] == '0')
 		size--;
 	if (((*mychr)->str)[size] == '.')
 		size--;
-	if (size != (*mychr)->len)
+	if (size != (int)((*mychr)->len))
 	{
 		clean = (char*)malloc(sizeof(char) * size + 2);
 		clean[size + 1] = '\0';
-		i = 0;
-		while (i <= size)
-		{
+		i = -1;
+		while (++i <= size)
 			clean[i] = ((*mychr)->str)[i];
-			i++;
-		}
 		free((*mychr)->str);
 		(*mychr)->str = clean;
 		(*mychr)->len = size + 1;
