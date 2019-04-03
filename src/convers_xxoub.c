@@ -75,10 +75,19 @@ void            conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
         {
                 i = base_detect(lst->format->convers);
                 nbr = ft_utoa_base(n, i);
+				ft_putstr("\nnbr = ");
+				ft_putstr(nbr);
+				ft_putstr("\n");
                 if (n && ft_strchr(lst->format->flag, '#') && lst->format->convers != 'u')
                         flag_dash(&nbr, i);
+				ft_putstr("\nnbr aftre dash  = ");
+				ft_putstr(nbr);
+				ft_putstr("\n");
                 flag_apostrophe(&nbr, lst->format);
                 str = fill_xxoub_str(lst->format, nbr, ft_strlen(nbr));
+				ft_putstr("\nstr = ");
+				ft_putstr(str);
+				ft_putstr("\n");
                 (lst->format->precis > 0) ? precis_o_udi(&str, lst->format, ft_strlen(nbr)) : 0;
                 (lst->format->convers == 'x') ? str = ft_strlowcase(str) : 0;
                 (lst->format->convers == 'X') ? str = ft_strupcase(str) : 0;

@@ -92,13 +92,8 @@ void            conv_invalid(t_chr **mychr, t_format *format, va_list ap)
         }
 }
 
-void            conv_color(t_lst *lst, t_chr **mychr, va_list ap)
+void            conv_color(t_lst *lst, t_chr **mychr)
 {
-        if (lst->format->convers != '}')
-        {
-                conv_invalid(mychr, lst->format, ap);
-                return ;
-        }
         (*mychr)->len = 0;
         if (!ft_strcmp(lst->format->flag, "red"))
                 (*mychr)->str = ft_strdup(RED);
@@ -115,5 +110,8 @@ void            conv_color(t_lst *lst, t_chr **mychr, va_list ap)
         else if (!ft_strcmp(lst->format->flag, "eoc"))
                 (*mychr)->str = ft_strdup(EOC);
         else
-                conv_invalid(mychr, lst->format, ap);
+		{
+                (*mychr)->str = ft_strdup(lst->format->flag);
+				(*mychr)->len = ft_strlen((*mychr)->str);
+		}
 }

@@ -37,6 +37,11 @@ static void             fill_di_str(t_chr **mychr, t_format *fmt, char *nbr, lon
                 nbr[0] = '0';
                 str[0] = '-';
         }
+		else if (d > 0 && ft_strchr(fmt->flag, '+') && ft_strchr(fmt->flag, '0'))
+		{
+			nbr[0] = '0';
+			str[0] = '+';
+		}
         ft_strcat(str, nbr);
         if (ft_strchr(fmt->flag, '0') && fmt->width > (int)(nbr_size) && !fmt->precis)
                 zero_dbiouxx(&str, fmt);

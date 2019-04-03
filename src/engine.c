@@ -56,11 +56,11 @@ static void	some_convers(t_lst *lst, t_chr *chr, va_list ap)
 	else if (lst->format->convers == 'k')
        		conv_k(lst->format, &chr, ap);
 	else if (lst->format->convers == '}')
-              	conv_color(lst, &chr, ap);
+              	conv_color(lst, &chr);
        	else if (lst->format->convers == 'p')
                	conv_p(lst, &chr, ap);
 	else
-		conv_percent(&chr);
+		conv_percent(&chr, lst, ap);
 }
 
 void            fill_chr(t_lst *lst, t_chr *chr, va_list ap)

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/03/08 16:20:53 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/03 01:09:32 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void		zero_dbiouxx(char **str, t_format *fmt)
 		while ((*str)[i] == ' ')
 			(*str)[i++] = '\0';
 	}
-	else if (ft_strchr("xxob", fmt->convers))
+	else if (ft_strchr("xXob", fmt->convers))
 		zero_xxob(str, fmt);
 	else if (fmt->convers == 'p')
 	{
@@ -70,10 +70,33 @@ void		precis_o_udi(char **str, t_format *fmt, size_t nbr_len)
 		(*str)[i++] = '0';
 }
 
-void		conv_percent(t_chr **mychr)
+void		conv_percent(t_chr **mychr, t_lst *lst, va_list ap)
 {
-	(*mychr)->str = ft_strdup("%");
-	(*mychr)->len = 1;
+	char	*str;
+	int		len;
+	int		i;
+	char	c;
+
+	flag_star(lst->format, ap);
+	len = ft_max(1, lst->format->width);
+	str = ft_strnew(len);
+	c = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
+	if (ft_strchr(lst->format->flag, '-'))
+	{
+		str[0] = '%';
+		i = 0;
+		while (++i < len)
+			str[i] = ' ';
+	}
+	else
+	{
+		i = -1;
+		while (++i < len - 1)
+			str[i] = c;
+		str[len - 1] = '%';
+	}
+	(*mychr)->str = str;
+	(*mychr)->len = len;
 }
 
 char				*int_addone(char *tab, int oldsize, int data)

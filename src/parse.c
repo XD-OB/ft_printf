@@ -16,36 +16,53 @@ int	has_color(char *str)
 	return (len);
 }
 
+char	*ft_strcolor(char *str)
+{
+	char	*res;
+	int		len;
+	int		i;
+
+	len = 0;
+	while (str[len] && str[len] != '}' && str[len] != '%')
+		len++;
+	res = ft_strnew(len);
+	i = -1;
+	while (++i < len)
+		res[i] = str[i];
+	return (res);
+}
+
 int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 {
 	int		i;
 	char		preflag[6];
 	char		postflag[6];
-	char		color[7];
+	//char		color[7];
 
 	i = -1;
 	while (++i < 6)
 	{
 		preflag[i] = '\0';
 		postflag[i] = '\0';
-		color[i] = '\0';
+		//color[i] = '\0';
 	}
 	curr->format->pos = pos;
 	i = 0;
 	if (*str == '{')
 	{
 		str++;
-		if (has_color(str) <= 7 && has_color(str))
-		{
-			while (*str != '}' && *str)
-			{
-				color[i] = *str;
-				str++;
-				i++;
-			}
-			color[i] = '\0';
-		}
-		curr->format->flag = ft_strdup(color);
+		//if (has_color(str) <= 7 && has_color(str))
+		//{
+		//	while (*str != '}' && *str)
+		//	{
+		//		color[i] = *str;
+		//		str++;
+		//		i++;
+		//	}
+		//	color[i] = '\0';
+		//}
+		//curr->format->flag = ft_strdup(color);
+		curr->format->flag = ft_strcolor(str);
 		curr->format->convers = '}';
 	}
 	else

@@ -5,14 +5,16 @@ void            flag_plus(char **nbr, char conv)
         char    *str;
         int     len;
 
-        len = ft_strlen(*nbr) + 1;
-        str = (char*)malloc(sizeof(char) * (len + 1));
         if (ft_atoi(*nbr) > 0 || ft_strchr("puxX", conv))
-                str[0] = '+';
-        str[len] = '\0';
-        ft_strcpy(&str[1], *nbr);
-        free (*nbr);
-        *nbr = str;
+		{
+        	len = ft_strlen(*nbr) + 1;
+        	str = (char*)malloc(sizeof(char) * (len + 1));
+        	        str[0] = '+';
+        	str[len] = '\0';
+        	ft_strcpy(&str[1], *nbr);
+        	free (*nbr);
+        	*nbr = str;
+		}
 }
 
 void            flag_space(char **nbr, char *flag)
