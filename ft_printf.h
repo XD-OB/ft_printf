@@ -70,7 +70,7 @@ char            *get_entier(long exp, long bin_mantis, int bias, t_format *forma
 char            *get_fract(long exp, long bin_mantis, int bias, t_format *format);
 char            *ft_fprecis(char *fract, int precis, int *carry);
 char            *ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned int len_f);
-char            *add_sign(char *str);
+char            *add_sign(char *str, int sign);
 void            precis_o_udi(char **str, t_format *fmt, size_t nbr_len);
 
 int	ft_printf(const char *format, ...);

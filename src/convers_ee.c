@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:48:46 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:56:50 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/03 21:59:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	printf("entier after*: %s\n", entier);
 	printf("fract after*: %s\n", fract);
 	if (db.zone.sign)
-		entier = add_sign(entier);
+		entier = add_sign(entier, (int)(db.zone.sign));
 	len_e = ft_strlen(entier);
 	len_f = ft_strlen(fract);
 	len = len_e + len_f + 1;
