@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   noprint.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/03 17:19:08 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/03 17:19:51 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-static char	*no_print_1(char c)
+static char		*no_print_1(char c)
 {
 	if (c == 0)
 		return (ft_strdup("[NUL]"));
@@ -27,7 +39,7 @@ static char	*no_print_1(char c)
 	return (ft_strdup("[VT ]"));
 }
 
-static char	*no_print_2(char c)
+static char		*no_print_2(char c)
 {
 	if (c == 12)
 		return (ft_strdup("[FF ]"));
@@ -52,7 +64,7 @@ static char	*no_print_2(char c)
 	return (ft_strdup("[SYN]"));
 }
 
-static char     *no_print_3(char c)
+static char		*no_print_3(char c)
 {
 	if (c == 23)
 		return (ft_strdup("[ETB]"));
@@ -75,7 +87,7 @@ static char     *no_print_3(char c)
 	return (ft_strdup("[DEL]"));
 }
 
-char            *flag_r(char c)
+char			*flag_r(char c)
 {
 	if (c < 12)
 		return (no_print_1(c));

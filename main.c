@@ -17,10 +17,9 @@ int	main(void)
 	c = 'h';
 	str = "This is a test text";
 	//ft_printf("%                           %");
-	ft_printf("%+10lf", 0);
+	ft_printf("%lf", 0);
 	printf("\n");
-	printf("%+10lf", 0);
-	//printf("%                           %");
+	printf("%lf", 0);
 	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");

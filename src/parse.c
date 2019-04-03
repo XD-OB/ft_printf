@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/03 17:15:23 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/03 17:48:14 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 #include <stdio.h>
 
-int	has_color(char *str)
+int		has_color(char *str)
 {
 	int	len;
 
@@ -32,13 +44,17 @@ char	*ft_strcolor(char *str)
 	return (res);
 }
 
-int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
+int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 {
 	char		*preflag;
 	char		*postflag;
+	char		*pre;
+	char		*post;
 
-	preflag = ft_strnew(0);
-	postflag = ft_strnew(0);
+	preflag = ft_strnew(20);
+	postflag = ft_strnew(50);
+	pre = preflag;
+	post = postflag;
 	curr->format->pos = pos;
 	if (*str == '{')
 	{
@@ -49,11 +65,18 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 	else
 	{
 		while (is_preflag(*str))
-			ft_str_pushback(preflag, *str++);
+		{
+			if (!ft_strchr(preflag, *str))
+			{
+				*pre = *str;
+				pre++;
+			}
+			str++;
+		}
 		if (!*str)
 		{
 			free(curr);
-			return -1;
+			return (-1);
 		}
 		if (ft_isdigit(*str))
 		{
@@ -72,7 +95,7 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 		if (!*str)
 		{
 			free(curr);
-			return -1;
+			return (-1);
 		}
 		if (*str == '.')
 		{
@@ -88,17 +111,26 @@ int		check_fill(va_list tmp, char *str, int pos,  t_lst *curr)
 				str++;
 		}
 		while (is_postflag(*str))
-			ft_str_pushback(postflag, *str++);
+		{
+			if ((*str == 'l' && !ft_strstr(postflag, "ll"))
+					|| (*str == 'h' && !ft_strstr(postflag, "hh"))
+					|| !ft_strchr(postflag, *str))
+			{
+				*post = *str;
+				post++;
+			}
+			str++;
+		}
 		if (!*str)
 		{
 			free(curr);
-			return -1;
+			return (-1);
 		}
 		curr->format->convers = *str;
 		curr->format->flag = ft_strjoin(preflag, postflag);
 	}
-	//free(preflag);
-	//free(postflag);
+	free(preflag);
+	free(postflag);
 	return (0);
 }
 
@@ -112,10 +144,10 @@ void	init_node(t_lst *node)
 	node->format->argn = 0;
 }
 
-t_lst	*parse_format(va_list ap, char	*str)
+t_lst	*parse_format(va_list ap, char *str)
 {
-	t_lst		*head;
-	t_lst		*node;
+	t_lst	*head;
+	t_lst	*node;
 	int		i;
 
 	i = 0;
@@ -133,7 +165,9 @@ t_lst	*parse_format(va_list ap, char	*str)
 			if (check_fill(ap, &str[i + 1], i, node) != -1)
 			{
 				head = add_node(head, node);
-				while (str[++i] != node->format->convers);
+				i++;
+				while (str[i] != node->format->convers)
+					i++;
 			}
 			else
 				free(node);
