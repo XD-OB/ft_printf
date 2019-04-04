@@ -26,6 +26,8 @@ LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 
 LIB_FT_PRINTF_OBJ = $(addsuffix .o, $(LIB_FT_PRINTF))
 
+SRC_OBJ = $(addprefix src/, $(LIB_FT_PRINTF_OBJ))
+
 LIBFT_H_DIR = libft/
 
 FLAGS = -Wall -Wextra -Werror
@@ -37,10 +39,11 @@ $(NAME) :
 		@gcc -c  $(FLAGS) -I ./ -I $(LIBFT_H_DIR) $(LIB_FT_PRINTF_SRC)
 		@ar rc $(NAME) $(LIBFT_OBJ) $(LIB_FT_PRINTF_OBJ)
 		@ranlib	$(NAME)
+		@mv $(LIB_FT_PRINTF_OBJ) src/
 
 clean :
 		@make clean -C libft
-		@/bin/rm -rf $(LIB_FT_PRINTF_OBJ)
+		@/bin/rm -rf $(SRC_OBJ) 
 
 fclean : clean
 		@make fclean -C libft
@@ -49,3 +52,4 @@ fclean : clean
 re : fclean all
 
 .PHONY : all clean fclean re
+.SILENT :
