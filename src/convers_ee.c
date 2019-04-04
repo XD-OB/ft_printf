@@ -147,7 +147,7 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	printf("entier: %s\n", entier);
 	free(entier);
 	(*mychr)->str = final;
-	(*mychr)->len = len;
+	(*mychr)->len = ft_strlen(final);
 	printf("%.70f\n", db.d);
 	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));

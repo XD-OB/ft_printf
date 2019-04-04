@@ -393,7 +393,8 @@ char		*ft_fwidthf(char *str, unsigned int size_str, t_format *format, unsigned i
 
 char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
 {
-	char			*tmp;
+	char		*tmp;
+	char		*final;
 	unsigned int	len[2];
 
 	if (carry == 1)
@@ -413,8 +414,9 @@ char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double d
 		flag_space(&entier, fmt->flag);	
 	tmp = (ft_strchr(fmt->flag, '#') || fmt->precis != 0) ?
 		ft_strjoin(entier, ".") : ft_strjoin(entier, "");
+	final = (fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
 	free(tmp);
-	return ((fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, ""));
+	return (final);
 }
 
 void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)

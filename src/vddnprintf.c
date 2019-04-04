@@ -30,7 +30,7 @@ int			ft_vprintf(const char *format, va_list ap)
 	if (!lst)
 	{
 		put_spstr((char*)format);
-		return ((format[len[1] - 1] == '%') ? -1 : ft_strlen(format));
+		return ((format[len[1] - 1] == '%') ? -1 : (int)ft_strlen(format));
 	}
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
@@ -58,7 +58,7 @@ int			ft_dprintf(int fd, const char *format, ...)
 	if (!lst)
 	{
 		put_spstr((char*)format);
-		return ((format[len[1] - 1] == '%') ? -1 : ft_strlen(format));
+		return ((format[len[1] - 1] == '%') ? -1 : (int)ft_strlen(format));
 	}
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
@@ -86,7 +86,7 @@ int			ft_dnprintf(int fd, size_t n, const char *format, ...)
 	if (!lst)
 	{
 		put_spstr((char*)format);
-		return ((format[len[1] - 1] == '%') ? -1 : ft_strlen(format));
+		return ((format[len[1] - 1] == '%') ? -1 : (int)ft_strlen(format));
 	}
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
