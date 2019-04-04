@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 23:21:40 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/04 02:15:29 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,26 +191,12 @@ char		*calc_bat(char *bat, int size, t_format *format)
 		if (bat[i] == '1')
 		{
 			fract = ft_strsum(fract, count, base);
-			//ft_putstr("\n fractdb: ");
-			//ft_putstr(fract);
-			//ft_putstr("\n");
 			len = ft_strlen(fract);
 		}
-		/*ft_putchar('\n');
-		  ft_putendl(count);*/
 		count = ft_strmult("5", count, base);
-		/*ft_putstr("\nfractinti: ");
-		  ft_putstr(fract);
-		  ft_putstr("\ncount    : ");
-		  ft_putstr(count);
-		  ft_putchar('\n');*/
 		fract = foisdix(fract, len);
 		len++;
 	}
-	/*ft_putstr("\nfract: ");
-	  ft_putstr(fract);
-	  fract[len] = '\0';
-	  ft_putchar('\n');*/
 	return (fract);
 }
 
@@ -240,11 +226,6 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 		size_dec++;
 		m >>= 1;
 	}
-	i = -1;
-	ft_putstr("\ntabinini ");
-	while (++i < size_dec)
-		ft_putchar(tab[i]);
-	ft_putchar('\n');
 	return (calc_tab(tab, size_dec, format));
 }
 
@@ -406,15 +387,42 @@ char		*ft_fwidthf(char *str, unsigned int size_str, t_format *format, unsigned i
 	return (res);
 }
 
+/*
+**		len[2]:		len[0]: len_e		len[1]: len_f
+*/
+
+char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
+{
+	char			*tmp;
+	unsigned int	len[2];
+
+	if (carry == 1)
+		entier = (fmt->convers == 'H') ?
+			ft_strsum(entier, "1", 16) : ft_strsum(entier, "1", 10);
+	if (db.zone.sign || ft_strchr(fmt->flag, '+'))
+		entier = add_sign(entier, (int)db.zone.sign);
+	len[0] = ft_strlen(entier);
+	len[1] = ft_strlen(fract);
+	if (fmt->width > (int)(len[0] + len[1] + 1))
+	{
+		(!ft_strchr(fmt->flag, '-')) ?
+			(entier = ft_fwidth(entier, len[0], fmt, len[1])) :
+			(fract = ft_fwidthf(fract, len[1], fmt, len[0]));
+	}
+	else if (ft_strchr(fmt->flag, ' ') && !ft_strchr(fmt->flag, '-'))
+		flag_space(&entier, fmt->flag);	
+	tmp = (ft_strchr(fmt->flag, '#') || fmt->precis != 0) ?
+		ft_strjoin(entier, ".") : ft_strjoin(entier, "");
+	free(tmp);
+	return ((fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, ""));
+}
+
 void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 {
 	char				*fract;
 	char				*entier;
-	unsigned int			len_e;
-	unsigned int			len_f;
-	char				*tmp;
 	char				*final;
-	int				carry;
+	int					carry;
 
 	carry = 0;
 	if (pre_d_calc(db, mychr, lst))
@@ -427,27 +435,7 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	if (carry == 1)
-		entier = (lst->format->convers == 'H') ? ft_strsum(entier, "1", 16) : ft_strsum(entier, "1", 10);
-	if (db.zone.sign || ft_strchr(lst->format->flag, '+'))
-		entier = add_sign(entier, (int)db.zone.sign);
-	len_e = ft_strlen(entier);
-	len_f = ft_strlen(fract);
-	if (lst->format->width > (int)(len_e + len_f + 1))
-	{
-		if (!ft_strchr(lst->format->flag, '-'))
-			entier = ft_fwidth(entier, len_e, lst->format, len_f);
-		else
-			fract = ft_fwidthf(fract, len_f, lst->format, len_e);
-	}
-	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
-		flag_space(&entier, lst->format->flag);	
-	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
-		tmp = ft_strjoin(entier, ".");
-	else
-		tmp = ft_strjoin(entier, "");
-	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
-	free(tmp);
+	final = modify_lf(lst->format, entier, fract, carry, db);
 	free(fract);
 	free(entier);
 	(*mychr)->str = final;
