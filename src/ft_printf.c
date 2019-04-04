@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/04 02:15:29 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 00:04:43 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,12 +191,21 @@ char		*calc_bat(char *bat, int size, t_format *format)
 		if (bat[i] == '1')
 		{
 			fract = ft_strsum(fract, count, base);
+			//ft_putstr("\n fractteb: ");
+			//ft_putstr(fract);
+			//ft_putstr("\n");
 			len = ft_strlen(fract);
 		}
 		count = ft_strmult("5", count, base);
 		fract = foisdix(fract, len);
+		//ft_putstr("\nfracttini: ");
+		//ft_putstr(fract);
+		//ft_putstr("\ncount    : ");
+		//ft_putstr(count);
+		//ft_putchar('\n');
 		len++;
 	}
+	ft_putchar('\n');
 	return (fract);
 }
 
@@ -244,7 +253,7 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	m = 1;
 	i = -1;
-	len_b = (bias = D_BIAS) ? ABS(52 - new_exp - 1) : ABS(63 - new_exp - 1);
+	len_b = (bias = D_BIAS) ? (52 - new_exp - 1) : ABS(63 - new_exp - 1);
 	if (new_exp == -1 * bias)
 	{
 		bat = int_addone(bat, size, 0);
@@ -413,8 +422,8 @@ char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double d
 	else if (ft_strchr(fmt->flag, ' ') && !ft_strchr(fmt->flag, '-'))
 		flag_space(&entier, fmt->flag);	
 	tmp = (ft_strchr(fmt->flag, '#') || fmt->precis != 0) ?
-		ft_strjoin(entier, ".") : ft_strjoin(entier, "");
-	final = (fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
+		ft_strjoin(entier, ".") : ft_strdup(entier);
+	final = (fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strdup(tmp);
 	free(tmp);
 	return (final);
 }
@@ -430,16 +439,16 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (pre_d_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	(db.d < 1 && db.d > 0) ? db.d++ : 0;
-	(db.d > -1 && db.d < 0) ? db.d-- : 0;
+	(db.d <= 1 && db.d > 0) ? db.d++ : 0;
+	(db.d >= -1 && db.d < 0) ? db.d-- : 0;
 	if (lst->format->convers == 'H')
 		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	final = modify_lf(lst->format, entier, fract, carry, db);
-	free(fract);
-	free(entier);
+	//free(fract);
+	//free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = ft_strlen(final);
 }
@@ -504,9 +513,9 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
 	printf("fract  : %s\n", fract);
 	free(tmp);
-	free(fract);
+	//free(fract);
 	printf("entier: %s\n", entier);
-	free(entier);
+	//free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = len;
 	printf("%.70Lf\n", db.ld);

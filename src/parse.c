@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:15:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:48:14 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/04 22:46:57 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,11 @@ char	*ft_strcolor(char *str)
 
 int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 {
-	char		*preflag;
-	char		*postflag;
-	char		*pre;
-	char		*post;
+	char		*flag;
+	char		*p;
 
-	preflag = ft_strnew(20);
-	postflag = ft_strnew(50);
-	pre = preflag;
-	post = postflag;
+	flag = ft_strnew(100);
+	p = flag;
 	curr->format->pos = pos;
 	if (*str == '{')
 	{
@@ -66,10 +62,20 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 	{
 		while (is_preflag(*str))
 		{
-			if (!ft_strchr(preflag, *str))
+			if (!ft_strchr(flag, *str))
 			{
-				*pre = *str;
-				pre++;
+				*p = *str;
+				if (*str == '$')
+				{
+					str++;
+					curr->arglist = (va_list*)malloc(sizeof(va_list));
+					va_copy(*(curr->arglist), tmp);
+					curr->format->argn = ft_atoi(str);
+					while (ft_isdigit(*str))
+						str++;
+					str--;
+				}
+				p++;
 			}
 			str++;
 		}
@@ -82,15 +88,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		{
 			curr->format->width = ft_atoi(str);
 			while (ft_isdigit(*str))
-				str++;
-			if (*str == '$')
-			{
-				curr->arglist = (va_list*)malloc(sizeof(va_list));
-				va_copy(*(curr->arglist), tmp);
-				curr->format->argn = curr->format->width;
-				curr->format->width = 0;
-				str++;
-			}
+				str++;	
 		}
 		if (!*str)
 		{
@@ -112,12 +110,11 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		while (is_postflag(*str))
 		{
-			if ((*str == 'l' && !ft_strstr(postflag, "ll"))
-					|| (*str == 'h' && !ft_strstr(postflag, "hh"))
-					|| !ft_strchr(postflag, *str))
+			if ((*str == 'l' && !ft_strstr(flag, "ll")) || !ft_strchr(flag, *str)
+					|| (*str == 'h' && !ft_strstr(flag, "hh")))
 			{
-				*post = *str;
-				post++;
+				*p = *str;
+				p++;
 			}
 			str++;
 		}
@@ -127,10 +124,8 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 			return (-1);
 		}
 		curr->format->convers = *str;
-		curr->format->flag = ft_strjoin(preflag, postflag);
+		curr->format->flag = flag;
 	}
-	free(preflag);
-	free(postflag);
 	return (0);
 }
 

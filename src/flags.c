@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:40:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:41:59 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/04 22:14:03 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int			flag_dollar(t_lst *lst)
 {
 	int		i;
 
-	if (lst->format->argn)
+	if (ft_strchr(lst->format->flag, '$'))
 	{
 		i = 0;
 		while (++i < lst->format->argn)
