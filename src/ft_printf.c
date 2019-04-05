@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 07:19:08 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 07:57:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ static void		zero_ob(char **str, t_format *fmt)
 			(*str)[++i] = '0';
 		if (fmt->convers == 'b')
 			(*str)[1] = 'b';
-		//else if (fmt->convers == 'x' || fmt->convers == 'X')
-		//	(*str)[1] = 'x';
 	}
 }
 

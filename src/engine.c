@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 07:04:13 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 07:49:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static void		some_convers(t_lst *lst, t_chr *chr, va_list ap)
 		conv_s(lst, &chr, ap);
 	else if (lst->format->convers == 'c')
 		conv_c(lst, &chr, ap);
+	else if (lst->format->convers == 'u')
+		conv_u(lst, &chr, ap);
 	else if (lst->format->convers == 'o')
 		conv_o(lst, &chr, ap);
 	else if (lst->format->convers == 'k')
@@ -90,15 +92,15 @@ void			fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 			chr = chr->next;
 		if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, ap);
-		else if (ft_strchr("osckp}%", lst->format->convers))
+		else if (ft_strchr("uosckp}%", lst->format->convers))
 			some_convers(lst, chr, ap);
 		else if (ft_strchr("f", lst->format->convers)
 				&& ft_strchr(lst->format->flag, 'L'))
 			conv_llf(lst, &chr, ap);
 		else if (ft_strchr("fHeEgG", lst->format->convers))
 			conv_d_efgh(lst, &chr, ap);
-		else if (ft_strchr("ub", lst->format->convers))
-			conv_ub(lst, &chr, ap);
+		else if (ft_strchr("bB", lst->format->convers))
+			conv_b(lst, &chr, ap);
 		else if (ft_strchr("xX", lst->format->convers))
 			conv_xx(lst, &chr, ap);
 		else

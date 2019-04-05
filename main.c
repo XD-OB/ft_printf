@@ -18,10 +18,10 @@ int	main(void)
 	str = "This is a test text";
 	//ft_printf("%                           %");
 	//ft_printf("%.25lf", 0.00000000000014);
-	ft_printf("%#20.10o", 12345);
+	ft_printf("%-010u", 12345);
 	printf("\n");
 	//printf("%.25lf", 0.00000000000014);
-	printf("%#20.10o", 12345);
+	printf("%-010u", 12345);
 	printf("\n");
 	//printf("flaot:%g", 0.314);
 	//printf("\n");
