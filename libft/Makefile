@@ -6,13 +6,13 @@
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/06 14:55:40 by obelouch          #+#    #+#              #
-#    Updated: 2019/01/25 21:00:32 by obelouch         ###   ########.fr        #
+#    Updated: 2019/04/06 00:29:57 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-SRCS = ft_*.c
+SRCS = *.c
 
 HEAD = libft.h
 

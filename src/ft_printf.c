@@ -6,67 +6,12 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 07:57:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 00:25:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
-
-static void		zero_ob(char **str, t_format *fmt)
-{
-	int	i;
-
-	i = 0;
-	if ((*str)[i] == '0')
-		i++;
-	if ((*str)[i] == 'b')
-		i++;
-	while ((*str)[i] == ' ')
-		(*str)[i++] = '0';
-	if (ft_strchr(fmt->flag, '#'))
-	{
-		if (fmt->convers != 'o')
-			(*str)[++i] = '0';
-		if (fmt->convers == 'b')
-			(*str)[1] = 'b';
-	}
-}
-
-void		zero_dbiou(char **str, t_format *fmt)
-{
-	int		i;
-
-	i = 0;
-	if (ft_strchr("udi", fmt->convers))
-	{
-		while ((*str)[i] == ' ')
-			(*str)[i++] = '0';
-	}
-	else if (ft_strchr("ob", fmt->convers))
-		zero_ob(str, fmt);
-	else if (fmt->convers == 'p')
-	{
-		(*str)[i++] = '0';
-		(*str)[i++] = 'x';
-		while ((*str)[i] != 'x')
-			(*str)[i++] = '0';
-		(*str)[i] = '0';
-	}
-}
-
-void		precis_o_udi(char **str, t_format *fmt, size_t nbr_len)
-{
-	int	n_z;
-	int	i;
-
-	n_z = fmt->precis - nbr_len;
-	if (n_z <= 0)
-		return ;
-	i = (fmt->width) ? fmt->width - nbr_len - n_z : 0;
-	while (n_z--)
-		(*str)[i++] = '0';
-}
 
 void		conv_percent(t_chr **mychr, t_lst *lst, va_list ap)
 {
@@ -239,32 +184,36 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 
 char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 {
-	unsigned long long	m;
 	int			len_b;
 	unsigned int		size;
-	int			i;
 	char			*bat;
 	long			new_exp;
 
 	bat = NULL;
 	size = 0;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
-	m = 1;
-	i = -1;
-	len_b = (bias = D_BIAS) ? (52 - new_exp - 1) : ABS(63 - new_exp - 1);
-	if (new_exp == -1 * bias)
+	len_b = (bias = D_BIAS) ? ABS(52 - new_exp - 1) : ABS(63 - new_exp - 1);
+	while (len_b >= 0)
 	{
-		bat = int_addone(bat, size, 0);
-		len_b++;
-		size++;
-	}
-	while (++i < len_b)
-		m <<= 1;
-	while (m)
-	{
-		bat = (m & bin_mantis) ? int_addone(bat, size, 1) : int_addone(bat, size, 0);
-		size++;
-		m >>= 1;
+		if (new_exp < -1)
+		{
+			bat = int_addone(bat, size, 0);
+			size++;
+			new_exp++;
+		}
+		else if (new_exp == -1)
+		{
+			bat = int_addone(bat, size, 1);
+			size++;
+			new_exp++;
+		}
+		else
+		{
+			bat = ((bin_mantis >> len_b) & 1) ?
+				int_addone(bat, size, 1) : int_addone(bat, size, 0);
+			size++;
+		}
+		len_b--;
 	}
 	return  (calc_bat(bat, size, format));
 }
@@ -437,8 +386,8 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (pre_d_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	(db.d <= 1 && db.d > 0) ? db.d += 1.0 : 0;
-	(db.d >= -1 && db.d < 0) ? db.d -= 1.0 : 0;
+	//(db.d < 1 && db.d > 0) ? db.d += 1.0 : 0;
+	//(db.d > -1 && db.d < 0) ? db.d -= 1.0 : 0;
 	if (lst->format->convers == 'H')
 		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);
