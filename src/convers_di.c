@@ -29,62 +29,156 @@ static long long int	cast_di(va_list ap, char *flag)
 	return (d);
 }
 
-/*
-**	len:	len[0]: size		len[1]: nbr_size		len[2]: i
-*/
-
-static void				fill_di_str(t_chr **mychr, t_format *fmt, char *nbr,
-								long long int d)
+char                    *all_zero_di(char *nbr, int precis)
 {
-	size_t				len[3];
-	char				*str;
+        char    *res;
+        int             len;
+        int             len_nbr;
+        int             i;
+        int             j;
 
-	len[1] = ft_strlen(nbr);
-	len[0] = ft_max(fmt->width, fmt->precis);
-	len[0] = ft_max(len[0], len[1]);
-	if (!(str = ft_strnew(len[0])))
-		return ;
-	len[2] = 0;
-	while (len[2] < (len[0] - len[1]))
-		str[(len[2])++] = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
-	if (d < 0 && ft_strchr(fmt->flag, '0'))
+        len = precis;
+	len_nbr = (nbr[0] == '-') ? (int)ft_strlen(nbr) - 1 : (int)ft_strlen(nbr);
+        res = ft_strnew(len);
+        i = 0;
+        j =  0;
+        while (i < (len - len_nbr))
+                res[i++] = '0';
+	if (nbr[0] == '-')
 	{
-		nbr[0] = '0';
-		str[0] = '-';
+		res[0] = '-';
+		j++;
 	}
-	ft_strcat(str, nbr);
-	if (ft_strchr(fmt->flag, '0') && fmt->width > (int)len[1] && !fmt->precis)
-		zero_dbiou(&str, fmt);
-	if (fmt->precis > 0)
-		precis_o_udi(&str, fmt, len[1]);
-	(*mychr)->str = str;
-	(*mychr)->len = len[0];
+        while (j < (int)ft_strlen(nbr))
+                res[i++] = nbr[j++];
+        return (res);
 }
 
-void					conv_di(t_lst *lst, t_chr **mychr, va_list ap)
+void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 {
-	char				*nbr;
-	long long int		d;
+        int             i;
+        int             j;
+        char    *nbr;
 
-	flag_star(lst->format, ap);
-	if (flag_dollar(lst))
-		d = cast_di(*(lst->arglist), lst->format->flag);
-	else
-		d = cast_di(ap, lst->format->flag);
-	if (d == 0 && !lst->format->precis)
+        if (ft_strchr(fmt->flag, '-'))
+        {
+                i = 0;
+                j = 0;
+                nbr = ft_strdup(*str);
+                while (i < fmt->precis - (int)nbr_len)
+                        (*str)[i++] = '0';
+		if ((*str)[i] == '-')
+		{
+			(*str)[0] = '-';
+			(*str)[i++] = '0';
+		}
+                while(j < (int)nbr_len)
+                        (*str)[i++] = nbr[j++];
+                free(nbr);
+        }
+        else
+        {
+                i = ft_strlen(*str) - nbr_len - 1;
+                j = fmt->precis - nbr_len;
+                while (j-- && i >= 0)
+                        (*str)[i--] = '0';
+                i = ft_strlen(*str) - nbr_len;
+		if ((*str)[i] == '-')
+		{
+			(*str)[i] = '0';
+			j = i;
+			while ((*str)[j] == '0')
+				j--;
+			(*str)[j] = '-';
+		}
+        }
+}
+
+static void		flag_plus_di(t_format *fmt, char **str, int d)
+{
+	char	*res;
+	int	i;
+
+	if (!ft_strchr(fmt->flag, '+') || d <= 0)
+		return ;
+	if ((*str)[0] != ' ')
 	{
-		(*mychr)->str = ft_strnew(0);
-		(*mychr)->len = 0;
+		res = ft_strjoin("+", *str);
+		free(*str);
+		if (res[ft_strlen(res) - 1] == ' ')
+			res[ft_strlen(res) - 1] = '\0';
+		*str = res;
+		return ;
 	}
-	else
-	{
-		nbr = ft_itoa(d);
-		flag_apostrophe(&nbr, lst->format);
-		if (ft_strchr(lst->format->flag, '+'))
-			flag_plus(&nbr, lst->format->convers);
-		if (d >= 0 && ft_strchr(lst->format->flag, ' '))
-			flag_space(&nbr, lst->format->flag);
-		fill_di_str(mychr, lst->format, nbr, d);
-		free(nbr);
-	}
+	i = 0;
+	while ((*str)[i] == ' ')
+		i++;
+	(*str)[i - 1] = '+';
+	return ;
+}
+
+static void             flag_space_di(t_format *fmt, char **str)
+{
+        char    *res;
+
+        if (!ft_strchr(fmt->flag, ' ') || ft_strchr(fmt->flag, '+'))
+                return ;
+        if ((*str)[0] != ' ')
+        {
+                res = ft_strjoin(" ", *str);
+                free(*str);
+                if (res[ft_strlen(res) - 1] == ' ')
+                        res[ft_strlen(res) - 1] = '\0';
+                *str = res;
+                return ;
+        }
+        return ;
+}
+
+void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
+{
+        size_t          size;
+        char            *str;
+        char            *nbr;
+        long long int	n;
+        int             i;
+
+        flag_star(lst->format, ap);
+        n = (flag_dollar(lst)) ?
+		cast_di(*(lst->arglist), lst->format->flag) : cast_di(ap, lst->format->flag);
+        if (n == 0 && !lst->format->precis)
+                (*mychr)->str = ft_strnew(0);
+        else
+        {
+                nbr = ft_lltoa(n);
+                flag_apostrophe(&nbr, lst->format);
+                size = ft_max(ft_strlen(nbr), lst->format->width);
+                if (!(str = ft_strnew(size)))
+                        return ;
+                if (ft_strchr(lst->format->flag, '-'))
+                {
+                        ft_strcpy(str, nbr);
+                        i = ft_strlen(nbr);
+                        while (i < (int)size)
+                                str[i++] = ' ';
+                }
+                else
+                {
+                        i = 0;
+                        while (i < (int)(size - ft_strlen(nbr) + 1))
+                                str[i++] = ' ';
+                        ft_strcpy(&str[--i], nbr);
+                }
+                if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+                                precis_di(&str, lst->format, ft_strlen(nbr));
+                if (lst->format->precis >= lst->format->width)
+                        str = all_zero_di(nbr, lst->format->precis);
+                if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
+                        str = all_zero_di(nbr, lst->format->width);
+		flag_plus_di(lst->format, &str, n);
+		flag_space_di(lst->format, &str);
+                (*mychr)->str = str;
+                free(nbr);
+        }
+        (*mychr)->len = ft_strlen(str);
 }

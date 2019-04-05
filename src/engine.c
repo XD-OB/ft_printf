@@ -78,7 +78,7 @@ static void		some_convers(t_lst *lst, t_chr *chr, va_list ap)
 		conv_k(lst->format, &chr, ap);
 	else if (lst->format->convers == '}')
 		conv_color(lst, &chr);
-	else if (lst->format->convers == 'p')
+	else if (ft_strchr("pP", lst->format->convers))
 		conv_p(lst, &chr, ap);
 	else
 		conv_percent(&chr, lst, ap);
@@ -92,7 +92,7 @@ void			fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 			chr = chr->next;
 		if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, ap);
-		else if (ft_strchr("uosckp}%", lst->format->convers))
+		else if (ft_strchr("uosckpP}%", lst->format->convers))
 			some_convers(lst, chr, ap);
 		else if (ft_strchr("f", lst->format->convers)
 				&& ft_strchr(lst->format->flag, 'L'))

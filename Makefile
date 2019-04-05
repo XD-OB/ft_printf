@@ -19,8 +19,8 @@ LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 
 LIB_FT_PRINTF = ft_printf check parse tools tools2 date noprint flags flags2 engine\
 			convers_cs precalc delete_me put_chr convers_efgh convers_ee\
-			convers_xxoub convers_di convers_pcolinv ssnprintf\
-			vddnprintf
+			convers_xb convers_di convers_colinv ssnprintf\
+			vddnprintf convers_o convers_u convers_p
 
 LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 

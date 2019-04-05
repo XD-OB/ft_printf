@@ -31,6 +31,7 @@ void	print_lst(t_lst *lst);
 void	free_lst(t_lst *lst);
 t_lst	*parse_format(va_list ap, char *str);
 t_lst	*add_node(t_lst *head, t_lst *node);
+size_t	cast_xxoub(va_list ap, char *flag);
 void            conv_k(t_format *format, t_chr **mychr, va_list ap);
 void            conv_color(t_lst *lst, t_chr **mychr);
 void            conv_c(t_lst *lst, t_chr **mychr, va_list ap);
