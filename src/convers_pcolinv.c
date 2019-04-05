@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:20:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:26:04 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 05:24:43 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void			conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 		flag_space(&nbr, lst->format->flag);
 	str = fill_p_str(nbr, size_nbr, lst->format);
 	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)size_nbr)
-		zero_dbiouxx(&str, lst->format);
+		zero_dbiou(&str, lst->format);
 	if (lst->format->precis > 0)
 		precis_zero(&str, lst->format->precis - 12);
 	(*mychr)->str = str;

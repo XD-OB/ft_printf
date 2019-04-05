@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:18:38 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 05:26:00 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void				fill_di_str(t_chr **mychr, t_format *fmt, char *nbr,
 	}
 	ft_strcat(str, nbr);
 	if (ft_strchr(fmt->flag, '0') && fmt->width > (int)len[1] && !fmt->precis)
-		zero_dbiouxx(&str, fmt);
+		zero_dbiou(&str, fmt);
 	if (fmt->precis > 0)
 		precis_o_udi(&str, fmt, len[1]);
 	(*mychr)->str = str;

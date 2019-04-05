@@ -6,21 +6,21 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 00:04:43 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 07:19:08 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
 
-static void		zero_xxob(char **str, t_format *fmt)
+static void		zero_ob(char **str, t_format *fmt)
 {
 	int	i;
 
 	i = 0;
 	if ((*str)[i] == '0')
 		i++;
-	if (ft_strchr("xb", (*str)[i]))
+	if ((*str)[i] == 'b')
 		i++;
 	while ((*str)[i] == ' ')
 		(*str)[i++] = '0';
@@ -30,12 +30,12 @@ static void		zero_xxob(char **str, t_format *fmt)
 			(*str)[++i] = '0';
 		if (fmt->convers == 'b')
 			(*str)[1] = 'b';
-		else if (fmt->convers == 'x' || fmt->convers == 'X')
-			(*str)[1] = 'x';
+		//else if (fmt->convers == 'x' || fmt->convers == 'X')
+		//	(*str)[1] = 'x';
 	}
 }
 
-void		zero_dbiouxx(char **str, t_format *fmt)
+void		zero_dbiou(char **str, t_format *fmt)
 {
 	int		i;
 
@@ -43,10 +43,10 @@ void		zero_dbiouxx(char **str, t_format *fmt)
 	if (ft_strchr("udi", fmt->convers))
 	{
 		while ((*str)[i] == ' ')
-			(*str)[i++] = '\0';
+			(*str)[i++] = '0';
 	}
-	else if (ft_strchr("xXob", fmt->convers))
-		zero_xxob(str, fmt);
+	else if (ft_strchr("ob", fmt->convers))
+		zero_ob(str, fmt);
 	else if (fmt->convers == 'p')
 	{
 		(*str)[i++] = '0';
@@ -439,8 +439,8 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (pre_d_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	(db.d <= 1 && db.d > 0) ? db.d++ : 0;
-	(db.d >= -1 && db.d < 0) ? db.d-- : 0;
+	(db.d <= 1 && db.d > 0) ? db.d += 1.0 : 0;
+	(db.d >= -1 && db.d < 0) ? db.d -= 1.0 : 0;
 	if (lst->format->convers == 'H')
 		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:38:16 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/05 07:19:05 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static int		base_detect(char c)
 {
-	if (c == 'x' || c == 'X')
-		return (16);
 	if (c == 'u')
 		return (10);
 	if (c == 'o')
@@ -42,7 +40,7 @@ static size_t	cast_xxoub(va_list ap, char *flag)
 	return (n);
 }
 
-static char		*fill_xxoub_str(t_format *fmt, char *nbr, size_t size_nbr)
+static char		*fill_oub_str(t_format *fmt, char *nbr, size_t size_nbr)
 {
 	size_t		size;
 	char		*str;
@@ -65,13 +63,84 @@ static char		*fill_xxoub_str(t_format *fmt, char *nbr, size_t size_nbr)
 		while (i < (size - size_nbr + 1))
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
-		if (ft_strchr(fmt->flag, '0') && fmt->width > (int)(size_nbr))
-			zero_dbiouxx(&str, fmt);
+		if (ft_strchr(fmt->flag, '0') && fmt->width > (int)(size_nbr)
+				&& fmt->precis == -1)
+			zero_dbiou(&str, fmt);
+		if (fmt->precis >= fmt->width)
+			zero_dbiou(&str, fmt);
 	}
 	return (str);
 }
 
-void			conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
+void			precis_x(char **str, t_format *fmt, size_t nbr_len)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*nbr;
+
+	len = (ft_strchr(fmt->flag, '#')) ? (nbr_len - 2) : nbr_len;
+	if (ft_strchr(fmt->flag, '-'))
+	{
+		i = 0;
+		j = 0;
+		nbr = ft_strdup(*str);
+		if (ft_strchr(fmt->flag, '#'))
+		{
+			j = 2;
+			(*str)[i++] = '0';
+			(*str)[i++] = 'X';
+		}
+		while (i < fmt->precis - len)
+			(*str)[i++] = '0';
+		while(j < len)
+			(*str)[i++] = nbr[j++];
+		free(nbr);
+	}
+	else
+	{
+		i = ft_strlen(*str) - len - 1;
+		j = fmt->precis - len;
+		while (j-- && i >= 0)
+			(*str)[i--] = '0';
+		if (ft_strchr(fmt->flag, '#'))
+		{
+			(*str)[i--] = 'X';
+			(*str)[i] = '0';
+		}
+	}
+}
+
+char			*all_zero_x(char *nbr, int precis, int dash, int width)
+{
+	char	*res;
+	int		len;
+	int		len_nbr;
+	int		i;
+	int		j;
+
+	len_nbr = (int)ft_strlen(nbr);
+	len = precis;
+	if (dash && !width)
+		len += 2;
+	res = ft_strnew(len);
+	i = 0;
+	j =  0;
+	if (dash)
+	{
+		len_nbr -= 2;
+		res[i++] = '0';
+		res[i++] = 'x';
+		j = 2;
+	}
+	while (i < (len - len_nbr))
+		res[i++] = '0';
+	while (i < len)
+		res[i++] = nbr[j++];
+	return (res);
+}
+
+void			conv_ub(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	char		*str;
 	char		*nbr;
@@ -97,16 +166,177 @@ void			conv_xxoub(t_lst *lst, t_chr **mychr, va_list ap)
 		ft_putstr(nbr);
 		ft_putstr("\n");
 		flag_apostrophe(&nbr, lst->format);
-		str = fill_xxoub_str(lst->format, nbr, ft_strlen(nbr));
+		str = fill_oub_str(lst->format, nbr, ft_strlen(nbr));
 		ft_putstr("\nstr = ");
 		ft_putstr(str);
 		ft_putstr("\n");
-		(lst->format->precis > 0) ?
-			precis_o_udi(&str, lst->format, ft_strlen(nbr)) : 0;
+		if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+				precis_o_udi(&str, lst->format, ft_strlen(nbr));
+		ft_putstr("\nstr precis_ox= ");
+		ft_putstr(str);
+		ft_putstr("\n");
+		//if (lst->format->precis > 0 && lst->format->convers == 'u')
+		//	precis_o_udi(&str, lst->format, ft_strlen(nbr));
+		(*mychr)->str = str;
+		free(nbr);
+	}
+	(*mychr)->len = ft_strlen(str);
+}
+
+char			*all_zero_o(char *nbr, int precis, int dash, int width)
+{
+	char	*res;
+	int		len;
+	int		len_nbr;
+	int		i;
+	int		j;
+
+	len_nbr = (int)ft_strlen(nbr);
+	len = precis;
+	if (dash && !width)
+		len++;
+	res = ft_strnew(len);
+	i = 0;
+	j =  0;
+	if (dash)
+	{
+		len_nbr--;
+		res[i++] = '0';
+		j++;
+	}
+	while (i < (len - len_nbr))
+		res[i++] = '0';
+	while (j < len_nbr)
+		res[i++] = nbr[j++];
+	return (res);
+}
+
+void			precis_o(char **str, t_format *fmt, size_t nbr_len)
+{
+	int		i;
+	int		j;
+	int		len;
+	char	*nbr;
+
+	len = (ft_strchr(fmt->flag, '#')) ? (nbr_len - 2) : nbr_len;
+	if (ft_strchr(fmt->flag, '-'))
+	{
+		i = 0;
+		j = 0;
+		nbr = ft_strdup(*str);
+		if (ft_strchr(fmt->flag, '#'))
+			j++;
+		while (i < fmt->precis - len)
+			(*str)[i++] = '0';
+		while(j < len)
+			(*str)[i++] = nbr[j++];
+		free(nbr);
+	}
+	else
+	{
+		i = ft_strlen(*str) - len - 1;
+		j = fmt->precis - len;
+		while (j-- && i >= 0)
+			(*str)[i--] = '0';
+	}
+}
+
+void			conv_o(t_lst *lst, t_chr **mychr, va_list ap)
+{
+	size_t		size;
+	char		*str;
+	char		*nbr;
+	size_t		n;
+	int			i;
+
+	flag_star(lst->format, ap);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
+		: cast_xxoub(ap, lst->format->flag);
+	if (n == 0 && !lst->format->precis)
+		(*mychr)->str = ft_strnew(0);
+	else
+	{
+		nbr = ft_utoa_base(n, 8);
+		if (n && ft_strchr(lst->format->flag, '#'))
+			flag_dash(&nbr, 8);
+		flag_apostrophe(&nbr, lst->format);
+		size = ft_max(ft_strlen(nbr), lst->format->width);
+		if (!(str = ft_strnew(size)))
+			return ;
+		if (ft_strchr(lst->format->flag, '-'))
+		{
+			ft_strcpy(str, nbr);
+			i = ft_strlen(nbr);
+			while (i < (int)size)
+				str[i++] = ' ';
+		}
+		else
+		{
+			i = 0;
+			while (i < (int)(size - ft_strlen(nbr) + 1))
+				str[i++] = ' ';
+			ft_strcpy(&str[--i], nbr);
+		}
+		ft_putstr("\nstr = ");
+		ft_putendl(str);
+		if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+				precis_o(&str, lst->format, ft_strlen(nbr));
+		if (lst->format->precis >= lst->format->width)
+			str = all_zero_o(nbr, lst->format->precis, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0);
+		if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+			str = all_zero_o(nbr, lst->format->width, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 1);
+		(*mychr)->str = str;
+		free(nbr);
+	}
+	(*mychr)->len = ft_strlen(str);
+}
+
+void			conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
+{
+	size_t		size;
+	char		*str;
+	char		*nbr;
+	size_t		n;
+	int			i;
+
+	flag_star(lst->format, ap);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
+		: cast_xxoub(ap, lst->format->flag);
+	if (n == 0 && !lst->format->precis)
+		(*mychr)->str = ft_strnew(0);
+	else
+	{
+		nbr = ft_utoa_base(n, 16);
+		if (n && ft_strchr(lst->format->flag, '#'))
+			flag_dash(&nbr, 16);
+		flag_apostrophe(&nbr, lst->format);
+		size = ft_max(ft_strlen(nbr), lst->format->width);
+		if (!(str = ft_strnew(size)))
+			return ;
+		if (ft_strchr(lst->format->flag, '-'))
+		{
+			ft_strcpy(str, nbr);
+			i = ft_strlen(nbr);
+			while (i < (int)size)
+				str[i++] = ' ';
+		}
+		else
+		{
+			i = 0;
+			while (i < (int)(size - ft_strlen(nbr) + 1))
+				str[i++] = ' ';
+			ft_strcpy(&str[--i], nbr);
+		}
+		ft_putstr("\nstr = ");
+		ft_putendl(str);
+		if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+				precis_x(&str, lst->format, ft_strlen(nbr));
+		if (lst->format->precis >= lst->format->width)
+			str = all_zero_x(nbr, lst->format->precis, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0);
+		if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr))
+			str = all_zero_x(nbr, lst->format->width, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 1);
 		(lst->format->convers == 'x') ? str = ft_strlowcase(str) : 0;
 		(lst->format->convers == 'X') ? str = ft_strupcase(str) : 0;
-		if (lst->format->precis > 0 && lst->format->convers == 'u')
-			precis_o_udi(&str, lst->format, ft_strlen(nbr));
 		(*mychr)->str = str;
 		free(nbr);
 	}
