@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:38:59 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 17:39:42 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 04:05:46 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,7 @@ int			put_chr(t_chr *chr)
 	len = 0;
 	while (chr)
 	{
-		if (chr->len == 1)
-			ft_putchar(*(chr->str));
-		else
-			ft_putstr(chr->str);
+		write(1, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;
 	}
@@ -36,7 +33,7 @@ int			put_chr_fd(int fd, t_chr *chr)
 	len = 0;
 	while (chr)
 	{
-		ft_putstr_fd(chr->str, fd);
+		write(fd, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;
 	}

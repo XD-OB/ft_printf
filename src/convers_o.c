@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 07:57:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 04:28:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,21 @@ void			conv_o(t_lst *lst, t_chr **mychr, va_list ap)
 	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
 		: cast_xxoub(ap, lst->format->flag);
 	if (n == 0 && !lst->format->precis)
-		(*mychr)->str = ft_strnew(0);
+	{
+		if (!ft_strchr(lst->format->flag, '#'))
+		{
+			(*mychr)->str = ft_strcnew(lst->format->width, ' ');
+			((*mychr)->str)[lst->format->width] = '\0';
+			(*mychr)->len = lst->format->width;
+		}
+		else
+		{
+			(*mychr)->str = ft_strcnew(lst->format->width + 1, '0');
+			((*mychr)->str)[lst->format->width + 1] = '\0';
+			(*mychr)->len = lst->format->width + 1;
+		}
+		return ;
+	}
 	else
 	{
 		nbr = ft_utoa_base(n, 8);
@@ -123,11 +137,15 @@ void			conv_o(t_lst *lst, t_chr **mychr, va_list ap)
 				str[i++] = ' ';
 			ft_strcpy(&str[--i], nbr);
 		}
-		if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+		if (!ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
+						&& lst->format->precis < lst->format->width)
 				precis_o(&str, lst->format, ft_strlen(nbr));
 		if (lst->format->precis >= lst->format->width)
 			str = all_zero_o(nbr, lst->format->precis, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0);
-		if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
+		if (ft_strchr(lst->format->flag, '0')
+				&& lst->format->width > (int)ft_strlen(nbr)
+				&& !ft_strchr(lst->format->flag, '-')
+				&& lst->format->precis <= 0)
 			str = all_zero_o(nbr, lst->format->width, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 1);
 		(*mychr)->str = str;
 		free(nbr);

@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 01:21:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 03:58:12 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char            *calcul_entierd(char *tab, int size, t_format *format)
+char            *calcul_entier(char *tab, int size, t_format *format)
 {
 	char		*entier;
 	char		*count;
@@ -42,7 +42,7 @@ char            *calcul_entierd(char *tab, int size, t_format *format)
 	return (entier);
 }
 
-char		*calcul_fractd(char *bat, int size, t_format *format)
+char		*calcul_fract(char *bat, int size, t_format *format)
 {
 	char		*fract;
 	int		i;
@@ -71,7 +71,8 @@ char		*calcul_fractd(char *bat, int size, t_format *format)
 	return (fract);
 }
 
-char		*get_entierd(long exp, long bin_mantis, int bias, t_format *format)
+
+char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 {
 	unsigned long long int		m;
 	long				new_exp;
@@ -97,10 +98,10 @@ char		*get_entierd(long exp, long bin_mantis, int bias, t_format *format)
 		size_dec++;
 		m >>= 1;
 	}
-	return (calcul_entierd(tab, size_dec, format));
+	return (calcul_entier(tab, size_dec, format));
 }
 
-char		*get_fractd(long exp, long bin_mantis, int bias, t_format *format)
+char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 {
 	int			len_b;
 	unsigned int		size;
@@ -133,5 +134,5 @@ char		*get_fractd(long exp, long bin_mantis, int bias, t_format *format)
 		}
 		len_b--;
 	}
-	return  (calcul_fractd(bat, size, format));
+	return  (calcul_fract(bat, size, format));
 }
