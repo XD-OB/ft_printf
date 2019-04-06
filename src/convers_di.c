@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 06:32:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 23:07:09 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static long long int	cast_di(va_list ap, char *flag)
 	return (d);
 }
 
-char                    *all_zero_di(char *nbr, int precis)
+char                    *all_zero_di(char *nbr, int precis, int is_width)
 {
 	char    *res;
 	int             len;
@@ -38,6 +38,8 @@ char                    *all_zero_di(char *nbr, int precis)
 	int             j;
 
 	len = precis;
+	if (nbr[0] == '-' && !is_width)
+		len++;
 	len_nbr = (nbr[0] == '-') ? (int)ft_strlen(nbr) - 1
 		: (int)ft_strlen(nbr);
 	res = ft_strnew(len);
@@ -83,6 +85,9 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 		j = fmt->precis - nbr_len;
 		while (j-- && i >= 0)
 			(*str)[i--] = '0';
+		ft_putstr("\n*str: [");
+		ft_putstr(*str);
+		ft_putstr("]\n");
 		i = ft_strlen(*str) - nbr_len;
 		if ((*str)[i] == '-')
 		{
@@ -173,13 +178,17 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
 	}
+	
 	if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
 		precis_di(&str, lst->format, ft_strlen(nbr));
-	if (lst->format->precis >= lst->format->width)
-		str = all_zero_di(nbr, lst->format->precis);
-	if (ft_strchr(lst->format->flag, '0')
+	else if (lst->format->precis >= lst->format->width)
+		str = all_zero_di(nbr, lst->format->precis, 0);
+	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
-		str = all_zero_di(nbr, lst->format->width);
+		str = all_zero_di(nbr, lst->format->width, 1);
+	ft_putstr("\nstr: [");
+	ft_putstr(str);
+	ft_putstr("]\n");
 	flag_plus_di(lst->format, &str, n);
 	if (n >= 0)
 		flag_space_di(lst->format, &str);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 03:58:12 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 00:16:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	entier = ft_strdup("0");
 	count = ft_strdup("1");
 	len =  1;
-	debut = -1;
-	while(tab[++debut] == '0');
+	debut = 0;
+	while(tab[debut] == '0')
+		debut++;
 	i = size;
+	ft_putchar('\n');
 	while (--i >= debut)
 	{
 		if (tab[i] == '1')
@@ -58,7 +60,6 @@ char		*calcul_fract(char *bat, int size, t_format *format)
 	while (bat[--size] == '0');
 	while (++i <= size)
 	{
-		ft_putchar(bat[i]);
 		if (bat[i] == '1')
 		{
 			fract = ft_strsum(fract, count, base);
@@ -74,11 +75,11 @@ char		*calcul_fract(char *bat, int size, t_format *format)
 
 char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 {
-	unsigned long long int		m;
-	long				new_exp;
-	char				*tab;
-	int				size_dec;
-	int				i;
+	unsigned long long int	m;
+	long	new_exp;
+	char	*tab;
+	int		size_dec;
+	int		i;
 
 	tab = NULL;
 	size_dec = 0;
@@ -94,10 +95,14 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 	i = -1;
 	while (++i < new_exp)
 	{
-		tab = (m & bin_mantis) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-		size_dec++;
-		m >>= 1;
+			tab = (m & bin_mantis) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+			size_dec++;
+			m >>= 1;
 	}
+	i = -1;
+	while (++i < size_dec)
+		ft_putchar(tab[i]);
+	ft_putchar('\n');
 	return (calcul_entier(tab, size_dec, format));
 }
 
@@ -112,6 +117,11 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 	size = 0;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	len_b = (bias = D_BIAS) ? ABS(52 - new_exp - 1) : ABS(63 - new_exp - 1);
+	ft_putstr("\n----------------len_b [");
+	ft_putnbr(len_b);
+	ft_putstr("]\n");
+	if (len_b < 0)
+		return (ft_strdup("0"));
 	while (len_b >= 0)
 	{
 		if (new_exp < -1)

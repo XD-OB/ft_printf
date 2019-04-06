@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:15:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 04:59:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 00:15:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,12 @@ t_lst	*parse_format(va_list ap, char *str)
 			node->format = (t_format*)malloc(sizeof(t_format));
 			init_node(node);
 			node->next = NULL;
-			if (check_fill(ap, &str[i + 1], i, node) != -1)
+			i++;
+			if (check_fill(ap, &str[i], i - 1, node) != -1)
 			{
 				head = add_node(head, node);
 				//i++;
-				while (str[++i] != node->format->convers)
+				while (str[i] != node->format->convers)
 					i++;
 			}
 			else

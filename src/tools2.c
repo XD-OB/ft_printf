@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 04:07:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/04 21:04:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 21:24:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int			is_postflag(char c)
 	int		i;
 
 	i = 0;
-	ref = "lLh0+-r";
+	ref = "lLh+-r";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:38:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 03:55:25 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 23:02:46 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (lst->format->convers == 'H')
 		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);
+	ft_putstr("\n--------------------\n");
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
+	ft_putstr("\n--------------------\n");
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	final = modify_lf(lst->format, entier, fract, carry, db);
 	//free(fract);
