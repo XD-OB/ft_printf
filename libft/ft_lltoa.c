@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2018/10/08 23:18:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 06:13:34 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ char		*ft_lltoa(long long int nbr)
 	size = size_val(nbr);
 	sign = sign_val(nbr);
 	if (sign == -1)
-		return (ft_strdup("-9223372036854775807"));
+			return (ft_strdup("-9223372036854775807"));
 	tmp = nbr_val(nbr);
 	while (tmp /= 10)
 		size++;

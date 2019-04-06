@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 07:49:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 06:25:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,11 @@ void			semi_load(char *format, t_lst *lst, int *p, t_chr **curr)
 	}
 	p[0] = (p[1] >= 0) ? p[1] : 0;
 	if (format[++p[0]] == '%')
-	{
 		while (format[p[0]] != lst->format->convers)
 			p[0]++;
-	}
+	else if (format[p[0]++] == '%')
+		while (format[p[0]] != lst->format->convers)
+			p[0]++;
 	if (lst->next)
 	{
 		(*curr)->next = (t_chr*)malloc(sizeof(t_chr));
