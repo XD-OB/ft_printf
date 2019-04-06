@@ -19,7 +19,10 @@ int			put_chr(t_chr *chr)
 	len = 0;
 	while (chr)
 	{
-		ft_putstr(chr->str);
+		if (chr->len == 1)
+			ft_putchar(*(chr->str));
+		else
+			ft_putstr(chr->str);
 		len += chr->len;
 		chr = chr->next;
 	}

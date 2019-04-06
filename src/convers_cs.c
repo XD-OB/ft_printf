@@ -52,7 +52,7 @@ void			conv_c(t_lst *lst, t_chr **mychr, va_list ap)
 		i = -1;
 		while (++i < len - 1)
 			str[i] = (ft_strchr(lst->format->flag, '0') ? '0' : ' ');
-		str[i] = (char)va_arg(ap, int);
+		str[i] = (char)va_arg(ap, unsigned int);
 	}
 	(*mychr)->str = str;
 	(*mychr)->len = len;

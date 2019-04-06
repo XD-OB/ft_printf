@@ -23,10 +23,11 @@ void			semi_load(char *format, t_lst *lst, int *p, t_chr **curr)
 		init_chr(curr);
 	}
 	p[0] = (p[1] >= 0) ? p[1] : 0;
-	if (format[p[0]] == '%')
-		p[0]++;
-	while (format[p[0]] != lst->format->convers)
-		p[0]++;
+	if (format[++p[0]] == '%')
+	{
+		while (format[p[0]] != lst->format->convers)
+			p[0]++;
+	}
 	if (lst->next)
 	{
 		(*curr)->next = (t_chr*)malloc(sizeof(t_chr));
