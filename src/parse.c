@@ -160,7 +160,7 @@ t_lst	*parse_format(va_list ap, char *str)
 			if (check_fill(ap, &str[i + 1], i, node) != -1)
 			{
 				head = add_node(head, node);
-				i++;
+				//i++;
 				while (str[++i] != node->format->convers)
 					i++;
 			}

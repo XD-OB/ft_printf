@@ -101,10 +101,6 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	if (pre_d_calc(db, mychr, lst))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	if (db.d < 1 && db.d > 0)
-		db.d++;
-	if (db.d > -1 && db.d < 0)
-		db.d--;
 	printf("entier before: %s\n", entier);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	printf("\nfract before: %s\n", fract);
@@ -143,12 +139,11 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	printf("fract  : %s\n", fract);
 	final = ft_finish_e(final, p, lst->format->convers);
 	free(tmp);
-	free(fract);
+	//free(fract);
 	printf("entier: %s\n", entier);
-	free(entier);
+	//free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = ft_strlen(final);
-	printf("%.70f\n", db.d);
 	printf("mantis: %llx\n", (unsigned long long int)db.zone.mantissa);
 	printf("expo  : %s\n", ft_itoa_base(db.zone.exponent, 2));
 	printf("sign  : %s\n", ft_itoa_base(db.zone.sign, 2));
