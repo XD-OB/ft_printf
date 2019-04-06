@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:20:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 05:24:43 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 01:14:18 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,33 @@ void			conv_color(t_lst *lst, t_chr **mychr)
 		(*mychr)->str = ft_strdup(lst->format->flag);
 		(*mychr)->len = ft_strlen((*mychr)->str);
 	}
+}
+
+void		conv_percent(t_chr **mychr, t_lst *lst, va_list ap)
+{
+	char	*str;
+	int		len;
+	int		i;
+	char	c;
+
+	flag_star(lst->format, ap);
+	len = ft_max(1, lst->format->width);
+	str = ft_strnew(len);
+	c = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
+	if (ft_strchr(lst->format->flag, '-'))
+	{
+		str[0] = '%';
+		i = 0;
+		while (++i < len)
+			str[i] = ' ';
+	}
+	else
+	{
+		i = -1;
+		while (++i < len - 1)
+			str[i] = c;
+		str[len - 1] = '%';
+	}
+	(*mychr)->str = str;
+	(*mychr)->len = len;
 }

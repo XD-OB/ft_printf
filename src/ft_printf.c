@@ -6,73 +6,12 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 00:25:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/06 01:24:03 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
-
-void		conv_percent(t_chr **mychr, t_lst *lst, va_list ap)
-{
-	char	*str;
-	int		len;
-	int		i;
-	char	c;
-
-	flag_star(lst->format, ap);
-	len = ft_max(1, lst->format->width);
-	str = ft_strnew(len);
-	c = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
-	if (ft_strchr(lst->format->flag, '-'))
-	{
-		str[0] = '%';
-		i = 0;
-		while (++i < len)
-			str[i] = ' ';
-	}
-	else
-	{
-		i = -1;
-		while (++i < len - 1)
-			str[i] = c;
-		str[len - 1] = '%';
-	}
-	(*mychr)->str = str;
-	(*mychr)->len = len;
-}
-
-char				*int_addone(char *tab, int oldsize, int data)
-{
-	char		*new;
-	int		i;
-
-	i = -1;
-	new = ft_strnew(oldsize + 1);
-	while (++i < oldsize)
-		new[i] = tab[i];
-	new[i] = data + '0';
-	if (oldsize)
-		free(tab);
-	return (new);
-}
-
-char				*foisdix(char *str, unsigned int len)
-{
-	char		*new;
-	unsigned int	i;
-
-	i = 0;
-	new = ft_strnew(len  + 1);
-	while (i < len)
-	{
-		new[i] = str[i];
-		i++;
-	}
-	new[i] = '0';
-	free(str);
-	return (new);
-}
 
 char            *calc_tab(char *tab, int size, t_format *format)
 {
@@ -134,18 +73,16 @@ char		*calc_bat(char *bat, int size, t_format *format)
 		if (bat[i] == '1')
 		{
 			fract = ft_strsum(fract, count, base);
-			//ft_putstr("\n fractteb: ");
-			//ft_putstr(fract);
-			//ft_putstr("\n");
+			ft_putstr("\n fractteb: ");
+			ft_putstr(fract);
+			ft_putstr("\n");
 			len = ft_strlen(fract);
 		}
 		count = ft_strmult("5", count, base);
 		fract = foisdix(fract, len);
-		//ft_putstr("\nfracttini: ");
-		//ft_putstr(fract);
-		//ft_putstr("\ncount    : ");
-		//ft_putstr(count);
-		//ft_putchar('\n');
+		ft_putstr("\nfracttini: ");
+		ft_putstr(fract);
+		ft_putchar('\n');
 		len++;
 	}
 	ft_putchar('\n');
@@ -216,188 +153,6 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 		len_b--;
 	}
 	return  (calc_bat(bat, size, format));
-}
-
-int		is_strzero(char *str)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != '0')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-char		*ft_fprecis(char *fract, int precis, int *carry)
-{
-	char		*str;
-	char		*tmp;
-	int		len;
-	int		i;
-
-	str = ft_strnew(precis);
-	len = ft_strlen(fract);
-	i = -1;
-	if (precis > len)
-	{
-		while (++i < len)
-			str[i] = fract[i];
-		while (i < precis)
-			str[i++] = '0';
-	}
-	else
-	{
-		while (++i < precis)
-			str[i] = fract[i];
-		if (fract[i] > '4')
-		{
-			tmp = ft_strsum(str, "1", 10);
-			if (ft_strlen(tmp) > (unsigned int)precis)
-			{
-				i = -1;
-				while (str[++i])
-					str[i] = '0';
-				*carry = 1;
-			}
-			else
-				ft_strswap(&tmp, &str);
-			free(tmp);
-		}
-	}
-	free(fract);
-	return (str);
-}
-
-char		*ft_fwidth(char *str, unsigned int size_str, t_format *format, unsigned int len_f)
-{
-	unsigned int	i;
-	unsigned int	len;
-	char			*res;
-	char			c;
-
-	c = (ft_strchr(format->flag, '0')) ? '0' : ' ';
-	len = format->width - len_f;
-	if (ft_strchr(format->flag, '+'))
-		len++;
-	if (format->precis != 0 || ft_strchr(format->flag, '#'))
-		len--;
-	if (ft_strpbrk(format->flag, "#+")
-			|| (ft_strchr(format->flag, ' ') && !ft_strchr(format->flag, '-')))
-		len--;
-	res = ft_strnew(len);
-	i = 0;
-	while (i < len - size_str)
-		res[i++] = c;
-	i--;
-	while (++i < len)
-		res[i] = str[i - (len - size_str)];
-	free(str);
-	return (res);
-}
-
-char		*add_sign(char *str, int sign)
-{
-	char		*res;
-	unsigned int	len;
-	unsigned int	i;
-
-	len = ft_strlen(str) + 1;
-	res = ft_strnew(len);
-	res[0] = (sign) ? '-' : '+';
-	i = 0;
-	while (++i < len)
-		res[i] = str[i - 1];
-	free(str);
-	return (res);
-}
-
-char		*ft_fwidthf(char *str, unsigned int size_str, t_format *format, unsigned int len_e)
-{
-	unsigned int	i;
-	unsigned int	len;
-	char			*res;
-	char			c;
-
-	c = (ft_strchr(format->flag, '0')) ? '0' : ' ';
-	len = format->width - len_e;
-	if (format->precis != 0 || ft_strchr(format->flag, '#'))
-		len--;
-	if (ft_strpbrk(format->flag, "#+")
-			|| (ft_strchr(format->flag, ' ') && !ft_strchr(format->flag, '-')))
-		len--;
-	res = ft_strnew(len);
-	i = 0;
-	while (i < size_str)
-	{
-		res[i] = str[i];
-		i++;
-	}
-	i--;
-	while (++i < len)
-		res[i] = c;
-	free(str);
-	return (res);
-}
-
-/*
-**		len[2]:		len[0]: len_e		len[1]: len_f
-*/
-
-char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
-{
-	char		*tmp;
-	char		*final;
-	unsigned int	len[2];
-
-	if (carry == 1)
-		entier = (fmt->convers == 'H') ?
-			ft_strsum(entier, "1", 16) : ft_strsum(entier, "1", 10);
-	if (db.zone.sign || ft_strchr(fmt->flag, '+'))
-		entier = add_sign(entier, (int)db.zone.sign);
-	len[0] = ft_strlen(entier);
-	len[1] = ft_strlen(fract);
-	if (fmt->width > (int)(len[0] + len[1] + 1))
-	{
-		(!ft_strchr(fmt->flag, '-')) ?
-			(entier = ft_fwidth(entier, len[0], fmt, len[1])) :
-			(fract = ft_fwidthf(fract, len[1], fmt, len[0]));
-	}
-	else if (ft_strchr(fmt->flag, ' ') && !ft_strchr(fmt->flag, '-'))
-		flag_space(&entier, fmt->flag);	
-	tmp = (ft_strchr(fmt->flag, '#') || fmt->precis != 0) ?
-		ft_strjoin(entier, ".") : ft_strdup(entier);
-	final = (fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strdup(tmp);
-	free(tmp);
-	return (final);
-}
-
-void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
-{
-	char				*fract;
-	char				*entier;
-	char				*final;
-	int					carry;
-
-	carry = 0;
-	if (pre_d_calc(db, mychr, lst))
-		return ;
-	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	//(db.d < 1 && db.d > 0) ? db.d += 1.0 : 0;
-	//(db.d > -1 && db.d < 0) ? db.d -= 1.0 : 0;
-	if (lst->format->convers == 'H')
-		flag_dash(&entier, 16);
-	flag_apostrophe(&entier, lst->format);
-	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	final = modify_lf(lst->format, entier, fract, carry, db);
-	//free(fract);
-	//free(entier);
-	(*mychr)->str = final;
-	(*mychr)->len = ft_strlen(final);
 }
 
 void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
