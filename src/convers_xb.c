@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 04:08:02 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:08:50 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 23:39:21 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void                    precis_xb(char **str, t_format *fmt, size_t nbr_len, int
 	{
 		i = ft_strlen(*str) - len - 1;
 		j = fmt->precis - len;
-		while (j-- && i >= 0)
+		while (j-- >= 0 && i >= 0)
 			(*str)[i--] = '0';
 		if (ft_strchr(fmt->flag, '#'))
 		{

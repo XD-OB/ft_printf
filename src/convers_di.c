@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 04:59:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 23:38:54 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 			(*str)[0] = '-';
 			(*str)[i++] = '0';
 		}
+		while (i < fmt->precis - (int)nbr_len)
+			(*str)[i++] = '0';
 		while(j < (int)nbr_len)
 			(*str)[i++] = nbr[j++];
 		free(nbr);
@@ -86,7 +88,7 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 	{
 		i = ft_strlen(*str) - nbr_len - 1;
 		j = fmt->precis - nbr_len;
-		while (j-- && i >= 0)
+		while (j-- >= 0 && i >= 0)
 			(*str)[i--] = '0';
 		i = ft_strlen(*str) - nbr_len;
 		if ((*str)[i] == '-')

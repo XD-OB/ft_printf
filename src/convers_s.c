@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 03:21:07 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 03:15:15 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/07 21:50:38 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static int		test_null(t_format *fmt, char *str, t_chr **chr)
 	{
 		res = (fmt->precis != -1) ?
 			ft_strndup("(null)", fmt->precis) : ft_strdup("(null)");
-		if (fmt->width > 6)
+		if (fmt->width > (int)ft_strlen(res))
 		{
 			len = (int)ft_strlen(res);
 			(*chr)->str = null_minus(fmt, len, res);

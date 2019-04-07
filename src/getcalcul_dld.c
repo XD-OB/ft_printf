@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 02:48:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 22:35:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 {
 	char		*entier;
 	char		*count;
-	unsigned int	len;
 	int 		debut;
 	int 		i;
 	int		base;
@@ -24,7 +23,6 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	base = (format->convers == 'H') ? 16 : 10;
 	entier = ft_strdup("0");
 	count = ft_strdup("1");
-	len =  1;
 	debut = 0;
 	while(tab[debut] == '0')
 		debut++;
@@ -32,14 +30,9 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	while (--i >= debut)
 	{
 		if (tab[i] == '1')
-		{
 			entier = ft_strsum(entier, count, base);
-			len = ft_strlen(entier);
-		}
 		count = ft_strmult("2", count, base);
-		len++;
 	}
-	entier[len] = '\0';
 	return (entier);
 }
 

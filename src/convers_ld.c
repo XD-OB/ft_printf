@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 02:47:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 23:14:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,6 @@ char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
 		i--;
 		new_exp--;
 	}
-	i = -1;
-	while (++i < size_dec)
-		ft_putchar(tab[i]);
-	ft_putchar('\n');
 	return (calcul_entier(tab, size_dec, format));
 }
 
@@ -133,3 +129,4 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	(*mychr)->str = final;
 	(*mychr)->len = len;
 }
+

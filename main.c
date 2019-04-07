@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <float.h>
 
 int	main(void)
 {
@@ -106,10 +107,10 @@ int	main(void)
 	//printf("\n");
 	//printf("%%");
 	//printf("\n");
-	//ft_printf("%5.2x", 5427);
-	//printf("\n");
-	//printf("%5.2x", 5427);
-	//printf("\n");
+	ft_printf("%5.2d", 5427);
+	printf("\n");
+	printf("%5.2d", 5427);
+	printf("\n");
 	//ft_printf("%+d", 42);
 	//printf("\n");
 	//printf("%+d", 42);
@@ -146,10 +147,10 @@ int	main(void)
 	//printf("\n");
 	//printf("Coucou %.0s\n%s%---12s", "hi", "coco", NULL);
 	//printf("\n");
-	ft_printf("TEST : u%4.2ss %-1.s", "coco", NULL);
-	printf("\n");
-	printf("TEST : u%4.2ss %-1.s", "coco", NULL);
-	printf("\n");
+	//ft_printf("TEST : u%4.2ss %-1.s", "coco", NULL);
+	//printf("\n");
+	//printf("TEST : u%4.2ss %-1.s", "coco", NULL);
+	//printf("\n");
 	//ft_printf("%1.4s et %-6.8s et %4.2s", "tuuu", "12345", "hu");
 	//printf("\n");
 	//printf("%1.4s et %-6.8s et %4.2s", "tuuu", "12345", "hu");
@@ -158,5 +159,12 @@ int	main(void)
 	//printf("\n");
 	//printf("%%|%%%%|%%%%%%|%%abc%%def%%ghi%%");
 	//printf("\n");
+	//ft_printf("%Lf", 1.0e309L);
+	//printf("\n");
+	//printf("%Lf", 1.0e309L);
+	//printf("\n");
+	//printf("%e", 12.00000000000000000000000000000005);
+	//printf("\n");
+
 	return (0);
 }

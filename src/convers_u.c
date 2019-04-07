@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 05:14:25 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:18:09 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 23:43:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,36 @@ char                    *all_zero_u(char *nbr, int precis)
 	return (res);
 }
 
-void                    precis_u(char **str, t_format *fmt, size_t nbr_len)
+void			precis_u(char **str, t_format *fmt, size_t nbr_len)
+{
+	int             i;
+	int             j;
+	char    *nbr;
+
+	ft_putstr("\nstr: [");
+	ft_putstr(*str);
+	ft_putstr("]\n");
+	if (ft_strchr(fmt->flag, '-'))
+	{
+		i = 0;
+		j = 0;
+		nbr = ft_strdup(*str);
+		while (i < fmt->precis - (int)nbr_len)
+			(*str)[i++] = '0';
+		while(j < (int)nbr_len)
+			(*str)[i++] = nbr[j++];
+		free(nbr);
+	}
+	else
+	{
+		i = ft_strlen(*str) - nbr_len - 1;
+		j = fmt->precis - nbr_len;
+		while (j-- && i >= 0)
+			(*str)[i--] = '0';
+	}
+}
+
+void                    precis_oldu(char **str, t_format *fmt, size_t nbr_len)
 {
 	int             i;
 	int             j;
