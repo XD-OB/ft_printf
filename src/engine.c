@@ -22,13 +22,11 @@ void			semi_load(char *format, t_lst *lst, int *p, t_chr **curr)
 		(*curr) = (*curr)->next;
 		init_chr(curr);
 	}
-	p[0] = (p[1] >= 0) ? p[1] : 0;
-	if (format[++p[0]] == '%')
-	//	while (format[p[0]] != lst->format->convers)
-			p[0]++;
-	//else if (format[p[0]++] == '%')
-		while (format[p[0]] != lst->format->convers)
-			p[0]++;
+	p[0] = p[1] + 1;
+	if (format[p[0]] == '%')
+		p[0]++;
+	while (format[p[0]] != lst->format->convers)
+		p[0]++;
 	if (lst->next)
 	{
 		(*curr)->next = (t_chr*)malloc(sizeof(t_chr));
@@ -96,9 +94,12 @@ void			fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 			conv_di(lst, &chr, ap);
 		else if (ft_strchr("uosckpP}%", lst->format->convers))
 			some_convers(lst, chr, ap);
-		else if (ft_strchr("f", lst->format->convers)
+		else if (lst->format->convers == 'f'
 				&& ft_strchr(lst->format->flag, 'L'))
 			conv_llf(lst, &chr, ap);
+		else if (ft_strchr("eE", lst->format->convers)
+				&& ft_strchr(lst->format->flag, 'L'))
+			conv_lee(lst, &chr, ap);
 		else if (ft_strchr("fHeEgG", lst->format->convers))
 			conv_d_efgh(lst, &chr, ap);
 		else if (ft_strchr("bB", lst->format->convers))

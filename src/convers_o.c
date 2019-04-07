@@ -14,30 +14,29 @@
 
 char			*all_zero_o(char *nbr, int precis, int dash, int width)
 {
-	char	*res;
+	char		*res;
 	int		len;
 	int		len_nbr;
 	int		i;
 	int		j;
 
-		len_nbr = (int)ft_strlen(nbr);
-		len = precis;
-		if (dash && !width)
-			len++;
-		res = ft_strnew(len);
-		i = 0;
-		j =  0;
-		if (dash)
-		{
-			len_nbr--;
-			res[i++] = '0';
-			j++;
-		}
-		while (i < (len - len_nbr))
-			res[i++] = '0';
-		while (j < len_nbr)
-			res[i++] = nbr[j++];
-		return (res);
+	i = 0;
+	j = 0;
+	len_nbr = (int)ft_strlen(nbr);
+	len = precis;
+	if (!width && dash)
+		len++;
+	res = ft_strnew(len);
+	if (dash)
+	{
+		res[i++] = '0';
+		j++;
+	}
+	while (i < (len - len_nbr))
+		res[i++] = '0';
+	while (i < len)
+		res[i++] = nbr[j++];
+	return (res);
 }
 
 void			precis_o(char **str, t_format *fmt, size_t nbr_len)

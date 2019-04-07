@@ -5,10 +5,16 @@ void     print_chr(t_chr *chr)
         while (chr)
         {
                 if (chr->str)
+		{
+			write(1, "[", 1);
                         write(1, chr->str, chr->len);
+		}
                 else
+		{
+			write(1, "[", 1);
                         write(1, "strO", 4);
-                write(1, " -> ", 4);
+		}
+                write(1, "]->", 4);
                 chr = chr->next;
         }
         write(1, "NULL", 4);

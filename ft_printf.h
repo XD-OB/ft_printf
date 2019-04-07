@@ -47,6 +47,7 @@ void            conv_lfh(t_lst *lst, t_chr **mychr, t_double db);
 void		conv_ee(t_lst *lst, t_chr **mychr, t_double db);
 void            conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap);
+void            conv_lee(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_percent(t_chr **mychr, t_lst *lst, va_list ap);
 void            conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void            conv_u(t_lst *lst, t_chr **mychr, va_list ap);

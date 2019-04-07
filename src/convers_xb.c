@@ -19,24 +19,26 @@ static char                    *all_zero_xb(char *nbr, int precis, int dash, int
 	int             len_nbr;
 	int             i;
 	int             j;
+	int		k;
 
+	j =  0;
 	len_nbr = (int)ft_strlen(nbr);
+	if (dash)
+		len_nbr -= 2;
 	len = ft_max(precis, len_nbr);
 	if (dash && !width)
-		len += 2;
-	res = ft_strnew(len);
+		j += 2;
+	res = ft_strnew(len + j);
 	i = 0;
-	j =  0;
 	if (dash)
 	{
-		len_nbr -= 2;
 		res[i++] = '0';
 		res[i++] = (base == 2) ? 'b' : 'x';
-		j = 2;
 	}
-	while (i < (len - len_nbr))
+	while (i < (len - len_nbr) + j)
 		res[i++] = '0';
-	while (i < len)
+	k = j;
+	while (i < len + k)
 		res[i++] = nbr[j++];
 	return (res);
 }
