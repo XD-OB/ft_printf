@@ -60,6 +60,8 @@ void            flag_plus(char **nbr, char conv);
 void            flag_dash(char **nbr, int base);
 void		flag_apostrophe(char **str, t_format *fmt);
 int		flag_dollar(t_lst *lst);
+char			*ft_dollar_cs(t_format *fmt);
+int		ft_countnp(char *s);
 char            *cut_str(char *str, int p1, int p2);
 void            init_chr(t_chr **chr);
 void            free_chr(t_chr *chr);
