@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 03:21:07 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 22:41:59 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 01:11:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ void			conv_s(t_lst *lst, t_chr **mychr, va_list ap)
 		i = 0;
 		if (!ft_strpbrk(lst->format->flag, "-+"))
 		{
-			if (len[0] > (int)strlen(str[0]))
-				len[0] = (int)strlen(str[0]);
+			if (len[0] > (int)ft_strlen(str[0]))
+				len[0] = (int)ft_strlen(str[0]);
 			while (i < len[1] - len[0])
 				str[1][i++] = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
 			j = -1;
@@ -129,8 +129,8 @@ void			conv_s(t_lst *lst, t_chr **mychr, va_list ap)
 		}
 		else if (ft_strchr(lst->format->flag, '-') && lst->format->width > lst->format->precis)
 		{
-			if (len[0] > (int)strlen(str[0]))
-				len[0] = (int)strlen(str[0]);
+			if (len[0] > (int)ft_strlen(str[0]))
+				len[0] = (int)ft_strlen(str[0]);
 			i = 0;
 			j = -1;
 			while (++j < len[0])

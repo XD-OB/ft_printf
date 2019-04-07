@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   convers_u.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/07 05:14:25 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/07 05:18:09 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 char                    *all_zero_u(char *nbr, int precis)
@@ -46,15 +58,15 @@ void                    precis_u(char **str, t_format *fmt, size_t nbr_len)
 
 void                    conv_u(t_lst *lst, t_chr **mychr, va_list ap)
 {
-	size_t          size;
-	char            *str;
-	char            *nbr;
-	size_t          n;
-	int                     i;
+	size_t          	size;
+	char            	*str;
+	char            	*nbr;
+	unsigned long	n;
+	int            		i;
 
 	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
-		: cast_xxoub(ap, lst->format->flag);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+		: cast_xxoub(ap, lst->format);
 	if (n == 0 && !lst->format->precis)
 	{
 		(*mychr)->str = ft_strcnew(lst->format->width, ' ');
@@ -62,7 +74,7 @@ void                    conv_u(t_lst *lst, t_chr **mychr, va_list ap)
 		(*mychr)->len = lst->format->width;
 		return ;
 	}
-	nbr = ft_utoa(n);
+	nbr = ft_ultoa(n);
 	flag_apostrophe(&nbr, lst->format);
 	size = ft_max(ft_strlen(nbr), lst->format->width);
 	if (!(str = ft_strnew(size)))

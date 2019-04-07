@@ -1,63 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lltoa.c                                         :+:      :+:    :+:   */
+/*   ft_ultoa.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:04:17 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 05:13:39 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static long long int	nbr_val(long long int nbr)
+char		*ft_ultoa(unsigned long int nbr)
 {
-	if (nbr < 0)
-		return (-nbr);
-	return (nbr);
-}
+	unsigned long int	tmp;
+	char			*res;
+	unsigned long		size;
 
-static int	sign_val(long long int nbr)
-{
-	if (nbr < 0)
-		return (1);
-	return (0);
-}
-
-static int	size_val(long long int nbr)
-{
-	if (nbr < 0)
-	{
-		if (nbr == -9223372036854775807)
-			return (-1);
-		return (2);
-	}
-	return (1);
-}
-
-char		*ft_lltoa(long long int nbr)
-{
-	char		*res;
-	long long int	tmp;
-	int		size;
-	int		sign;
-
-	size = size_val(nbr);
-	sign = sign_val(nbr);
-	if (sign == -1)
-			return (ft_strdup("-9223372036854775807"));
-	tmp = nbr_val(nbr);
+	size = 1;
+	tmp = nbr;
 	while (tmp /= 10)
 		size++;
 	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
 		return (res);
 	res[size] = '\0';
-	if (sign)
-		res[0] = '-';
-	tmp = nbr_val(nbr);
-	while (size-- > sign)
+	tmp = nbr;
+	while (size-- > 0)
 	{
 		res[size] = (tmp % 10) + 48;
 		tmp /= 10;

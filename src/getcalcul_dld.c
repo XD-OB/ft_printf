@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 00:16:49 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 02:48:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	while(tab[debut] == '0')
 		debut++;
 	i = size;
-	ft_putchar('\n');
 	while (--i >= debut)
 	{
 		if (tab[i] == '1')
@@ -70,79 +69,4 @@ char		*calcul_fract(char *bat, int size, t_format *format)
 		len++;
 	}
 	return (fract);
-}
-
-
-char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
-{
-	unsigned long long int	m;
-	long	new_exp;
-	char	*tab;
-	int		size_dec;
-	int		i;
-
-	tab = NULL;
-	size_dec = 0;
-	new_exp = (exp == 0) ? 1 - bias : exp - bias;
-	if (new_exp < 0)
-		return (ft_strdup("0"));
-	m = (bias == D_BIAS) ? 2251799813685248 : 2305843000000000000;
-	if (bias == D_BIAS)
-	{
-		tab = (exp) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-		size_dec++;
-	}
-	i = -1;
-	while (++i < new_exp)
-	{
-			tab = (m & bin_mantis) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-			size_dec++;
-			m >>= 1;
-	}
-	i = -1;
-	while (++i < size_dec)
-		ft_putchar(tab[i]);
-	ft_putchar('\n');
-	return (calcul_entier(tab, size_dec, format));
-}
-
-char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
-{
-	int			len_b;
-	unsigned int		size;
-	char			*bat;
-	long			new_exp;
-
-	bat = NULL;
-	size = 0;
-	new_exp = (exp == 0) ? 1 - bias : exp - bias;
-	len_b = (bias = D_BIAS) ? ABS(52 - new_exp - 1) : ABS(63 - new_exp - 1);
-	ft_putstr("\n----------------len_b [");
-	ft_putnbr(len_b);
-	ft_putstr("]\n");
-	if (len_b < 0)
-		return (ft_strdup("0"));
-	while (len_b >= 0)
-	{
-		if (new_exp < -1)
-		{
-			bat = int_addone(bat, size, 0);
-			size++;
-			new_exp++;
-		}
-		else if (new_exp == -1)
-		{
-			bat = int_addone(bat, size, 1);
-			size++;
-			new_exp++;
-		}
-		else
-		{
-			bat = ((bin_mantis >> len_b) & 1) ?
-				int_addone(bat, size, 1) : int_addone(bat, size, 0);
-			size++;
-		}
-		len_b--;
-	}
-	return  (calcul_fract(bat, size, format));
 }

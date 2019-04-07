@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 04:08:02 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 04:08:04 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 05:08:50 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
 	int                     i;
 
 	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
-		: cast_xxoub(ap, lst->format->flag);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+		: cast_xxoub(ap, lst->format);
 	if (n == 0 && !lst->format->precis)
 	{
 		(*mychr)->str = ft_strcnew(lst->format->width, ' ');
@@ -119,7 +119,7 @@ void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
 	}
-	if (!ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
+	if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
 			&& lst->format->precis < lst->format->width)
 		precis_xb(&str, lst->format, ft_strlen(nbr), 16);
 	if (lst->format->precis >= lst->format->width)
@@ -146,8 +146,8 @@ void                    conv_b(t_lst *lst, t_chr **mychr, va_list ap)
 	int                     i;
 
 	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
-		: cast_xxoub(ap, lst->format->flag);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+		: cast_xxoub(ap, lst->format);
 	if (n == 0 && !lst->format->precis)
 		(*mychr)->str = ft_strnew(0);
 	else
@@ -173,7 +173,8 @@ void                    conv_b(t_lst *lst, t_chr **mychr, va_list ap)
 				str[i++] = ' ';
 			ft_strcpy(&str[--i], nbr);
 		}
-		if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
+		if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
+				&& lst->format->precis < lst->format->width)
 			precis_xb(&str, lst->format, ft_strlen(nbr), 2);
 		if (lst->format->precis >= lst->format->width)
 			str = all_zero_xb(nbr, lst->format->precis, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0, 2);

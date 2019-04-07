@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 00:29:36 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 05:14:00 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ char				*ft_ltoa(long int n);
 char				*ft_lltoa(long long int n);
 char				*ft_itoa_base(long long int val, int base);
 char				*ft_utoa(size_t n);
+char				*ft_ultoa(unsigned long int n);
 char				*ft_ulltoa(unsigned long long int n);
 char				*ft_utoa_base(size_t val, int base);
 void				ft_putchar(char c);

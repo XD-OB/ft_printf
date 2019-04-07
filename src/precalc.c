@@ -62,7 +62,7 @@ int             pre_ld_calc(t_ldouble db, t_chr **mychr, t_lst *lst)
         if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
         {
                 (*mychr)->str = ft_strzero(lst, db.zone.sign);
-                (*mychr)->len = 1;
+                (*mychr)->len = ft_strlen((*mychr)->str);
                 return (1);
         }
         if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
@@ -88,21 +88,18 @@ long            int_exp(long bin_exp, int bias)
         int_exp = 0;
         ref = (bias == D_BIAS) ? 2048 : 32768;
         while (ref >>= 1)
-		int_exp += (bin_exp & ref);
+			int_exp += (bin_exp & ref);
         return (int_exp);
 }
 
-long            int_mants(long bin_mants, int bias)
+long long		int_mants(long bin_mants, int bias)
 {
-        unsigned long	ref;
+        int				ref;
         long long    	int_mants;
 
         int_mants = 0;
-        ref = (bias == D_BIAS) ? 2251799813685248 : 4611686018427387904;
-        while (ref)
-        {
-                int_mants += (bin_mants & ref);
-                ref >>= 1;
-        }
+        ref = (bias == D_BIAS) ? 53 : 63;
+        while (--ref)
+                int_mants += ((bin_mants >> ref) & 1);
         return (int_mants);
 }

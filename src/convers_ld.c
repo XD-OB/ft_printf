@@ -6,21 +6,92 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 04:05:32 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 02:47:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
 
+char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
+{
+	long	new_exp;
+	long	bin_mantis;
+	char	*tab;
+	int		size_dec;
+	int		i;
+
+	tab = NULL;
+	size_dec = 0;
+	bin_mantis = db.zone.mantissa;
+	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	if (new_exp < 0)
+		return (ft_strdup("0"));
+	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+	size_dec++;
+	i = 62;
+	while (new_exp > 0)
+	{
+		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+		size_dec++;
+		i--;
+		new_exp--;
+	}
+	i = -1;
+	while (++i < size_dec)
+		ft_putchar(tab[i]);
+	ft_putchar('\n');
+	return (calcul_entier(tab, size_dec, format));
+}
+
+char		*get_fractld(long exp, t_ldouble db, int bias, t_format *format)
+{
+	int			len_b;
+	unsigned int		size;
+	char			*tab;
+	long			new_exp;
+	long			bin_mantis;
+
+	tab = NULL;
+	size = 0;
+	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	bin_mantis = db.zone.mantissa;
+	len_b = ABS(63 - new_exp - 1);
+	if (len_b < 0)
+		return (ft_strdup("0"));
+	while (len_b >= 0)
+	{
+		if (new_exp < -1)
+		{
+			tab = int_addone(tab, size, 0);
+			size++;
+			new_exp++;
+		}
+		else if (new_exp == -1)
+		{
+			tab = (db.zone.int_b) ? int_addone(tab, size, 1) : int_addone(tab, size, 0);
+			size++;
+			new_exp++;
+		}
+		else
+		{
+			tab = ((bin_mantis >> len_b) & 1) ?
+				int_addone(tab, size, 1) : int_addone(tab, size, 0);
+			size++;
+		}
+		len_b--;
+	}
+	return  (calcul_fract(tab, size, format));
+}
+
 void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 {
 	t_ldouble                       db;
 	char                            *fract;
 	char                            *entier;
-	unsigned int                    len_e;
-	unsigned int                    len_f;
-	unsigned int                    len;
+	int             		       len_e;
+	int         		           len_f;
+	int   			               len;
 	char                            *tmp;
 	char                            *final;
 	int                             carry;
@@ -31,10 +102,9 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
 	if (pre_ld_calc(db, mychr, lst))
 		return ;
-	entier = get_entier(int_exp(db.zone.exponent, LD_BIAS), db.zone.mantissa, LD_BIAS, lst->format);
+	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, LD_BIAS, lst->format);
 	flag_apostrophe(&entier, lst->format);
-	fract = get_fract(int_exp(db.zone.exponent, LD_BIAS), db.zone.mantissa, LD_BIAS, lst->format);
-	printf("\nfract before: %s\n", fract);
+	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, LD_BIAS, lst->format);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	ft_putchar('\n');
 	if (carry == 1)
@@ -57,11 +127,9 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	else
 		tmp = ft_strjoin(entier, "");
 	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
-	printf("fract  : %s\n", fract);
 	free(tmp);
-	//free(fract);
-	printf("entier: %s\n", entier);
-	//free(entier);
+	free(fract);
+	free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = len;
 }

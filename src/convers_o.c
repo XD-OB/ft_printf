@@ -6,28 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 04:28:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 05:08:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-size_t	cast_xxoub(va_list ap, char *flag)
-{
-	size_t		n;
-
-	if (ft_strstr(flag, "hh"))
-		n = (unsigned char)va_arg(ap, unsigned int);
-	else if (ft_strstr(flag, "h"))
-		n = (unsigned short int)va_arg(ap, unsigned int);
-	else if (ft_strstr(flag, "ll"))
-		n = (unsigned long long int)va_arg(ap, unsigned long long int);
-	else if (ft_strstr(flag, "l"))
-		n = (unsigned long int)va_arg(ap, unsigned long int);
-	else
-		n = (unsigned int)va_arg(ap, unsigned int);
-	return (n);
-}
 
 char			*all_zero_o(char *nbr, int precis, int dash, int width)
 {
@@ -96,8 +79,8 @@ void			conv_o(t_lst *lst, t_chr **mychr, va_list ap)
 	int			i;
 
 	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format->flag)
-		: cast_xxoub(ap, lst->format->flag);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+		: cast_xxoub(ap, lst->format);
 	if (n == 0 && !lst->format->precis)
 	{
 		if (!ft_strchr(lst->format->flag, '#'))

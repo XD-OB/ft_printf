@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 06:25:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 04:54:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void		some_convers(t_lst *lst, t_chr *chr, va_list ap)
 		conv_s(lst, &chr, ap);
 	else if (lst->format->convers == 'c')
 		conv_c(lst, &chr, ap);
-	else if (lst->format->convers == 'u')
+	else if (ft_strchr("uU", lst->format->convers))
 		conv_u(lst, &chr, ap);
 	else if (lst->format->convers == 'o')
 		conv_o(lst, &chr, ap);

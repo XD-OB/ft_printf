@@ -6,17 +6,81 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:38:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 23:02:46 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/07 03:09:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-/*
-**	len[2]:		len[0]: len_e		len[1]: len_f
-*/
+char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
+{
+	unsigned long long int	m;
+	long	new_exp;
+	char	*tab;
+	int		size_dec;
+	int		i;
 
-char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
+	tab = NULL;
+	size_dec = 0;
+	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	if (new_exp < 0)
+		return (ft_strdup("0"));
+	m = 2251799813685248;
+	tab = (exp) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+	size_dec++;
+	i = -1;
+	while (++i < new_exp)
+	{
+		tab = (m & bin_mantis) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+		size_dec++;
+		m >>= 1;
+	}
+	return (calcul_entier(tab, size_dec, format));
+}
+
+char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
+{
+	int			len_b;
+	unsigned int		size;
+	char			*bat;
+	long			new_exp;
+
+	bat = NULL;
+	size = 0;
+	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	len_b = ABS(52 - new_exp - 1);
+	if (len_b < 0)
+		return (ft_strdup("0"));
+	while (len_b >= 0)
+	{
+		if (new_exp < -1)
+		{
+			bat = int_addone(bat, size, 0);
+			size++;
+			new_exp++;
+		}
+		else if (new_exp == -1)
+		{
+			bat = (exp) ? int_addone(bat, size, 1) : int_addone(bat, size, 1);
+			size++;
+			new_exp++;
+		}
+		else
+		{
+			bat = ((bin_mantis >> len_b) & 1) ?
+				int_addone(bat, size, 1) : int_addone(bat, size, 0);
+			size++;
+		}
+		len_b--;
+	}
+	return  (calcul_fract(bat, size, format));
+}
+
+/*
+ **	len[2]:		len[0]: len_e		len[1]: len_f
+ */
+
+static char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
 {
 	char			*tmp;
 	char			*final;
@@ -58,13 +122,11 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	if (lst->format->convers == 'H')
 		flag_dash(&entier, 16);
 	flag_apostrophe(&entier, lst->format);
-	ft_putstr("\n--------------------\n");
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
-	ft_putstr("\n--------------------\n");
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
 	final = modify_lf(lst->format, entier, fract, carry, db);
-	//free(fract);
-	//free(entier);
+	free(fract);
+	free(entier);
 	(*mychr)->str = final;
 	(*mychr)->len = ft_strlen(final);
 }
