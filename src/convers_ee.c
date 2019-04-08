@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:48:46 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 01:17:41 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 06:46:57 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,73 +16,6 @@
 **	len[3]:		i => 0		len_e = 1		len_f = 2
 **	new[2]:		new_entier => 0		new_fract => 1
 */
-
-static char		*get_entierld(long exp, t_ldouble db, t_format *format)
-{
-	long	new_exp;
-	long	bin_mantis;
-	char	*tab;
-	int		size_dec;
-	int		i;
-
-	tab = NULL;
-	size_dec = 0;
-	bin_mantis = db.zone.mantissa;
-	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
-	if (new_exp < 0)
-		return (ft_strdup("0"));
-	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-	size_dec++;
-	i = 62;
-	while (new_exp > 0)
-	{
-		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-		size_dec++;
-		i--;
-		new_exp--;
-	}
-	return (calcul_entier(tab, size_dec, format));
-}
-
-static char		*get_fractld(long exp, t_ldouble db, t_format *format)
-{
-	int			len_b;
-	unsigned int		size;
-	char			*tab;
-	long			new_exp;
-	long			bin_mantis;
-
-	tab = NULL;
-	size = 0;
-	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
-	bin_mantis = db.zone.mantissa;
-	len_b = ABS(63 - new_exp - 1);
-	if (len_b < 0)
-		return (ft_strdup("0"));
-	while (len_b >= 0)
-	{
-		if (new_exp < -1)
-		{
-			tab = int_addone(tab, size, 0);
-			size++;
-			new_exp++;
-		}
-		else if (new_exp == -1)
-		{
-			tab = (db.zone.int_b) ? int_addone(tab, size, 1) : int_addone(tab, size, 0);
-			size++;
-			new_exp++;
-		}
-		else
-		{
-			tab = ((bin_mantis >> len_b) & 1) ?
-				int_addone(tab, size, 1) : int_addone(tab, size, 0);
-			size++;
-		}
-		len_b--;
-	}
-	return  (calcul_fract(tab, size, format));
-}
 
 static int	addjust_e(char **entier, char **fract)
 {

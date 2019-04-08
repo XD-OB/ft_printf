@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 04:08:02 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 03:44:35 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 06:31:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,14 @@ static char                    *all_zero_xb(char *nbr, int precis, int dash, int
 	int             len_nbr;
 	int             i;
 	int             j;
-	int		k;
 
 	j =  0;
 	len_nbr = (int)ft_strlen(nbr);
 	if (dash)
 		len_nbr -= 2;
 	len = ft_max(precis, len_nbr);
-	if (dash && !width)
-		j += 2;
+	if (dash && width)
+		j = 2;
 	res = ft_strnew(len + j);
 	i = 0;
 	if (dash)
@@ -35,10 +34,9 @@ static char                    *all_zero_xb(char *nbr, int precis, int dash, int
 		res[i++] = '0';
 		res[i++] = (base == 2) ? 'b' : 'x';
 	}
-	while (i < (len - len_nbr) + j)
+	while (i < (len - len_nbr))
 		res[i++] = '0';
-	k = j;
-	while (i < len + k)
+	while (i < len)
 		res[i++] = nbr[j++];
 	return (res);
 }
@@ -105,8 +103,7 @@ void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
 		flag_dash(&nbr, 16);
 	flag_apostrophe(&nbr, lst->format);
 	size = ft_max(ft_strlen(nbr), lst->format->width);
-	if (!(str = ft_strnew(size)))
-		return ;
+	str = ft_strnew(size);
 	if (ft_strchr(lst->format->flag, '-'))
 	{
 		ft_strcpy(str, nbr);
@@ -121,13 +118,16 @@ void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
 	}
+	ft_putstr("\nstr[");
+	ft_putstr(str);
+	ft_putstr("]\n");
 	if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
 			&& lst->format->precis < lst->format->width)
 		precis_xb(&str, lst->format, ft_strlen(nbr), 16);
-	if (lst->format->precis >= lst->format->width)
+	else if (lst->format->precis >= lst->format->width)
 		str = all_zero_xb(nbr, lst->format->precis,
 			(ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0, 16);
-	if (ft_strchr(lst->format->flag, '0')
+	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr)
 			&& !ft_strchr(lst->format->flag, '-') && lst->format->precis <= 0)
 		str = all_zero_xb(nbr, lst->format->width,

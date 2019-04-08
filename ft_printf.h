@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/08 03:58:04 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/08 07:04:13 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void				conv_k(t_format *format, t_chr **mychr, va_list ap);
 void				conv_color(t_lst *lst, t_chr **mychr);
 void				conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_s(t_lst *lst, t_chr **mychr, va_list ap);
+void				conv_n(t_lst *lst, t_chr **mychr, t_chr *debut, va_list ap);
 void				conv_p(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_o(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_b(t_lst *lst, t_chr **mychr, va_list ap);
@@ -84,8 +85,10 @@ int					pre_d_calc(t_double db, t_chr **mychr, t_lst *lst);
 int					pre_ld_calc(t_ldouble db, t_chr **mychr, t_lst *lst);
 long				int_exp(long bin_exp, int bias);
 long long			int_mants(long bin_mants, int bias);
+char				*get_entierld(long exp, t_ldouble db, t_format *format);
 char				*get_entier(long exp, long bin_mantis,
 		int bias, t_format *format);
+char				*get_fractld(long exp, t_ldouble db, t_format *format);
 char				*get_fract(long exp, long bin_mantis,
 		int bias, t_format *format);
 char				*ft_fprecis(char *fract, int precis, int *carry);

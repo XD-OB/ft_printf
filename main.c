@@ -3,7 +3,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <float.h>
+//#include <float.h>
+# define LDBL_MIN 4.9406564584124654e-324
+# define LDBL_MAX 1.7976931348623158e+308	
 
 int	main(void)
 {
@@ -107,10 +109,10 @@ int	main(void)
 	//printf("\n");
 	//printf("%%");
 	//printf("\n");
-	//ft_printf("%7.5d", 5427);
-	//printf("\n");
-	//printf("%7.5d", 5427);
-	//printf("\n");
+	ft_printf("%7.5d", 5427);
+	printf("\n");
+	printf("%7.5d", 5427);
+	printf("\n");
 	//ft_printf("%+d", 42);
 	//printf("\n");
 	//printf("%+d", 42);
@@ -163,9 +165,17 @@ int	main(void)
 	//printf("\n");
 	//printf("%Lf", 1.0e309L);
 	//printf("\n");
-	ft_printf("%.500Lf", LDBL_MIN);
-	printf("\n");
-	printf("%.500Lf", LDBL_MIN);
-	printf("\n");
+	//ft_printf("%.380Lf", LDBL_MIN);
+	//printf("\n");
+	//printf("%.380Lf", LDBL_MIN);
+	//printf("\n");
+	//ft_printf("%0+5d", 42);
+	//printf("\n");
+	//printf("%0+5d", 42);
+	//printf("\n");
+	//ft_printf("%#08x", 42); 
+	//printf("\n");
+	//printf("%#08x", 42); 
+	//printf("\n");
 	return (0);
 }

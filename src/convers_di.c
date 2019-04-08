@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 03:44:08 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 06:31:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 	}
 }
 
-static void		flag_plus_di(t_format *fmt, char **str, int d)
+static void		flag_plus_di(t_format *fmt, char **str)
 {
 	char	*res;
 	int		len_str;
@@ -110,23 +110,15 @@ static void		flag_plus_di(t_format *fmt, char **str, int d)
 
 	i = 0;
 	len_str = (int)ft_strlen(*str);
-	if (!ft_strchr(fmt->flag, '+') || d < 0)
-		return ;
 	c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
 	if (fmt->width == len_str)
 	{
-		while ((*str)[i] == c)
+		while ((*str)[i] == ' ')
 			i++;
 		if (i > 0)
 			(*str)[i - 1] = '+';
 		else
-		{
-			res = ft_strnew(len_str);
-			res[0] = '+';
-			ft_strncpy(&(res[1]), *str, len_str - 1);
-			free (*str);
-			*str = res;
-		}
+			(*str)[0] = '+';
 	}
 	else if (fmt->precis == len_str || ft_strchr(fmt->flag, '0'))
 	{
@@ -202,17 +194,17 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
 	}
-	
 	if (lst->format->precis > 0
 			&& lst->format->precis < lst->format->width)
 		precis_di(&str, lst->format, ft_strlen(nbr));
 	else if (lst->format->precis >= lst->format->width)
-		str = all_zero_di(nbr, lst->format->precis, 0);
+		str = all_zero_di(nbr, lst->format->precis, 0);	
 	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
 		str = all_zero_di(nbr, lst->format->width, 1);
-	flag_plus_di(lst->format, &str, n);
-	if (n >= 0)
+	if (n >= 0 && ft_strchr(lst->format->flag, '+'))
+		flag_plus_di(lst->format, &str);
+	else if (n >= 0)
 		flag_space_di(lst->format, &str);
 	(*mychr)->str = str;
 	free(nbr);

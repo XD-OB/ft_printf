@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 01:25:37 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 07:07:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,25 @@ static void		some_convers(t_lst *lst, t_chr *chr, va_list ap)
 
 void			fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 {
+	t_chr		*debut;
+
+	debut = chr;
 	while (lst)
 	{
 		while (chr && chr->str)
 			chr = chr->next;
 		if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, ap);
+		else if (lst->format->convers == 'n')
+			conv_n(lst, &chr, debut, ap);
+		else if (ft_strchr("xX", lst->format->convers))
+			conv_xx(lst, &chr, ap);
 		else if (ft_strchr("uUosckpP}%", lst->format->convers))
 			some_convers(lst, chr, ap);
 		else if (ft_strchr("fHeEgG", lst->format->convers))
 			conv_d_efgh(lst, &chr, ap);
 		else if (ft_strchr("bB", lst->format->convers))
 			conv_b(lst, &chr, ap);
-		else if (ft_strchr("xX", lst->format->convers))
-			conv_xx(lst, &chr, ap);
 		else
 			conv_invalid(&chr, lst->format, ap);
 		lst = lst->next;

@@ -6,14 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 04:25:23 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 06:47:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
-char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
+char		*get_entierld(long exp, t_ldouble db, t_format *format)
 {
 	long	new_exp;
 	long	bin_mantis;
@@ -24,17 +23,16 @@ char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
 	tab = NULL;
 	size_dec = 0;
 	bin_mantis = db.zone.mantissa;
-	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
 	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
 	size_dec++;
-	i = 62;
-	while (i >= 0 && new_exp > 0)
+	i = 63;
+	while (--i >= 0 && new_exp > 0)
 	{
 		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
 		size_dec++;
-		i--;
 		new_exp--;
 	}
 	while (new_exp > 0)
@@ -43,14 +41,10 @@ char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
 		size_dec++;
 		new_exp--;
 	}
-	i = 0;
-	while (i < size_dec)
-		ft_putchar(tab[i++]);
-	ft_putchar(tab[i]);
 	return (calcul_entier(tab, size_dec, format));
 }
 
-char		*get_fractld(long exp, t_ldouble db, int bias, t_format *format)
+char		*get_fractld(long exp, t_ldouble db, t_format *format)
 {
 	int			len_b;
 	unsigned int		size;
@@ -60,7 +54,7 @@ char		*get_fractld(long exp, t_ldouble db, int bias, t_format *format)
 
 	tab = NULL;
 	size = 0;
-	new_exp = (exp == 0) ? 1 - bias : exp - bias;
+	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
 	bin_mantis = db.zone.mantissa;
 	len_b = ABS(63 - new_exp - 1);
 	if (len_b < 0)
@@ -75,7 +69,8 @@ char		*get_fractld(long exp, t_ldouble db, int bias, t_format *format)
 		}
 		else if (new_exp == -1)
 		{
-			tab = (db.zone.int_b) ? int_addone(tab, size, 1) : int_addone(tab, size, 0);
+			tab = (db.zone.int_b) ?
+				int_addone(tab, size, 1) : int_addone(tab, size, 0);
 			size++;
 			new_exp++;
 		}
@@ -108,11 +103,10 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
 	if (pre_ld_calc(db, mychr, lst))
 		return ;
-	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, LD_BIAS, lst->format);
+	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	flag_apostrophe(&entier, lst->format);
-	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, LD_BIAS, lst->format);
+	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	ft_putchar('\n');
 	if (carry == 1)
 		entier = ft_strsum(entier, "1", 10);
 	if (db.zone.sign)
@@ -128,10 +122,8 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
 		flag_space(&entier, lst->format->flag);
 	len_e = ft_strlen(entier);
-	if (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0)
-		tmp = ft_strjoin(entier, ".");
-	else
-		tmp = ft_strjoin(entier, "");
+	tmp = (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0) ?
+		ft_strjoin(entier, ".") : ft_strdup(entier);
 	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
 	free(tmp);
 	free(fract);
