@@ -57,7 +57,8 @@ void		free_lst(t_lst *lst)
 		lst = curr;
 		free(curr->format->flag);
 		free(curr->format);
-		free(curr->arglist);
+		if (curr->arglist)
+			free(curr->arglist);
 		curr = curr->next;
 		free(lst);
 	}
@@ -71,6 +72,7 @@ void		free_chr(t_chr *chr)
 	{
 		tmp = chr;
 		chr = chr->next;
+		free(tmp->str);
 		free(tmp);
 	}
 }

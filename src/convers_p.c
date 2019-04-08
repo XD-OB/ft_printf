@@ -151,5 +151,6 @@ void			conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 		flag_plus_p(lst->format, &str);
 		(*mychr)->str = str;
 	}
+	free(nbr);
 	(*mychr)->len = ft_strlen(str);
 }

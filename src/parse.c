@@ -81,7 +81,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(flag);
 			return (-1);
 		}
 		if (ft_isdigit(*str))
@@ -92,7 +92,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(flag);
 			return (-1);
 		}
 		if (*str == '.')
@@ -120,7 +120,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(flag);
 			return (-1);
 		}
 		curr->format->convers = *str;

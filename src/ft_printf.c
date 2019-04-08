@@ -39,7 +39,10 @@ int		ft_printf(const char *format, ...)
 	}
 	//print_lst(lst);
 	if (!(mychr = load_chr((char*)format, lst)))
-		return -1;
+	{
+		free_lst(lst);
+		return (-1);
+	}
 	//print_chr(mychr);
 	//ft_putendl((char*)format);
 	fill_chr(lst, mychr, ap);

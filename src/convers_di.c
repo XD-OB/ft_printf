@@ -106,11 +106,9 @@ static void		flag_plus_di(t_format *fmt, char **str)
 	char	*res;
 	int		len_str;
 	int		i;
-	char	c;
 
 	i = 0;
 	len_str = (int)ft_strlen(*str);
-	c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
 	if (fmt->width == len_str)
 	{
 		while ((*str)[i] == ' ')

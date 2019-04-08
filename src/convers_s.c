@@ -130,6 +130,7 @@ static void		conv_s_annex(t_lst *lst, int *len, char **str, t_chr **mychr)
 		i = -1;
 		while (++i < len[0])
 			str[1][i] = str[0][i];
+		free(str[0]);
 		(*mychr)->str = str[1];
 	}
 }

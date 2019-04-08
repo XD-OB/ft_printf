@@ -47,7 +47,6 @@ void				conv_k(t_format *format, t_chr **mychr, va_list ap);
 void				conv_color(t_lst *lst, t_chr **mychr);
 void				conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_s(t_lst *lst, t_chr **mychr, va_list ap);
-void				conv_n(t_lst *lst, t_chr **mychr, t_chr *debut, va_list ap);
 void				conv_p(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_o(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_b(t_lst *lst, t_chr **mychr, va_list ap);

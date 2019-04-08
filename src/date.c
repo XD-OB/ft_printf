@@ -99,12 +99,12 @@ static char				*e_date(char **times, int len)
 **	var:		var[0] : s		var[1] : y		var[2] : i
 */
 
-void					conv_k(t_format *format, t_chr **mychr, va_list ap)
+void				conv_k(t_format *format, t_chr **mychr, va_list ap)
 {
-	long int			var[3];
+	long int		var[3];
 	unsigned int		date[5];
-	char				*res;
-	char				*times[6];
+	char			*res;
+	char			*times[6];
 	unsigned int		len;
 
 	var[0] = (long int)va_arg(ap, long int);
@@ -117,6 +117,6 @@ void					conv_k(t_format *format, t_chr **mychr, va_list ap)
 	(*mychr)->str = res;
 	(*mychr)->len = ft_strlen(res);
 	var[2] = -1;
-	while (++var[2] < 5)
+	while (++var[2] < 6)
 		free(times[var[2]]);
 }

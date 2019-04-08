@@ -92,7 +92,6 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	char                            *entier;
 	int             		       len_e;
 	int         		           len_f;
-	int   			               len;
 	char                            *tmp;
 	char                            *final;
 	int                             carry;
@@ -113,15 +112,10 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 		entier = add_sign(entier, (int)(db.zone.sign));
 	len_e = ft_strlen(entier);
 	len_f = ft_strlen(fract);
-	len = len_e + len_f + 1;
-	if (lst->format->width > (int)len && !ft_strchr(lst->format->flag, '-'))
-	{
+	if (lst->format->width > (int)(len_e + len_f + 1) && !ft_strchr(lst->format->flag, '-'))
 		entier = ft_fwidth(entier, len_e, lst->format, len_f);
-		len = lst->format->width;
-	}
 	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
 		flag_space(&entier, lst->format->flag);
-	len_e = ft_strlen(entier);
 	tmp = (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0) ?
 		ft_strjoin(entier, ".") : ft_strdup(entier);
 	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
@@ -129,6 +123,6 @@ void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
 	free(fract);
 	free(entier);
 	(*mychr)->str = final;
-	(*mychr)->len = len;
+	(*mychr)->len = ft_strlen(final);
 }
 

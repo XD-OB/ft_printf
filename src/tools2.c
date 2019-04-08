@@ -67,8 +67,7 @@ char		*cut_str(char *str, int p1, int p2)
 	int		i;
 
 	i = p1 - 1;
-	if (!(ret = ft_strnew(p2 - p1 + 1)))
-		return (0);
+	ret = ft_strnew(p2 - p1 + 1);
 	while (++i <= p2)
 		ret[i - p1] = str[i];
 	return (ret);

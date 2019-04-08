@@ -12,11 +12,11 @@
 
 #include "ft_printf.h"
 
-void			error(void)
+/*void			error(void)
 {
 	write(1, "Invalid format\n", 15);
 	exit(-1);
-}
+}*/
 
 static int		is_repeat(char *str, char c)
 {

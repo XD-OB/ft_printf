@@ -33,33 +33,47 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 			entier = ft_strsum(entier, count, base);
 		count = ft_strmult("2", count, base);
 	}
+	free(count);
+	free(tab);
 	return (entier);
 }
 
-char		*calcul_fract(char *bat, int size, t_format *format)
+static unsigned int	ft_strupdatelen(char *str, unsigned int old)
+{
+	unsigned int	len;
+
+	len = old;
+	while (str[len])
+		len++;
+	return (len);
+}
+
+char		*calcul_fract(char *tab, int size, t_format *format)
 {
 	char		*fract;
-	int		i;
 	char		*count;
 	unsigned int	len;
 	int		base;
+	int		i;
 
 	i = -1;
 	base = (format->convers == 'H') ? 16 : 10;
 	fract = ft_strdup("0");
 	len = 1;
 	count = ft_strdup("5");
-	while (bat[--size] == '0');
+	while (tab[--size] == '0');
 	while (++i <= size)
 	{
-		if (bat[i] == '1')
+		if (tab[i] == '1')
 		{
 			fract = ft_strsum(fract, count, base);
-			len = ft_strlen(fract);
+			len = ft_strupdatelen(fract, len);
 		}
 		count = ft_strmult("5", count, base);
 		fract = foisdix(fract, len);
 		len++;
 	}
+	free(count);
+	free(tab);
 	return (fract);
 }

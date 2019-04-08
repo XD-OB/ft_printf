@@ -118,9 +118,6 @@ void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
 			str[i++] = ' ';
 		ft_strcpy(&str[--i], nbr);
 	}
-	ft_putstr("\nstr[");
-	ft_putstr(str);
-	ft_putstr("]\n");
 	if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
 			&& lst->format->precis < lst->format->width)
 		precis_xb(&str, lst->format, ft_strlen(nbr), 16);

@@ -19,13 +19,11 @@ static char	*dash_xob(char *nbr, int size, int base)
 
 	i = (base == 8) ? 1 : 2;
 	size += i;
-	if (!(str = (char*)malloc(sizeof(char) * (size + 1))))
-		return (NULL);
+	str = ft_strnew(size);
 	str[0] = '0';
 	(base == 16) ? str[1] = 'X' : 0;
 	(base == 2) ? str[1] = 'b' : 0;
 	ft_strcpy(&str[i], nbr);
-	str[size] = '\0';
 	return (str);
 }
 
