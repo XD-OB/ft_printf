@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 07:01:00 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/08 06:49:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,15 @@ int		ft_printf(const char *format, ...)
 	va_list		ap;
 	int		len;
 	int		len_format;
-	int		pflag;
 
-	pflag = 0;
 	len = 0;
 	len_format = 0;
 	while (format[len_format])
 		len_format++;
 	va_start(ap, format);
-	lst = parse_format(ap, (char*)format, &pflag);
+	lst = parse_format(ap, (char*)format);
 	if (!lst)
 	{
-		if (pflag == -1)
-			return (0);
 		put_spstr((char*)format);
 		if (format[len_format - 1] == '%')
 			return (-1);

@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/08 07:04:13 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 07:12:02 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char				*foisdix(char *str, unsigned int len);
 void				put_spstr(char *str);
 void				print_lst(t_lst *lst);
 void				free_lst(t_lst *lst);
-t_lst				*parse_format(va_list ap, char *str);
+t_lst				*parse_format(va_list ap, char *str, int *pflag);
 t_lst				*add_node(t_lst *head, t_lst *node);
 unsigned long long	cast_xxoub(va_list ap, t_format *format);
 char				*add_sign(char *str, int sign);

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:15:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 06:02:18 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/07 00:15:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(curr);
 			return (-1);
 		}
 		if (ft_isdigit(*str))
@@ -92,7 +92,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(curr);
 			return (-1);
 		}
 		if (*str == '.')
@@ -120,7 +120,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		if (!*str)
 		{
-			//free(curr);
+			free(curr);
 			return (-1);
 		}
 		curr->format->convers = *str;
@@ -139,9 +139,8 @@ void	init_node(t_lst *node)
 	node->format->argn = 0;
 }
 
-t_lst	*parse_format(va_list ap, char *str, int *pflag)
+t_lst	*parse_format(va_list ap, char *str)
 {
-
 	t_lst	*head;
 	t_lst	*node;
 	int		i;
@@ -161,17 +160,13 @@ t_lst	*parse_format(va_list ap, char *str, int *pflag)
 			i++;
 			if (check_fill(ap, &str[i], i - 1, node) != -1)
 			{
-
 				head = add_node(head, node);
 				//i++;
-				while (str[i] && str[i] != node->format->convers)
+				while (str[i] != node->format->convers)
 					i++;
 			}
 			else
-			{
-				*pflag = -1;
 				free(node);
-			}
 			node = node->next;
 		}
 		i++;
