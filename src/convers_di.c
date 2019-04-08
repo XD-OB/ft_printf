@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 23:38:54 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 03:44:08 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static long long int	cast_di(va_list ap, char *flag)
 		d = va_arg(ap, long long int);
 	else if (ft_strstr(flag, "l"))
 		d = va_arg(ap, long int);
+	else if (ft_strstr(flag, "j"))
+		d = va_arg(ap, intmax_t);
 	else
 		d = (int)va_arg(ap, int);
 	return (d);
@@ -63,9 +65,6 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 	int             j;
 	char    *nbr;
 
-	ft_putstr("\nstr: [");
-	ft_putstr(*str);
-	ft_putstr("]\n");
 	if (ft_strchr(fmt->flag, '-'))
 	{
 		i = 0;
@@ -88,7 +87,7 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 	{
 		i = ft_strlen(*str) - nbr_len - 1;
 		j = fmt->precis - nbr_len;
-		while (j-- >= 0 && i >= 0)
+		while (--j >= 0 && i >= 0)
 			(*str)[i--] = '0';
 		i = ft_strlen(*str) - nbr_len;
 		if ((*str)[i] == '-')
@@ -212,9 +211,6 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
 		str = all_zero_di(nbr, lst->format->width, 1);
-	ft_putstr("\nstr: [");
-	ft_putstr(str);
-	ft_putstr("]\n");
 	flag_plus_di(lst->format, &str, n);
 	if (n >= 0)
 		flag_space_di(lst->format, &str);

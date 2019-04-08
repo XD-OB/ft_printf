@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 05:14:25 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 23:43:07 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 03:44:54 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,6 @@ void			precis_u(char **str, t_format *fmt, size_t nbr_len)
 	int             j;
 	char    *nbr;
 
-	ft_putstr("\nstr: [");
-	ft_putstr(*str);
-	ft_putstr("]\n");
 	if (ft_strchr(fmt->flag, '-'))
 	{
 		i = 0;
@@ -126,7 +123,8 @@ void                    conv_u(t_lst *lst, t_chr **mychr, va_list ap)
 		precis_u(&str, lst->format, ft_strlen(nbr));
 	if (lst->format->precis >= lst->format->width)
 		str = all_zero_u(nbr, lst->format->precis);
-	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
+	if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr)
+			&& !ft_strchr(lst->format->flag, '-'))
 		str = all_zero_u(nbr, lst->format->width);
 	(*mychr)->str = str;
 	free(nbr);

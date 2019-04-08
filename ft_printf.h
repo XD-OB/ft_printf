@@ -9,6 +9,7 @@
 # include <stdlib.h>
 # include <stdarg.h>
 # include <limits.h>
+# include <inttypes.h>
 # include "libft/libft.h"
 # include "structs.h"
 

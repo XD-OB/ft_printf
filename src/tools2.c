@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 04:07:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 21:24:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 03:31:54 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int			is_format(char c)
 	int		i;
 
 	i = 0;
-	ref = "cspdiouxXfegrkb}%";
+	ref = "cspdiouUxXfegrkb}%";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);
@@ -31,7 +31,7 @@ int			is_postflag(char c)
 	int		i;
 
 	i = 0;
-	ref = "lLh+-r";
+	ref = "lLh+-rjz";
 	while (ref[i])
 		if (c == ref[i++])
 			return (1);

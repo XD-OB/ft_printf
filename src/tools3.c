@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:08:14 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 03:28:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
 		n = (unsigned long long int)va_arg(ap, unsigned long long int);
 	else if (ft_strstr(fmt->flag, "l"))
 		n = (unsigned long int)va_arg(ap, unsigned long int);
+	else if (ft_strstr(fmt->flag, "z"))
+		n = (size_t)va_arg(ap, size_t);
+	else if (ft_strstr(fmt->flag, "j"))
+		n = (size_t)va_arg(ap, uintmax_t);
 	else
 		n = (unsigned int)va_arg(ap, unsigned int);
 	return (n);
