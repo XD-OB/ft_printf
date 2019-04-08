@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:48:46 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 00:12:25 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/08 01:17:41 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,73 @@
 **	len[3]:		i => 0		len_e = 1		len_f = 2
 **	new[2]:		new_entier => 0		new_fract => 1
 */
+
+static char		*get_entierld(long exp, t_ldouble db, t_format *format)
+{
+	long	new_exp;
+	long	bin_mantis;
+	char	*tab;
+	int		size_dec;
+	int		i;
+
+	tab = NULL;
+	size_dec = 0;
+	bin_mantis = db.zone.mantissa;
+	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
+	if (new_exp < 0)
+		return (ft_strdup("0"));
+	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+	size_dec++;
+	i = 62;
+	while (new_exp > 0)
+	{
+		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
+		size_dec++;
+		i--;
+		new_exp--;
+	}
+	return (calcul_entier(tab, size_dec, format));
+}
+
+static char		*get_fractld(long exp, t_ldouble db, t_format *format)
+{
+	int			len_b;
+	unsigned int		size;
+	char			*tab;
+	long			new_exp;
+	long			bin_mantis;
+
+	tab = NULL;
+	size = 0;
+	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
+	bin_mantis = db.zone.mantissa;
+	len_b = ABS(63 - new_exp - 1);
+	if (len_b < 0)
+		return (ft_strdup("0"));
+	while (len_b >= 0)
+	{
+		if (new_exp < -1)
+		{
+			tab = int_addone(tab, size, 0);
+			size++;
+			new_exp++;
+		}
+		else if (new_exp == -1)
+		{
+			tab = (db.zone.int_b) ? int_addone(tab, size, 1) : int_addone(tab, size, 0);
+			size++;
+			new_exp++;
+		}
+		else
+		{
+			tab = ((bin_mantis >> len_b) & 1) ?
+				int_addone(tab, size, 1) : int_addone(tab, size, 0);
+			size++;
+		}
+		len_b--;
+	}
+	return  (calcul_fract(tab, size, format));
+}
 
 static int	addjust_e(char **entier, char **fract)
 {
@@ -85,6 +152,16 @@ static char	*ft_finish_e(char *final, int p, char c)
 	return (new_final);
 }
 
+void		reduce_fract(char **str)
+{
+	unsigned int	len;
+
+	len = ft_strlen(*str) - 1;
+	while ((*str)[len] == '0')
+		len--;
+	(*str)[len + 1] = '\0';
+}
+
 char		*final_ee(t_format *fmt, char **entier, char *fract, int *a)
 {
 	char		*final;
@@ -97,10 +174,9 @@ char		*final_ee(t_format *fmt, char **entier, char *fract, int *a)
 	else if (ft_strchr(fmt->flag, ' ') && !ft_strchr(fmt->flag, '-'))
 		flag_space(entier, fmt->flag);
 	a[0] = ft_strlen(*entier);
-	if (ft_strchr(fmt->flag, '#') || fmt->precis != 0)
-		tmp = ft_strjoin(*entier, ".");
-	else
-		tmp = ft_strjoin(*entier, "");
+	tmp = (ft_strchr(fmt->flag, '#') || fmt->precis != 0) ?
+		ft_strjoin(*entier, ".") : ft_strjoin(*entier, "");
+	(ft_strchr("gG", fmt->convers)) ? reduce_fract(&fract) : 0;
 	final = (fmt->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
 	final = ft_finish_e(final, a[3], fmt->convers);
 	free(tmp);
@@ -110,8 +186,8 @@ char		*final_ee(t_format *fmt, char **entier, char *fract, int *a)
 }
 
 /*
-** a[0] = len_e | a[1] = len_f | a[2] = carry | a[3] = p
-*/
+ ** a[0] = len_e | a[1] = len_f | a[2] = carry | a[3] = p
+ */
 
 void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 {
@@ -128,7 +204,40 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS),
 			db.zone.mantissa, D_BIAS, lst->format);
 	a[3] = addjust_e(&entier, &fract);
-	fract = ft_fprecis(fract, lst->format->precis, a + 2);
+	(ft_strchr("gG", lst->format->convers)) ? lst->format->precis-- : 0;
+	if (lst->format->precis > 0)
+		fract = ft_fprecis(fract, lst->format->precis, a + 2);
+	(a[2] == 1) ? entier = ft_strsum(entier, "1", 10) : 0;
+	(ft_strlen(entier) > 1) ? ft_scum(&entier, &fract, a + 3) : 0;
+	flag_apostrophe(&fract, lst->format);
+	(db.zone.sign) ? entier = add_sign(entier, (int)(db.zone.sign)) : 0;
+	a[0] = ft_strlen(entier);
+	a[1] = ft_strlen(fract);
+	final = final_ee(lst->format, &entier, fract, a);
+	(*mychr)->str = final;
+	(*mychr)->len = ft_strlen(final);
+}
+
+void		conv_lee(t_lst *lst, t_chr **mychr, va_list ap)
+{
+	char			*final;
+	char			*fract;
+	char			*entier;
+	int				a[4];
+	t_ldouble		db;
+
+	a[2] = 0;
+	flag_star(lst->format, ap);
+	db.ld = (flag_dollar(lst)) ? va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
+	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
+	if (pre_ld_calc(db, mychr, lst))
+		return ;
+	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
+	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
+	a[3] = addjust_e(&entier, &fract);
+	(ft_strchr("gG", lst->format->convers)) ? lst->format->precis-- : 0;
+	if (lst->format->precis > 0)
+		fract = ft_fprecis(fract, lst->format->precis, a + 2);
 	(a[2] == 1) ? entier = ft_strsum(entier, "1", 10) : 0;
 	(ft_strlen(entier) > 1) ? ft_scum(&entier, &fract, a + 3) : 0;
 	flag_apostrophe(&fract, lst->format);

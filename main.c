@@ -107,10 +107,10 @@ int	main(void)
 	//printf("\n");
 	//printf("%%");
 	//printf("\n");
-	ft_printf("%5.2d", 5427);
-	printf("\n");
-	printf("%5.2d", 5427);
-	printf("\n");
+	//ft_printf("%5.2d", 5427);
+	//printf("\n");
+	//printf("%5.2d", 5427);
+	//printf("\n");
 	//ft_printf("%+d", 42);
 	//printf("\n");
 	//printf("%+d", 42);
@@ -163,8 +163,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%Lf", 1.0e309L);
 	//printf("\n");
-	//printf("%e", 12.00000000000000000000000000000005);
-	//printf("\n");
-
+	ft_printf("%.1Lf", 12222e50L);
+	printf("\n");
+	printf("%.1Lf", 12222e50L);
+	printf("\n");
 	return (0);
 }

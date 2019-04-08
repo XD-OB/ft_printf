@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 04:54:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 01:25:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,14 +92,8 @@ void			fill_chr(t_lst *lst, t_chr *chr, va_list ap)
 			chr = chr->next;
 		if (ft_strchr("di", lst->format->convers))
 			conv_di(lst, &chr, ap);
-		else if (ft_strchr("uosckpP}%", lst->format->convers))
+		else if (ft_strchr("uUosckpP}%", lst->format->convers))
 			some_convers(lst, chr, ap);
-		else if (lst->format->convers == 'f'
-				&& ft_strchr(lst->format->flag, 'L'))
-			conv_llf(lst, &chr, ap);
-		else if (ft_strchr("eE", lst->format->convers)
-				&& ft_strchr(lst->format->flag, 'L'))
-			conv_lee(lst, &chr, ap);
 		else if (ft_strchr("fHeEgG", lst->format->convers))
 			conv_d_efgh(lst, &chr, ap);
 		else if (ft_strchr("bB", lst->format->convers))

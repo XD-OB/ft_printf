@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:57:10 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 19:29:31 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 01:25:18 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,10 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 			va_arg(*(lst->arglist), double) : va_arg(ap, double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
 	if (ft_strchr("fH", lst->format->convers))
-		conv_lfh(lst, mychr, db);
+		(ft_strchr(lst->format->flag, 'L')) ? conv_llf(lst, mychr, ap) : conv_lfh(lst, mychr, db);
 	else if (ft_strchr("eE", lst->format->convers))
-		conv_ee(lst, mychr, db);
+		(ft_strchr(lst->format->flag, 'L')) ?
+			conv_lee(lst, mychr, ap) : conv_ee(lst, mychr, db);
 	else
 	{
 		if (lst->format->precis == 0)
@@ -71,7 +72,8 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 		{
 			if (lst->format->convers == 'G')
 				lst->format->convers = 'E';
-			conv_ee(lst, mychr, db);
+			(ft_strchr(lst->format->flag, 'L')) ?
+				conv_lee(lst, mychr, ap) : conv_ee(lst, mychr, db);
 		}
 		else
 			conv_lfh(lst, mychr, db);
