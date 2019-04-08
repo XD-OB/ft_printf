@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 23:14:10 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 04:25:23 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,23 @@ char		*get_entierld(long exp, t_ldouble db, int bias, t_format *format)
 	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
 	size_dec++;
 	i = 62;
-	while (new_exp > 0)
+	while (i >= 0 && new_exp > 0)
 	{
 		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
 		size_dec++;
 		i--;
 		new_exp--;
 	}
+	while (new_exp > 0)
+	{
+		tab = int_addone(tab, size_dec, 0);
+		size_dec++;
+		new_exp--;
+	}
+	i = 0;
+	while (i < size_dec)
+		ft_putchar(tab[i++]);
+	ft_putchar(tab[i]);
 	return (calcul_entier(tab, size_dec, format));
 }
 

@@ -139,10 +139,10 @@ int	main(void)
 	//printf("\n");
 	//printf("TEST : %020.10s", NULL);
 	//printf("\n");
-	ft_printf("TEST : %-020.10s", NULL);
-	printf("\n");
-	printf("TEST : %-020.10s", NULL);
-	printf("\n");
+	//ft_printf("TEST : %-020.10s", NULL);
+	//printf("\n");
+	//printf("TEST : %-020.10s", NULL);
+	//printf("\n");
 	//ft_printf("Coucou %.0s\n%s%---12s", "hi", "coco", NULL);
 	//printf("\n");
 	//printf("Coucou %.0s\n%s%---12s", "hi", "coco", NULL);
@@ -163,9 +163,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%Lf", 1.0e309L);
 	//printf("\n");
-	//ft_printf("%.1Lf", 12222e50L);
-	//printf("\n");
-	//printf("%.1Lf", 12222e50L);
-	//printf("\n");
+	ft_printf("%.500Lf", LDBL_MIN);
+	printf("\n");
+	printf("%.500Lf", LDBL_MIN);
+	printf("\n");
 	return (0);
 }
