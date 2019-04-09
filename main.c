@@ -182,9 +182,9 @@ int	main(void)
 	//printf("%.60lf", 12e-50); 
 	//printf("\n");
 	int len, ft_len;
-	ft_len = ft_printf("%-+10.5d", 4242);
+	ft_len = ft_printf("%+10.5d", 4242);
 	printf("\n");
-	len = printf("%-+10.5d", 4242);
+	len = printf("%+10.5d", 4242);
 	printf("\n");
 
 	if (len == ft_len)

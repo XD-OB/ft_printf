@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 03:12:20 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/09 03:16:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,7 @@ static void		flag_plusp_di(t_format *fmt, char **str, int len_nbr, char x)
 			if (fmt->width > len_nbr)
 			{
 				i = 0;
-				while ((*str)[i] != ' ')
+				while ((*str)[i] == ' ')
 					i++;
 				(*str)[i - 1] = x;
 			}
