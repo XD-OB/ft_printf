@@ -3,13 +3,22 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-//#include <float.h>
-# define LDBL_MIN 4.9406564584124654e-324
-# define LDBL_MAX 1.7976931348623158e+308	
+#include <float.h>
+
+void	_vfunction(const char *format, ...)
+{
+	va_list	ap;
+	
+	va_start(ap, format);
+	ft_vprintf(format, ap);
+}
+
 
 int	main(void)
 {
 	char		*str;
+	char		*s;
+	int			fd;
 
 	str = "This is a test text";
 
@@ -77,9 +86,9 @@ int	main(void)
 	//printf("\n");
 	//printf("ORIG  ---%+d", 0);
 	//printf("\n");
-	//ft_printf("TEST16---%+-05d", 42);
+	//ft_printf("TEST16---%0+5d", 42);
 	//printf("\n");
-	//printf("ORIG  ---%+-05d", 42);
+	//printf("ORIG  ---%0+5d", 42);
 	//printf("\n");
 	//ft_printf("TEST17---%lld", -92233720368547758);
 	//printf("\n");
@@ -113,9 +122,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%7.5d", 5427);
 	//printf("\n");
-	//ft_printf("pt[%+d]", 42);
+	//ft_printf("%+d", 42);
 	//printf("\n");
-	//printf("ft[%+d]", 42);
+	//printf("%+d", 42);
 	//printf("\n");
 	//ft_printf("m%#.9od\nee", 123456789);
 	//printf("\n");
@@ -165,29 +174,42 @@ int	main(void)
 	//printf("\n");
 	//printf("%Lf", 1.0e309L);
 	//printf("\n");
-	//ft_printf("%.380Lf", LDBL_MIN);
+	//ft_printf("% ");
 	//printf("\n");
-	//printf("%.380Lf", LDBL_MIN);
+	//printf("% ");
 	//printf("\n");
-	//ft_printf("%0+5d", 42);
+
+	/*
+	**	FFT_SPRINT & FT_SNPRINTF + FT_DPRINTF & FT_DNPRINTF + FT_VPRINTF
+	*/	
+
+	//ft_sprintf(&s, "%rs", "\t");
+	//ft_putstr(s);
 	//printf("\n");
-	//printf("%0+5d", 42);
+	//_vfunction("%s", str);
+	//fd = open("./testfile" ,O_CREAT | O_RDWR);
+	//ft_dnprintf(fd, 4, "%s", "testtest");	
+
+	//ft_printf("%-01.5u", 1U);
 	//printf("\n");
-	//ft_printf("%#08x", 42); 
+	//printf("%-01.5u", 1U);
 	//printf("\n");
-	//printf("%#08x", 42); 
+	//ft_printf("%.u|%-.u|%0.u", UINT_MAX, UINT_MAX, UINT_MAX);
 	//printf("\n");
-	//ft_printf("%.60lf", 12e-50); 
+	//printf("%.u|%-.u|%0.u", UINT_MAX, UINT_MAX, UINT_MAX);
 	//printf("\n");
-	//printf("%.60lf", 12e-50); 
+	//ft_printf("%.5u|%-.5u|%0.5u", UINT_MAX, UINT_MAX, UINT_MAX);
 	//printf("\n");
-	int len, ft_len;
-	ft_len = ft_printf("%+10.5d", 4242);
+	//printf("%.5u|%-.5u|%0.5u", UINT_MAX, UINT_MAX, UINT_MAX);
+	//printf("\n");
+	//ft_printf("%23u|%-23u|%023u", 0U, 0U, 0U);
+	//printf("\n");
+	//printf("%23u|%-23u|%023u", 0U, 0U, 0U);
+	//printf("\n");
+	ft_printf("%23.u|%-23.u|%023.u", UINT_MAX, UINT_MAX, UINT_MAX);
 	printf("\n");
-	len = printf("%+10.5d", 4242);
+	printf("%23.u|%-23.u|%023.u", UINT_MAX, UINT_MAX, UINT_MAX);
 	printf("\n");
 
-	if (len == ft_len)
-		printf("**OK**\n");
 	return (0);
 }

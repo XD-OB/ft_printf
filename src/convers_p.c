@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 14:12:58 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 22:37:19 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/09 03:44:44 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static void		flag_plus_p(t_format *fmt, char **str)
 	char		*res;
 	int			i;
 
+	(fmt->convers == 'p') ? *str = ft_strlowcase(*str) : 0;
 	if (!ft_strchr(fmt->flag, '+'))
 		return ;
 	if ((*str)[0] != ' ')
@@ -146,7 +147,6 @@ void			conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 				&& lst->format->width > (int)ft_strlen(nbr)
 				&& !ft_strchr(lst->format->flag, '-'))
 			str = all_zero_p(nbr, lst->format->width, 1);
-		(lst->format->convers == 'p') ? str = ft_strlowcase(str) : 0;
 		flag_plus_p(lst->format, &str);
 		(*mychr)->str = str;
 		free(nbr);

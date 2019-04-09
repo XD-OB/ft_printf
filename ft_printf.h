@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/08 22:58:48 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/09 07:08:22 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ void				conv_lee(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_percent(t_chr **mychr, t_lst *lst, va_list ap);
 void				conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_u(t_lst *lst, t_chr **mychr, va_list ap);
+void				precis_u(char **str, t_format *fmt, int nbr_len);
+char				*all_zero_u(char *nbr, int precis);
 void				conv_invalid(t_chr **mychr, t_format *format, va_list ap);
 void				zero_dbiou(char **str, t_format *fmt);
 char				*flag_r(char c);
