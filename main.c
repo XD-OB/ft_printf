@@ -206,10 +206,13 @@ int	main(void)
 	//printf("\n");
 	//printf("%23u|%-23u|%023u", 0U, 0U, 0U);
 	//printf("\n");
-	ft_printf("%23.u|%-23.u|%023.u", UINT_MAX, UINT_MAX, UINT_MAX);
+	//ft_printf(""%-#23.5hho|%-023.5hho|%#023.5hho|%-#023.5hho", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX");
+	//printf("\n");
+	//printf("%-#23.5hho|%-023.5hho|%#023.5hho|%-#023.5hho", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
+	//printf("\n");
+	ft_printf("%s", "wi32x-3vx++===98234z1esfatr");
 	printf("\n");
-	printf("%23.u|%-23.u|%023.u", UINT_MAX, UINT_MAX, UINT_MAX);
+	printf("%s", "wi32x-3vx++===98234z1esfatr");
 	printf("\n");
-
 	return (0);
 }

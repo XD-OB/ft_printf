@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 03:16:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/09 07:50:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static long long int	cast_di(va_list ap, char *flag)
 	return (d);
 }
 
-char                    *all_zero_di(char *nbr, int precis, int is_width)
+char                    *all_zero_di(t_format *fmt, char *nbr, int precis, int is_width)
 {
 	char    *res;
 	int             len;
@@ -40,7 +40,7 @@ char                    *all_zero_di(char *nbr, int precis, int is_width)
 	int             j;
 
 	len = precis;
-	if (nbr[0] == '-' && !is_width)
+	if ((nbr[0] == '-' && !is_width) || (ft_strpbrk(fmt->flag, "+ ") && !is_width))
 		len++;
 	len_nbr = (nbr[0] == '-') ? (int)ft_strlen(nbr) - 1
 		: (int)ft_strlen(nbr);
@@ -48,12 +48,12 @@ char                    *all_zero_di(char *nbr, int precis, int is_width)
 	i = 0;
 	j =  0;
 	while (i < (len - len_nbr))
-		res[i++] = '0';
-	if (nbr[0] == '-')
-	{
-		res[0] = '-';
-		j++;
-	}
+		res[i++] = (!ft_strchr(fmt->flag, '-') && fmt->precis == 0) ? ' ' : '0';
+	//if (nbr[0] == '-')
+	//{
+	//	res[i++] = '-';
+	//	j++;
+	//}
 	while (j < (int)ft_strlen(nbr))
 		res[i++] = nbr[j++];
 	return (res);
@@ -110,7 +110,7 @@ static void		flag_plusp_di(t_format *fmt, char **str, int len_nbr, char x)
 	len_str = ft_strlen(*str);
 	if (ft_strchr(fmt->flag, '-'))
 	{
-		if (len_nbr > ft_max (fmt->precis, fmt->width))
+		if (len_nbr >= ft_max (fmt->precis, fmt->width))
 			len_str++;
 		res = ft_strnew(len_str);
 		res[0] = x;
@@ -123,7 +123,20 @@ static void		flag_plusp_di(t_format *fmt, char **str, int len_nbr, char x)
 		if (ft_strchr(fmt->flag, '0'))
 		{
 			if (fmt->width > len_nbr ||  fmt->precis > len_nbr)
-				(*str)[0] = x;
+			{
+				if (fmt->width > fmt->precis)
+				{
+					i = 0;
+					while ((*str)[i] == ' ')
+						i++;
+					if (i > 0)
+						(*str)[i - 1] = x;
+					else
+						(*str)[0] = x;
+				}
+				else
+					(*str)[0] = x;
+			}
 			else
 			{
 				res = ft_strnew(len_str + 1);
@@ -163,15 +176,30 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	char            *nbr;
 	long long int	n;
 	int             i;
+	char			c;
 
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ?
 		cast_di(*(lst->arglist), lst->format->flag) : cast_di(ap, lst->format->flag);
 	if (n == 0 && !lst->format->precis)
 	{
-		(*mychr)->str = ft_strcnew(lst->format->width, ' ');
-		((*mychr)->str)[lst->format->width] = '\0';
-		(*mychr)->len = lst->format->width;
+		i = -1;
+		size = (size_t)lst->format->width;
+		if (size == 0 && ft_strpbrk(lst->format->flag, "+ "))
+			size++;
+		(*mychr)->str = ft_strnew(size);
+		while (++i < (int)size)
+			((*mychr)->str)[i] = ' ';
+		(ft_strchr(lst->format->flag, ' ')) ? c = ' ' : 0;
+		(ft_strchr(lst->format->flag, '+')) ? c = '+' : 0;
+		if (ft_strchr(" +", c))
+		{
+			if (ft_strchr(lst->format->flag, c) && ft_strchr(lst->format->flag, '-'))
+				((*mychr)->str)[0] = c;
+			else
+				((*mychr)->str)[i - 1] = c;
+		}
+		(*mychr)->len = (int)size;
 		return ;
 	}
 	nbr = ft_lltoa(n);
@@ -197,14 +225,16 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 			&& lst->format->precis < lst->format->width)
 		precis_di(&str, lst->format, ft_strlen(nbr));
 	else if (lst->format->precis >= lst->format->width)
-		str = all_zero_di(nbr, lst->format->precis, 0);	
+		str = all_zero_di(lst->format, nbr, lst->format->precis, 0);	
 	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
-		str = all_zero_di(nbr, lst->format->width, 1);
+		str = all_zero_di(lst->format, nbr, lst->format->width, 1);
 	if (n >= 0)
 	{
 		if (ft_strchr(lst->format->flag, '+'))
+		{
 			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), '+');
+		}
 		else if (ft_strchr(lst->format->flag, ' '))
 			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), ' ');
 	}
