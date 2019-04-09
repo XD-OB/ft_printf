@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 06:31:37 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/09 03:12:20 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,58 +101,59 @@ void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
 	}
 }
 
-static void		flag_plus_di(t_format *fmt, char **str)
+static void		flag_plusp_di(t_format *fmt, char **str, int len_nbr, char x)
 {
-	char	*res;
-	int		len_str;
-	int		i;
+	int			len_str;
+	char		*res;
+	int			i;
 
-	i = 0;
-	len_str = (int)ft_strlen(*str);
-	if (fmt->width == len_str)
+	len_str = ft_strlen(*str);
+	if (ft_strchr(fmt->flag, '-'))
 	{
-		while ((*str)[i] == ' ')
-			i++;
-		if (i > 0)
-			(*str)[i - 1] = '+';
-		else
-			(*str)[0] = '+';
-	}
-	else if (fmt->precis == len_str || ft_strchr(fmt->flag, '0'))
-	{
-		while ((*str)[i] == '0')
-			i++;
-		(*str)[i - 1] = '+';
+		if (len_nbr > ft_max (fmt->precis, fmt->width))
+			len_str++;
+		res = ft_strnew(len_str);
+		res[0] = x;
+		ft_strncpy(&res[1], *str, len_str - 1);
+		free (*str);
+		*str = res;
 	}
 	else
 	{
-		if (!ft_strchr(fmt->flag, '-'))
-			len_str++;
-		res = ft_strnew(len_str);
-		ft_strncpy(&(res[1]), (*str), len_str);
-		res[0] = '+';
-		free(*str);
-		*str = res;
+		if (ft_strchr(fmt->flag, '0'))
+		{
+			if (fmt->width > len_nbr ||  fmt->precis > len_nbr)
+				(*str)[0] = x;
+			else
+			{
+				res = ft_strnew(len_str + 1);
+				res[0] = x;
+				ft_strncpy(&res[1], *str, len_str);
+				free (*str);
+				*str = res;
+			}
+		}
+		else
+		{
+			if (fmt->width > len_nbr)
+			{
+				i = 0;
+				while ((*str)[i] != ' ')
+					i++;
+				(*str)[i - 1] = x;
+			}
+			else if (fmt->precis > len_nbr)
+				(*str)[0] = x;
+			else
+			{
+				res = ft_strnew(len_str + 1);
+				res[0] = x;
+				ft_strncpy(&res[1], *str, len_str);
+				free (*str);
+				*str = res;
+			}
+		}
 	}
-	return ;
-}
-
-static void             flag_space_di(t_format *fmt, char **str)
-{
-	char    *res;
-
-	if (!ft_strchr(fmt->flag, ' ') || ft_strchr(fmt->flag, '+'))
-		return ;
-	if ((*str)[0] != ' ')
-	{
-		res = ft_strjoin(" ", *str);
-		free(*str);
-		if (res[ft_strlen(res) - 1] == ' ')
-			res[ft_strlen(res) - 1] = '\0';
-		*str = res;
-		return ;
-	}
-	return ;
 }
 
 void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
@@ -200,10 +201,13 @@ void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
 	else if (ft_strchr(lst->format->flag, '0')
 			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
 		str = all_zero_di(nbr, lst->format->width, 1);
-	if (n >= 0 && ft_strchr(lst->format->flag, '+'))
-		flag_plus_di(lst->format, &str);
-	else if (n >= 0)
-		flag_space_di(lst->format, &str);
+	if (n >= 0)
+	{
+		if (ft_strchr(lst->format->flag, '+'))
+			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), '+');
+		else if (ft_strchr(lst->format->flag, ' '))
+			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), ' ');
+	}
 	(*mychr)->str = str;
 	free(nbr);
 	(*mychr)->len = ft_strlen(str);

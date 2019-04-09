@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 03:28:55 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 23:01:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,23 @@ unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
 	else
 		n = (unsigned int)va_arg(ap, unsigned int);
 	return (n);
+}
+
+char			*int_add(char *tab, unsigned int *oldsize, int data)
+{
+	char				*new;
+	unsigned int		i;
+
+	i = 0;
+	new = ft_strnew(*oldsize + 1);
+	while (i < *oldsize)
+	{
+		new[i] = tab[i];
+		i++;
+	}
+	new[i] = data + '0';
+	if (*oldsize != 0)
+		free(tab);
+	(*oldsize)++;
+	return (new);
 }

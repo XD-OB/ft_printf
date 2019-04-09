@@ -13,7 +13,7 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
 		 ft_lstdel ft_lstadd ft_lstiter ft_lstmap ft_sqrt ft_prime ft_ultoa\
 		 ft_strlowcase ft_strupcase ft_swap ft_strrev ft_isblank ft_isxdigit\
 		 ft_strnjoin ft_atoi_base ft_strswap ft_strsum ft_str_pushback ft_ulltoa\
-		 ft_lltoa ft_strmult ft_strcnew ft_ltoa ft_maxmin int_addone\
+		 ft_lltoa ft_strmult ft_strcnew ft_ltoa ft_maxmin\
 
 LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 

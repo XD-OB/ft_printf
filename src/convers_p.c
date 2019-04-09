@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 14:12:58 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/05 15:39:05 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:37:19 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ static char		*str_p(t_format *fmt, char *nbr, int size, int ln)
 	if (ft_strchr(fmt->flag, '0') && fmt->width > ln
 			&& !ft_strchr(fmt->flag, '-'))
 		str = all_zero_p(nbr, fmt->width, 1);
-	free(nbr);
 	return (str);
 }
 
@@ -150,7 +149,7 @@ void			conv_p(t_lst *lst, t_chr **mychr, va_list ap)
 		(lst->format->convers == 'p') ? str = ft_strlowcase(str) : 0;
 		flag_plus_p(lst->format, &str);
 		(*mychr)->str = str;
+		free(nbr);
 	}
-	free(nbr);
 	(*mychr)->len = ft_strlen(str);
 }

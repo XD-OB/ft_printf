@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:14:00 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:11:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ char				*ft_str_pushback(char *str, char c);
 char				*ft_strsum(char *str1, char *str2, int base);
 char				*ft_strcnew(size_t size, char c);
 char				*ft_strmult(char *num1, char *num2, int base);
-char				*int_addone(char *tab, int oldsize, int data);
 int				ft_max(int a, int b);
 int				ft_min(int a, int b);
 

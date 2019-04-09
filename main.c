@@ -12,7 +12,7 @@ int	main(void)
 	char		*str;
 
 	str = "This is a test text";
-	
+
 	//ft_printf("TEST1---%06.2x", 5427);
 	//printf("\n");
 	//printf("ORIG ---%06.2x", 5427);
@@ -77,9 +77,9 @@ int	main(void)
 	//printf("\n");
 	//printf("ORIG  ---%+d", 0);
 	//printf("\n");
-	//ft_printf("TEST16---%0+5d", 42);
+	//ft_printf("TEST16---%+-05d", 42);
 	//printf("\n");
-	//printf("ORIG  ---%0+5d", 42);
+	//printf("ORIG  ---%+-05d", 42);
 	//printf("\n");
 	//ft_printf("TEST17---%lld", -92233720368547758);
 	//printf("\n");
@@ -177,5 +177,17 @@ int	main(void)
 	//printf("\n");
 	//printf("%#08x", 42); 
 	//printf("\n");
+	//ft_printf("%.60lf", 12e-50); 
+	//printf("\n");
+	//printf("%.60lf", 12e-50); 
+	//printf("\n");
+	int len, ft_len;
+	ft_len = ft_printf("%-+10.5d", 4242);
+	printf("\n");
+	len = printf("%-+10.5d", 4242);
+	printf("\n");
+
+	if (len == ft_len)
+		printf("**OK**\n");
 	return (0);
 }

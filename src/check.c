@@ -6,17 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 03:16:14 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 03:20:17 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:52:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-/*void			error(void)
-{
-	write(1, "Invalid format\n", 15);
-	exit(-1);
-}*/
 
 static int		is_repeat(char *str, char c)
 {

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 06:47:22 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 23:02:23 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,31 +17,28 @@ char		*get_entierld(long exp, t_ldouble db, t_format *format)
 	long	new_exp;
 	long	bin_mantis;
 	char	*tab;
-	int		size_dec;
+	unsigned int		size;
 	int		i;
 
 	tab = NULL;
-	size_dec = 0;
+	size = 0;
 	bin_mantis = db.zone.mantissa;
 	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
-	tab = (db.zone.int_b) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-	size_dec++;
+	tab = (db.zone.int_b) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 	i = 63;
 	while (--i >= 0 && new_exp > 0)
 	{
-		tab = (1 & (bin_mantis >> i)) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-		size_dec++;
+		tab = (1 & (bin_mantis >> i)) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		new_exp--;
 	}
 	while (new_exp > 0)
 	{
-		tab = int_addone(tab, size_dec, 0);
-		size_dec++;
+		tab = int_add(tab, &size, 0);
 		new_exp--;
 	}
-	return (calcul_entier(tab, size_dec, format));
+	return (calcul_entier(tab, size, format));
 }
 
 char		*get_fractld(long exp, t_ldouble db, t_format *format)
@@ -63,23 +60,16 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 	{
 		if (new_exp < -1)
 		{
-			tab = int_addone(tab, size, 0);
-			size++;
+			tab = int_add(tab, &size, 0);
 			new_exp++;
 		}
 		else if (new_exp == -1)
 		{
-			tab = (db.zone.int_b) ?
-				int_addone(tab, size, 1) : int_addone(tab, size, 0);
-			size++;
+			tab = (db.zone.int_b) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 			new_exp++;
 		}
 		else
-		{
-			tab = ((bin_mantis >> len_b) & 1) ?
-				int_addone(tab, size, 1) : int_addone(tab, size, 0);
-			size++;
-		}
+			tab = ((bin_mantis >> len_b) & 1) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		len_b--;
 	}
 	return  (calcul_fract(tab, size, format));

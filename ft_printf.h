@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/08 07:12:02 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:58:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ char				*ft_fwidth(char *str, unsigned int size_str,
 char				*ft_fwidthf(char *str, unsigned int size_str,
 		t_format *format, unsigned int len_f);
 char				*add_sign(char *str, int sign);
+char			*int_add(char *tab, unsigned int *oldsize, int data);
 void				precis_o_udi(char **str, t_format *fmt, size_t nbr_len);
 char				*calcul_entier(char *tab, int size, t_format *format);
 char				*calcul_fract(char *bat, int size, t_format *format);

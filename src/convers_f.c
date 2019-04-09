@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:38:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 23:17:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/08 23:02:27 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,35 @@
 char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 {
 	unsigned long long int	m;
-	long	new_exp;
-	char	*tab;
-	int		size_dec;
-	int		i;
+	long					new_exp;
+	char					*tab;
+	unsigned int			size;
+	int						i;
 
+	i = -1;
 	tab = NULL;
-	size_dec = 0;
+	size = 0;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
 	m = 2251799813685248;
-	tab = (exp) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-	size_dec++;
-	i = -1;
+	tab = (exp) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 	while (++i < new_exp)
 	{
-		tab = (m & bin_mantis) ? int_addone(tab, size_dec, 1) : int_addone(tab, size_dec, 0);
-		size_dec++;
+		tab = (m & bin_mantis) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		m >>= 1;
 	}
-	return (calcul_entier(tab, size_dec, format));
+	return (calcul_entier(tab, size, format));
 }
 
 char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 {
-	int			len_b;
-	unsigned int		size;
-	char			*bat;
+	int				len_b;
+	unsigned int	size;
+	char			*tab;
 	long			new_exp;
 
-	bat = NULL;
+	tab = NULL;
 	size = 0;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	len_b = ABS(52 - new_exp - 1);
@@ -55,40 +53,32 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 	{
 		if (new_exp < -1)
 		{
-			bat = int_addone(bat, size, 0);
-			size++;
+			tab = int_add(tab, &size, 0);
 			new_exp++;
 		}
 		else if (new_exp == -1)
 		{
-			bat = (exp) ? int_addone(bat, size, 1) : int_addone(bat, size, 1);
-			size++;
+			tab = (exp) ? int_add(tab, &size, 1) : int_add(tab, &size, 1);
 			new_exp++;
 		}
 		else
-		{
-			bat = ((bin_mantis >> len_b) & 1) ?
-				int_addone(bat, size, 1) : int_addone(bat, size, 0);
-			size++;
-		}
+			tab = ((bin_mantis >> len_b) & 1) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		len_b--;
 	}
-	return  (calcul_fract(bat, size, format));
+	return  (calcul_fract(tab, size, format));
 }
 
 /*
  **	len[2]:		len[0]: len_e		len[1]: len_f
  */
 
-static char		*modify_lf(t_format *fmt, char *entier, char *fract, int carry, t_double db)
+static char		*modify_lf(t_format *fmt, char *entier, char *fract, t_double db)
 {
 	char			*tmp;
 	char			*final;
 	unsigned int	len[2];
 
-	if (carry == 1)
-		entier = (fmt->convers == 'H') ?
-			ft_strsum(entier, "1", 16) : ft_strsum(entier, "1", 10);
+	
 	if (db.zone.sign || ft_strchr(fmt->flag, '+'))
 		entier = add_sign(entier, (int)db.zone.sign);
 	len[0] = ft_strlen(entier);
@@ -124,7 +114,10 @@ void		conv_lfh(t_lst *lst, t_chr **mychr, t_double db)
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	fract = ft_fprecis(fract, lst->format->precis, &carry);
-	final = modify_lf(lst->format, entier, fract, carry, db);
+	if (carry == 1)
+		entier = (lst->format->convers == 'H') ?
+			ft_strsum(entier, "1", 16) : ft_strsum(entier, "1", 10);
+	final = modify_lf(lst->format, entier, fract, db);
 	free(fract);
 	free(entier);
 	(*mychr)->str = final;
