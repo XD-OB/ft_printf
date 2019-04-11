@@ -40,56 +40,14 @@ static int		sign_n(long long int n)
 	return (0);
 }
 
-static int		w_di_annex(char **res, t_format *fmt, char *nbr, int len_nbr)
-{
-	int		i;
-
-	i = -1;
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		i = -1;
-		while (++i < len_nbr)
-			(*res)[i] = nbr[i];
-		while (i < fmt->width)
-			(*res)[i++] = ' ';
-		return (1);
-	}
-	return (0);
-}
-
-static char		*width_di(t_format *fmt, char *nbr, int len_nbr, int sign)
-{
-	int	z;
-	char	*res;
-	int	i;
-	int	j;
-	char	c;
-
-	z = (sign == 0) ? 1 : -1;
-	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
-	res[fmt->width] = '\0';
-	if (w_di_annex(&res, fmt, nbr, len_nbr) == 1)
-		return (res);
-	c = (ft_strchr(fmt->flag, '0') && fmt->precis == z) ? '0' : ' ';
-	i = fmt->width - 1;
-	j = len_nbr - 1;
-	while (j >= 0)
-		res[i--] = nbr[j--];
-	while (i >= 0)
-		res[i--] = c;
-	if (c == '0' && (ft_strpbrk(fmt->flag, "+ ") || sign == -1))
-	{
-		res[0] = (sign == -1) ? '-' :
-			((ft_strchr(fmt->flag, '+')) ? '+' : ' ');
-		res[fmt->width - len_nbr] = '0';
-	}
-	return (res);
-}
-
 static void		di_zero(t_chr **chr, t_format *fmt)
 {
 	char		*nbr;
+	char		*res;
 	int		len_nbr;
+	char		c;
+	int		i;
+	int		j;
 
 	if (fmt->precis == -1)
 		fmt->precis = 1;
@@ -103,9 +61,34 @@ static void		di_zero(t_chr **chr, t_format *fmt)
 		nbr[0] = ' ';
 	if (fmt->width > len_nbr)
 	{
-		(*chr)->str = width_di(fmt, nbr, len_nbr, 0);
-		(*chr)->len = fmt->width;
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (ft_strchr(fmt->flag, '-'))
+		{
+			i = -1;
+			while (++i < len_nbr)
+				res[i] = nbr[i];
+			while (i < fmt->width)
+				res[i++] = ' ';
+		}
+		else
+		{
+			c = (ft_strchr(fmt->flag, '0') && fmt->precis == 1) ? '0' : ' ';
+			i = fmt->width - 1;
+			j = len_nbr - 1;
+			while (j >= 0)
+				res[i--] = nbr[j--];
+			while (i >= 0)
+				res[i--] = c;
+			if (c == '0' && ft_strpbrk(fmt->flag, "+ "))
+			{
+				res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
+				res[fmt->width - len_nbr] = '0';
+			}
+		}
 		free(nbr);
+		(*chr)->str = res;
+		(*chr)->len = fmt->width;
 	}
 	else
 	{
@@ -114,20 +97,24 @@ static void		di_zero(t_chr **chr, t_format *fmt)
 	}
 }
 
-/*
-** len[2]       0: len_nbr		1: len_num
-*/
-
-static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
+static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
 {
 	char		*nbr;
+	char		*res;
+	int		len_nbr;
+	int		len_num;
+	char		c;
 	int		i;
 	int		j;
 
-	nbr = (char*)malloc(sizeof(char) * (len[0] + 1));
-	nbr[len[0]] = '\0';
-	i = len[0];
-	j = len[1];
+	len_num = ft_strlen(num);
+	len_nbr = ft_max(fmt->precis, len_num);
+	if (sign == -1 || ft_strpbrk(fmt->flag, "+ "))
+		len_nbr++;
+	nbr = (char*)malloc(sizeof(char) * (len_nbr + 1));
+	nbr[len_nbr] = '\0';
+	i = len_nbr;
+	j = len_num;
 	while (--j >= 0)
 		nbr[--i] = num[j];
 	while (--i >= 0)
@@ -138,29 +125,44 @@ static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
 		nbr[0] = '+';
 	else if (ft_strchr(fmt->flag, ' '))
 		nbr[0] = ' ';
-	return (nbr);
-}
-
-static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
-{
-	char		*nbr;
-	int		len[2];
-
-	len[1] = ft_strlen(num);
-	len[0] = ft_max(fmt->precis, len[1]);
-	if (sign == -1 || ft_strpbrk(fmt->flag, "+ "))
-		len[0]++;
-	nbr = di_nbr(fmt, num, len, sign);
-	if (fmt->width > len[0])
+	if (fmt->width > len_nbr)
 	{
-		(*chr)->str = width_di(fmt, nbr, len[0], sign);
-		(*chr)->len = fmt->width;
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (ft_strchr(fmt->flag, '-'))
+		{
+			i = -1;
+			while (++i < len_nbr)
+				res[i] = nbr[i];
+			while (i < fmt->width)
+				res[i++] = ' ';
+		}
+		else
+		{
+			c = (ft_strchr(fmt->flag, '0') && fmt->precis == -1) ? '0' : ' ';
+			i = fmt->width - 1;
+			j = len_nbr - 1;
+			while (j >= 0)
+				res[i--] = nbr[j--];
+			while (i >= 0)
+				res[i--] = c;
+			if (c == '0' && (ft_strpbrk(fmt->flag, "+ ") || sign == -1))
+			{
+				if (sign == -1)
+					res[0] = '-';
+				else
+					res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
+				res[fmt->width - len_nbr] = '0';
+			}
+		}
 		free(nbr);
+		(*chr)->str = res;
+		(*chr)->len = fmt->width;
 	}
 	else
 	{
 		(*chr)->str = nbr;
-		(*chr)->len = len[0];
+		(*chr)->len = len_nbr;
 	}
 }
 
@@ -180,5 +182,8 @@ void			conv_di(t_lst *lst, t_chr **chr, va_list ap)
 	{
 		num = ft_poslltoa(n);
 		di_n(chr, lst->format, num, sign);
+		free(num);
+		num = NULL;
 	}
 }
+
