@@ -12,150 +12,103 @@
 
 #include "ft_printf.h"
 
-static char		*null_minus(t_format *fmt, int len, char *res)
+static char	*null_str(t_format *fmt, int *len_str)
 {
-	int	i;
-	int	j;
 	char	*str;
 
-	i = -1;
-	str = ft_strnew(fmt->width);
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->precis == 0)
 	{
-		while (++i < len)
-			str[i] = res[i];
-		while (i < fmt->width)
-			str[i++] = ' ';
+		str = ft_strnew(0);
+		*len_str = 0;
 	}
 	else
 	{
-		while (++i < fmt->width - len)
-			str[i] = ' ';
-		i--;
-		j = 0;
-		while (++i < fmt->width)
-			str[i] = res[j++];
+		if (fmt->precis == -1 || fmt->precis > 6)
+		{
+			str = ft_strdup("(null)");
+			*len_str = 6;
+		}
+		else
+		{
+			str = ft_strndup("(null)", fmt->precis);
+			*len_str = fmt->precis;
+		}
 	}
 	return (str);
 }
 
-static int		test_null(t_format *fmt, char *str, t_chr **chr)
+static char	*s_str(t_format *fmt, char *str, int *len_str)
 {
 	char	*res;
-	int	len;
+	char	c;
+	int	i;
 
-	if (!str)
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (!ft_strchr(fmt->flag, '-'))
 	{
-		res = (fmt->precis != -1) ?
-			ft_strndup("(null)", fmt->precis) : ft_strdup("(null)");
-		if (fmt->width > (int)ft_strlen(res))
-		{
-			len = (int)ft_strlen(res);
-			(*chr)->str = null_minus(fmt, len, res);
-			free(res);
-			(*chr)->len = fmt->width;
-		}
-		else
-		{
-			(*chr)->str = res;
-			(*chr)->len = ft_strlen((*chr)->str);
-		}
-		return (1);
+		c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
+		i = fmt->width;
+		while (--(*len_str) >= 0)
+			res[--i] = str[*len_str];
+		while (--i >= 0)
+			res[i] = c;
 	}
-	return (0);
-}
-
-static void		conv_s_annex1(t_lst *lst, int *len, char **str, t_chr **mychr)
-{
-	int			i;
-	int			j;
-	char			c;
-
-	i = 0;
-	c = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
-	if (len[0] > (int)ft_strlen(str[0]))
-		len[0] = (int)ft_strlen(str[0]);
-	while (i < len[1] - len[0])
-		str[1][i++] = c;
-	j = -1;
-	while ((++j + len[1] - len[0]) < len[1])
-	{
-		if (ft_isprint(str[0][j]) || !ft_strchr(lst->format->flag, 'r'))
-			str[1][i] = str[0][j];
-		else
-		{
-			ft_strcat(&(str[1][i]), flag_r(str[0][j]));
-			i += 4;
-		}
-		i++;
-	}
-	(*mychr)->str = str[1];
-}
-
-static void		conv_s_annex2(t_lst *lst, int *len, char **str, t_chr **mychr)
-{
-	int			i;
-	int			j;
-
-	if (len[0] > (int)ft_strlen(str[0]))
-		len[0] = (int)ft_strlen(str[0]);
-	i = 0;
-	j = -1;
-	while (++j < len[0])
-	{
-		if (ft_isprint(str[0][j]) || !ft_strchr(lst->format->flag, 'r'))
-			str[1][i] = str[0][j];
-		else
-		{
-			ft_strcat(&(str[1][i]), flag_r(str[0][j]));
-			i += 4;
-		}
-		i++;
-	}
-	while (j++ < len[1])
-		str[1][i++] = ' ';
-	(*mychr)->str = str[1];
-}
-
-static void		conv_s_annex(t_lst *lst, int *len, char **str, t_chr **mychr)
-{
-	int			i;
-
-	if (!ft_strpbrk(lst->format->flag, "-+"))
-		conv_s_annex1(lst, len, str, mychr);
-	else if (ft_strchr(lst->format->flag, '-'))
-		conv_s_annex2(lst, len, str, mychr);
 	else
 	{
 		i = -1;
-		while (++i < len[0])
-			str[1][i] = str[0][i];
-		free(str[0]);
-		(*mychr)->str = str[1];
+		while (++i < *len_str)
+			res[i] = str[i];
+		while (i < fmt->width)
+			res[i++] = ' ';
 	}
+	*len_str = fmt->width;
+	return (res);
 }
 
-void			conv_s(t_lst *lst, t_chr **mychr, va_list ap)
+static char	*mystr(t_format *fmt, char *s, int *len_str)
 {
-	int			count_np;
-	int			len[2];
-	char		*str[2];
+	char	*str;
+
+	if (!s)
+		str = null_str(fmt, len_str);
+	else
+	{
+		*len_str = ft_strlen(s);
+		if (fmt->precis < *len_str && fmt->precis != -1)
+		{
+			str = ft_strndup(s, fmt->precis);
+			*len_str = fmt->precis;
+		}
+		else
+			str = ft_strdup(s);
+	}
+	return (str);
+}
+
+void		conv_s(t_lst *lst, t_chr **chr, va_list ap)
+{
+	char	*s;
+	char	*str;
+	int	len_str;
 
 	flag_star(lst->format, ap);
 	if (flag_dollar(lst))
-		(*mychr)->str = ft_dollar_cs(lst->format);
+	{
+		(*chr)->str = ft_dollar_cs(lst->format);
+		(*chr)->len = ft_strlen((*chr)->str);
+	}
 	else
 	{
-		str[0] = va_arg(ap, char*);
-		if (test_null(lst->format, str[0], mychr))
-			return ;
-		len[0] = (lst->format->precis != -1) ? lst->format->precis
-			: (int)ft_strlen(str[0]);
-		len[1] = lst->format->width;
-		count_np = ft_countnp(str[0]);
-		if (!(str[1] = ft_strnew(len[1] + (count_np * 4))))
-			return ;
-		conv_s_annex(lst, len, str, mychr);
+		s = va_arg(ap, char*);
+		str = mystr(lst->format, s, &len_str);
+		if (lst->format->width > len_str)
+		{
+			(*chr)->str = s_str(lst->format, str, &len_str);
+			free(str);
+		}
+		else
+			(*chr)->str = str;
+		(*chr)->len = len_str;
 	}
-	(*mychr)->len = ft_strlen((*mychr)->str);
 }
