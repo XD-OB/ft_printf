@@ -31,214 +31,159 @@ static long long int	cast_di(va_list ap, char *flag)
 	return (d);
 }
 
-char                    *all_zero_di(t_format *fmt, char *nbr, int precis, int is_width)
+static int		sign_n(long long int n)
 {
-	char    *res;
-	int             len;
-	int             len_nbr;
-	int             i;
-	int             j;
-
-	len = precis;
-	if ((nbr[0] == '-' && !is_width) || (ft_strpbrk(fmt->flag, "+ ") && !is_width))
-		len++;
-	len_nbr = (nbr[0] == '-') ? (int)ft_strlen(nbr) - 1
-		: (int)ft_strlen(nbr);
-	res = ft_strnew(len);
-	i = 0;
-	j =  0;
-	while (i < (len - len_nbr))
-		res[i++] = (!ft_strchr(fmt->flag, '-') && fmt->precis == 0) ? ' ' : '0';
-	//if (nbr[0] == '-')
-	//{
-	//	res[i++] = '-';
-	//	j++;
-	//}
-	while (j < (int)ft_strlen(nbr))
-		res[i++] = nbr[j++];
-	return (res);
+	if (n > 0)
+		return (1);
+	if (n < 0)
+		return (-1);
+	return (0);
 }
 
-void                    precis_di(char **str, t_format *fmt, size_t nbr_len)
+static void		di_zero(t_chr **chr, t_format *fmt)
 {
-	int             i;
-	int             j;
-	char    *nbr;
-
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		i = 0;
-		j = 0;
-		nbr = ft_strdup(*str);
-		while (i < fmt->precis - (int)nbr_len)
-			(*str)[i++] = '0';
-		if ((*str)[i] == '-')
-		{
-			(*str)[0] = '-';
-			(*str)[i++] = '0';
-		}
-		while (i < fmt->precis - (int)nbr_len)
-			(*str)[i++] = '0';
-		while(j < (int)nbr_len)
-			(*str)[i++] = nbr[j++];
-		free(nbr);
-	}
-	else
-	{
-		i = ft_strlen(*str) - nbr_len - 1;
-		j = fmt->precis - nbr_len;
-		while (--j >= 0 && i >= 0)
-			(*str)[i--] = '0';
-		i = ft_strlen(*str) - nbr_len;
-		if ((*str)[i] == '-')
-		{
-			(*str)[i] = '0';
-			j = i;
-			while ((*str)[j] == '0')
-				j--;
-			(*str)[j] = '-';
-		}
-	}
-}
-
-static void		flag_plusp_di(t_format *fmt, char **str, int len_nbr, char x)
-{
-	int			len_str;
+	char		*nbr;
 	char		*res;
-	int			i;
+	int		len_nbr;
+	char		c;
+	int		i;
+	int		j;
 
-	len_str = ft_strlen(*str);
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->precis == -1)
+		fmt->precis = 1;
+	len_nbr = fmt->precis;
+	if (ft_strpbrk(fmt->flag, "+ "))
+		len_nbr++;
+	nbr = ft_strcnew(len_nbr, '0');
+	if (ft_strchr(fmt->flag, '+'))
+		nbr[0] = '+';
+	else if (ft_strchr(fmt->flag, ' '))
+		nbr[0] = ' ';
+	if (fmt->width > len_nbr)
 	{
-		if (len_nbr >= ft_max (fmt->precis, fmt->width))
-			len_str++;
-		res = ft_strnew(len_str);
-		res[0] = x;
-		ft_strncpy(&res[1], *str, len_str - 1);
-		free (*str);
-		*str = res;
-	}
-	else
-	{
-		if (ft_strchr(fmt->flag, '0'))
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (ft_strchr(fmt->flag, '-'))
 		{
-			if (fmt->width > len_nbr ||  fmt->precis > len_nbr)
-			{
-				if (fmt->width > fmt->precis)
-				{
-					i = 0;
-					while ((*str)[i] == ' ')
-						i++;
-					if (i > 0)
-						(*str)[i - 1] = x;
-					else
-						(*str)[0] = x;
-				}
-				else
-					(*str)[0] = x;
-			}
-			else
-			{
-				res = ft_strnew(len_str + 1);
-				res[0] = x;
-				ft_strncpy(&res[1], *str, len_str);
-				free (*str);
-				*str = res;
-			}
+			i = -1;
+			while (++i < len_nbr)
+				res[i] = nbr[i];
+			while (i < fmt->width)
+				res[i++] = ' ';
 		}
 		else
 		{
-			if (fmt->width > len_nbr)
+			c = (ft_strchr(fmt->flag, '0') && fmt->precis == 1) ? '0' : ' ';
+			i = fmt->width - 1;
+			j = len_nbr - 1;
+			while (j >= 0)
+				res[i--] = nbr[j--];
+			while (i >= 0)
+				res[i--] = c;
+			if (c == '0' && ft_strpbrk(fmt->flag, "+ "))
 			{
-				i = 0;
-				while ((*str)[i] == ' ')
-					i++;
-				(*str)[i - 1] = x;
-			}
-			else if (fmt->precis > len_nbr)
-				(*str)[0] = x;
-			else
-			{
-				res = ft_strnew(len_str + 1);
-				res[0] = x;
-				ft_strncpy(&res[1], *str, len_str);
-				free (*str);
-				*str = res;
+				res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
+				res[fmt->width - len_nbr] = '0';
 			}
 		}
+		free(nbr);
+		(*chr)->str = res;
+		(*chr)->len = fmt->width;
+	}
+	else
+	{
+		(*chr)->str = nbr;
+		(*chr)->len = len_nbr;
 	}
 }
 
-void                    conv_di(t_lst *lst, t_chr **mychr, va_list ap)
+static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
 {
-	size_t          size;
-	char            *str;
-	char            *nbr;
+	char		*nbr;
+	char		*res;
+	int		len_nbr;
+	int		len_num;
+	char		c;
+	int		i;
+	int		j;
+
+	len_num = ft_strlen(num);
+	len_nbr = ft_max(fmt->precis, len_num);
+	if (sign == -1 || ft_strpbrk(fmt->flag, "+ "))
+		len_nbr++;
+	nbr = (char*)malloc(sizeof(char) * (len_nbr + 1));
+	nbr[len_nbr] = '\0';
+	i = len_nbr;
+	j = len_num;
+	while (--j >= 0)
+		nbr[--i] = num[j];
+	while (--i >= 0)
+		nbr[i] = '0';
+	if (sign == -1)
+		nbr[0] = '-';
+	else if (ft_strchr(fmt->flag, '+'))
+		nbr[0] = '+';
+	else if (ft_strchr(fmt->flag, ' '))
+		nbr[0] = ' ';
+	if (fmt->width > len_nbr)
+	{
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (ft_strchr(fmt->flag, '-'))
+		{
+			i = -1;
+			while (++i < len_nbr)
+				res[i] = nbr[i];
+			while (i < fmt->width)
+				res[i++] = ' ';
+		}
+		else
+		{
+			c = (ft_strchr(fmt->flag, '0') && fmt->precis == -1) ? '0' : ' ';
+			i = fmt->width - 1;
+			j = len_nbr - 1;
+			while (j >= 0)
+				res[i--] = nbr[j--];
+			while (i >= 0)
+				res[i--] = c;
+			if (c == '0' && (ft_strpbrk(fmt->flag, "+ ") || sign == -1))
+			{
+				if (sign == -1)
+					res[0] = '-';
+				else
+					res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
+				res[fmt->width - len_nbr] = '0';
+			}
+		}
+		free(nbr);
+		(*chr)->str = res;
+		(*chr)->len = fmt->width;
+	}
+	else
+	{
+		(*chr)->str = nbr;
+		(*chr)->len = len_nbr;
+	}
+}
+
+void			conv_di(t_lst *lst, t_chr **chr, va_list ap)
+{
 	long long int	n;
-	int             i;
-	char			c;
+	int		sign;
+	char		*num;
 
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ?
 		cast_di(*(lst->arglist), lst->format->flag) : cast_di(ap, lst->format->flag);
-	if (n == 0 && !lst->format->precis)
-	{
-		i = -1;
-		size = (size_t)lst->format->width;
-		if (size == 0 && ft_strpbrk(lst->format->flag, "+ "))
-			size++;
-		(*mychr)->str = ft_strnew(size);
-		while (++i < (int)size)
-			((*mychr)->str)[i] = ' ';
-		(ft_strchr(lst->format->flag, ' ')) ? c = ' ' : 0;
-		(ft_strchr(lst->format->flag, '+')) ? c = '+' : 0;
-		if (ft_strchr(" +", c))
-		{
-			if (ft_strchr(lst->format->flag, c) && ft_strchr(lst->format->flag, '-'))
-				((*mychr)->str)[0] = c;
-			else
-				((*mychr)->str)[i - 1] = c;
-		}
-		(*mychr)->len = (int)size;
-		return ;
-	}
-	nbr = ft_lltoa(n);
-	flag_apostrophe(&nbr, lst->format);
-	size = ft_max(ft_strlen(nbr), lst->format->width);
-	if (!(str = ft_strnew(size)))
-		return ;
-	if (ft_strchr(lst->format->flag, '-'))
-	{
-		ft_strcpy(str, nbr);
-		i = ft_strlen(nbr);
-		while (i < (int)size)
-			str[i++] = ' ';
-	}
+	sign = sign_n(n);
+	if (sign == 0)
+		di_zero(chr, lst->format);
 	else
 	{
-		i = 0;
-		while (i < (int)(size - ft_strlen(nbr) + 1))
-			str[i++] = ' ';
-		ft_strcpy(&str[--i], nbr);
+		num = ft_poslltoa(n);
+		di_n(chr, lst->format, num, sign);
+		free(num);
+		num = NULL;
 	}
-	if (lst->format->precis > 0
-			&& lst->format->precis < lst->format->width)
-		precis_di(&str, lst->format, ft_strlen(nbr));
-	else if (lst->format->precis >= lst->format->width)
-		str = all_zero_di(lst->format, nbr, lst->format->precis, 0);	
-	else if (ft_strchr(lst->format->flag, '0')
-			&& lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
-		str = all_zero_di(lst->format, nbr, lst->format->width, 1);
-	if (n >= 0)
-	{
-		if (ft_strchr(lst->format->flag, '+'))
-		{
-			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), '+');
-		}
-		else if (ft_strchr(lst->format->flag, ' '))
-			flag_plusp_di(lst->format, &str, (int)ft_strlen(nbr), ' ');
-	}
-	(*mychr)->str = str;
-	free(nbr);
-	(*mychr)->len = ft_strlen(str);
 }
+

@@ -15,6 +15,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <limits.h>
 
 typedef struct  		s_mult
 {
@@ -121,6 +122,7 @@ char				*ft_strcnew(size_t size, char c);
 char				*ft_strmult(char *num1, char *num2, int base);
 int				ft_max(int a, int b);
 int				ft_min(int a, int b);
+char				*ft_poslltoa(long long int n);
 
 
 #endif
