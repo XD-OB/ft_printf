@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 
-LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr\
+LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr ft_printhex\
 		 ft_memcmp ft_memalloc ft_memdel ft_strnew ft_strdel ft_strclr\
 		 ft_striter ft_striteri ft_strmap ft_strmapi ft_strequ ft_strnequ\
 		 ft_strsub ft_strjoin ft_strtrim ft_strsplit ft_itoa ft_itoa_base\
