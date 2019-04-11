@@ -40,7 +40,7 @@ int		ft_printf(const char *format, ...)
 	//print_lst(lst);
 	if (!(mychr = load_chr((char*)format, lst)))
 	{
-		free_lst(lst);
+		free_lst(&lst);
 		return (-1);
 	}
 	//print_chr(mychr);
@@ -49,8 +49,8 @@ int		ft_printf(const char *format, ...)
 	//show_lst(lst);
 	//print_chr(mychr);
 	len = put_chr(mychr);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len);
 }

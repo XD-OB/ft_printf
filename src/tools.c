@@ -46,33 +46,74 @@ int			lstlen(t_lst *lst)
 	}
 	return (size);
 }
+/*
+   void		free_lst(t_lst *lst)
+   {
+   t_lst	*curr;
 
-void		free_lst(t_lst *lst)
+   curr = lst;
+   while (curr)
+   {
+   lst = curr;
+   free(curr->format->flag);
+   free(curr->format);
+   if (curr->arglist)
+   free(curr->arglist);
+   curr = curr->next;
+   free(lst);
+   }
+   }
+
+   void		free_chr(t_chr *chr)
+   {
+   t_chr	*tmp;
+
+   while (chr)
+   {
+   tmp = chr;
+   chr = chr->next;
+   free(tmp->str);
+   free(tmp);
+   }
+   }
+ */
+
+void		free_chr(t_chr **chr)
 {
-	t_lst	*curr;
+	t_chr	*curr;
+	t_chr	*next;
 
-	curr = lst;
+	curr = *chr;
 	while (curr)
 	{
-		lst = curr;
-		free(curr->format->flag);
-		free(curr->format);
-		if (curr->arglist)
-			free(curr->arglist);
-		curr = curr->next;
-		free(lst);
+		next = curr->next;
+		if (curr->str)
+			free(curr->str);
+		free(curr);
+		curr = next;
 	}
+	*chr = NULL;
 }
 
-void		free_chr(t_chr *chr)
+void		free_lst(t_lst **lst)
 {
-	t_chr	*tmp;
+	t_lst	*curr;
+	t_lst	*next;
 
-	while (chr)
+	curr = *lst;
+	while (curr)
 	{
-		tmp = chr;
-		chr = chr->next;
-		free(tmp->str);
-		free(tmp);
+		next = curr->next;
+		if (curr->format)
+		{
+			if (curr->format->flag)
+				free(curr->format->flag);
+			free(curr->format);
+		}
+		if (curr->arglist)
+			free(curr->arglist);
+		free(curr);
+		curr = next;
 	}
+	*lst = NULL;
 }

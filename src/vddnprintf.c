@@ -52,8 +52,8 @@ int			ft_vprintf(const char *format, va_list ap)
 		return (-1);
 	fill_chr(lst, mychr, ap);
 	len[0] = put_chr(mychr);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len[0]);
 }
@@ -84,8 +84,8 @@ int			ft_dprintf(int fd, const char *format, ...)
 		return (-1);
 	fill_chr(lst, mychr, ap);
 	len[0] = put_chr_fd(fd, mychr);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len[0]);
 }
@@ -116,8 +116,8 @@ int			ft_dnprintf(int fd, size_t n, const char *format, ...)
 		return (-1);
 	fill_chr(lst, mychr, ap);
 	len[0] = put_chr_nfd(fd, n, mychr);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len[0]);
 }

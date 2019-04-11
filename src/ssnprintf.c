@@ -65,8 +65,8 @@ int             	ft_sprintf(char **str, const char *format, ...)
 	//print_lst(lst);
 	len = get_chr_len(mychr);
 	*str = str_chr(mychr, len);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len);
 }
@@ -102,8 +102,8 @@ int             ft_snprintf(char **str, size_t n, const char *format, ...)
 	if (len > n)
 		len = n;
 	*str = str_chr(mychr, n);
-	free_lst(lst);
-	free_chr(mychr);
+	free_lst(&lst);
+	free_chr(&mychr);
 	va_end(ap);
 	return (len);
 }
