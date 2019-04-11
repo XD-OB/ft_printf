@@ -64,6 +64,7 @@ char				*ft_itoa(long long int n);
 char				*ft_ltoa(long int n);
 char				*ft_lltoa(long long int n);
 char				*ft_itoa_base(long long int val, int base);
+char				*ft_ulltoa_base(unsigned long long val, int base);
 char				*ft_utoa(size_t n);
 char				*ft_ultoa(unsigned long int n);
 char				*ft_ulltoa(unsigned long long int n);

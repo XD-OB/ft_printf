@@ -22,10 +22,10 @@ int	main(void)
 
 	str = "This is a test text";
 
-	//ft_printf("TEST1---%06.2x", 5427);
-	//printf("\n");
-	//printf("ORIG ---%06.2x", 5427);
-	//printf("\n");
+	ft_printf("%lx|%-lx|%#lx|%0lx", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
+	printf("\n");
+	printf("%lx|%-lx|%#lx|%0lx", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
+	printf("\n");
 	//ft_printf("TEST2---%.2x", 5427);
 	//printf("\n");
 	//printf("ORIG ---%.2x", 5427);
@@ -210,9 +210,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%-#23.5hho|%-023.5hho|%#023.5hho|%-#023.5hho", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
 	//printf("\n");
-	ft_printf("%s", "wi32x-3vx++===98234z1esfatr");
-	printf("\n");
-	printf("%s", "wi32x-3vx++===98234z1esfatr");
-	printf("\n");
+	//ft_printf("%s", "wi32x-3vx++===98234z1esfatr");
+	//printf("\n");
+	//printf("%s", "wi32x-3vx++===98234z1esfatr");
+	//printf("\n");
 	return (0);
 }

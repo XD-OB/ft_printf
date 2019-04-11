@@ -12,177 +12,162 @@
 
 #include "ft_printf.h"
 
-static char                    *all_zero_xb(char *nbr, int precis, int dash, int width, int base)
+static char		*xx_zero_res(t_format *fmt, char *nbr, int len_nbr, char c)
 {
-	char    *res;
-	int             len;
-	int             len_nbr;
-	int             i;
-	int             j;
+	char		*res;
+	int		i;
+	int		j;
 
-	j =  0;
-	len_nbr = (int)ft_strlen(nbr);
-	if (dash)
-		len_nbr -= 2;
-	len = ft_max(precis, len_nbr);
-	if (dash && width)
-		j = 2;
-	res = ft_strnew(len + j);
-	i = 0;
-	if (dash)
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (!ft_strchr(fmt->flag, '-'))
 	{
-		res[i++] = '0';
-		res[i++] = (base == 2) ? 'b' : 'x';
+		i = fmt->width;
+		j = len_nbr;
+		while (--j >= 0)
+			res[--i] = nbr[j];
+		while (--i >= 0)
+			res[i] = c;
 	}
-	while (i < (len - len_nbr))
-		res[i++] = '0';
-	while (i < len)
-		res[i++] = nbr[j++];
-	return (res);
-}
-
-void                    precis_xb(char **str, t_format *fmt, size_t nbr_len, int base)
-{
-	int             i;
-	int             j;
-	int             len;
-	char    *nbr;
-
-	len = (ft_strchr(fmt->flag, '#')) ? (nbr_len - 2) : nbr_len;
-	if (ft_strchr(fmt->flag, '-'))
+	else
 	{
 		i = 0;
 		j = 0;
-		nbr = ft_strdup(*str);
-		if (ft_strchr(fmt->flag, '#'))
-		{
-			j = 2;
-			(*str)[i++] = '0';
-			(*str)[i++] = (base == 2) ? 'b' : 'x';
-		}
-		while (i < fmt->precis - len)
-			(*str)[i++] = '0';
-		while(j < len)
-			(*str)[i++] = nbr[j++];
+		while (j < len_nbr)
+			res[i++] = nbr[j++];
+		while (i < fmt->width)
+			res[i++] = c;
+	}
+	return (res);
+}
+
+char			*xx_zero(t_format *fmt)
+{
+	int		len_nbr;
+	char		*nbr;
+	char		*res;
+	char		c;
+
+	len_nbr = fmt->precis;
+	if (fmt->precis == -1)
+		len_nbr = 1;
+	nbr = ft_strcnew(len_nbr, '0');
+	if (fmt->width > len_nbr)
+	{
+		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0') 
+			&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		res = xx_zero_res(fmt, nbr, len_nbr, c);
 		free(nbr);
+		return (res);
 	}
-	else
-	{
-		i = ft_strlen(*str) - len - 1;
-		j = fmt->precis - len;
-		while (j-- >= 0 && i >= 0)
-			(*str)[i--] = '0';
-		if (ft_strchr(fmt->flag, '#'))
-		{
-			(*str)[i--] = 'x';
-			(*str)[i] = '0';
-		}
-	}
+	return (nbr);
 }
 
-void                    conv_xx(t_lst *lst, t_chr **mychr, va_list ap)
+static char		*xx_n(t_format *fmt, char *num, int len_num, int base)
 {
-	size_t          size;
-	char            *str;
-	char            *nbr;
-	size_t          n;
-	int                     i;
+	int		len_nbr;
+	int		is_dash;
+	int		diff;
+	char		*res;
+	char		*nbr;
+	char		c;
+	int		i;
+	int		j;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-		: cast_xxoub(ap, lst->format);
-	if (n == 0 && !lst->format->precis)
+	len_num = ft_strlen(num);
+	is_dash = (ft_strchr(fmt->flag, '#')) ? 2 : 0;
+	len_nbr = ft_max(len_num, fmt->precis) + is_dash;
+	nbr = (char*)malloc(sizeof(char) * (len_nbr + 1));
+	nbr[len_nbr] = '\0';
+	i = len_nbr;
+	j = len_num;
+	while (--j >= 0)
+		nbr[--i] = num[j];
+	while (--i >= 0)
+		nbr[i] = '0';
+	diff = fmt->width - len_nbr;
+	if (is_dash)
 	{
-		(*mychr)->str = ft_strcnew(lst->format->width, ' ');
-		((*mychr)->str)[lst->format->width] = '\0';
-		(*mychr)->len = lst->format->width;
-		return ;
+		nbr[0] = '0';
+		nbr[1] = (base == 16) ? 'x' : 'b';
 	}
-	nbr = ft_utoa_base(n, 16);
-	if (n && ft_strchr(lst->format->flag, '#'))
-		flag_dash(&nbr, 16);
-	flag_apostrophe(&nbr, lst->format);
-	size = ft_max(ft_strlen(nbr), lst->format->width);
-	str = ft_strnew(size);
-	if (ft_strchr(lst->format->flag, '-'))
+	if (diff > 0)
 	{
-		ft_strcpy(str, nbr);
-		i = ft_strlen(nbr);
-		while (i < (int)size)
-			str[i++] = ' ';
-	}
-	else
-	{
-		i = 0;
-		while (i < (int)(size - ft_strlen(nbr) + 1))
-			str[i++] = ' ';
-		ft_strcpy(&str[--i], nbr);
-	}
-	if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
-			&& lst->format->precis < lst->format->width)
-		precis_xb(&str, lst->format, ft_strlen(nbr), 16);
-	else if (lst->format->precis >= lst->format->width)
-		str = all_zero_xb(nbr, lst->format->precis,
-			(ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0, 16);
-	else if (ft_strchr(lst->format->flag, '0')
-			&& lst->format->width > (int)ft_strlen(nbr)
-			&& !ft_strchr(lst->format->flag, '-') && lst->format->precis <= 0)
-		str = all_zero_xb(nbr, lst->format->width,
-				(ft_strchr(lst->format->flag, '#')) ? 1 : 0, 1, 16);
-	(lst->format->convers == 'x') ? str = ft_strlowcase(str) : 0;
-	(lst->format->convers == 'X') ? str = ft_strupcase(str) : 0;
-	(*mychr)->str = str;
-	free(nbr);
-	(*mychr)->len = ft_strlen(str);
-}
-
-void                    conv_b(t_lst *lst, t_chr **mychr, va_list ap)
-{
-	size_t          size;
-	char            *str;
-	char            *nbr;
-	size_t          n;
-	int                     i;
-
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-		: cast_xxoub(ap, lst->format);
-	if (n == 0 && !lst->format->precis)
-		(*mychr)->str = ft_strnew(0);
-	else
-	{
-		nbr = ft_utoa_base(n, 2);
-		if (n && ft_strchr(lst->format->flag, '#'))
-			flag_dash(&nbr, 2);
-		flag_apostrophe(&nbr, lst->format);
-		size = ft_max(ft_strlen(nbr), lst->format->width);
-		if (!(str = ft_strnew(size)))
-			return ;
-		if (ft_strchr(lst->format->flag, '-'))
+		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0') 
+			&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (!ft_strchr(fmt->flag, '-'))
 		{
-			ft_strcpy(str, nbr);
-			i = ft_strlen(nbr);
-			while (i < (int)size)
-				str[i++] = ' ';
+			i = -1;
+			while (++i < diff)
+				res[i] = c;
+			if (is_dash && c == '0')
+			{
+				res[1] = (base == 16) ? 'x' : 'b';
+				nbr[1] = '0';
+			}
+			j = -1;
+			while (++j < len_nbr)
+				res[i++] = nbr[j];
 		}
 		else
 		{
 			i = 0;
-			while (i < (int)(size - ft_strlen(nbr) + 1))
-				str[i++] = ' ';
-			ft_strcpy(&str[--i], nbr);
+			j = 0;
+			while (j < len_nbr)
+				res[i++] = nbr[j++];
+			while (i < fmt->width)
+				res[i++] = ' ';
 		}
-		if (ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
-				&& lst->format->precis < lst->format->width)
-			precis_xb(&str, lst->format, ft_strlen(nbr), 2);
-		if (lst->format->precis >= lst->format->width)
-			str = all_zero_xb(nbr, lst->format->precis, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 0, 2);
-		if (ft_strchr(lst->format->flag, '0') && lst->format->width > (int)ft_strlen(nbr) && !ft_strchr(lst->format->flag, '-'))
-			str = all_zero_xb(nbr, lst->format->width, (ft_strchr(lst->format->flag, '#')) ? 1 : 0, 1, 2);
-		(lst->format->convers == 'b') ? str = ft_strlowcase(str) : 0;
-		(lst->format->convers == 'B') ? str = ft_strupcase(str) : 0;
-		(*mychr)->str = str;
 		free(nbr);
+		return (res);
 	}
-	(*mychr)->len = ft_strlen(str);
+	return (nbr);
+}
+
+void                    conv_xx(t_lst *lst, t_chr **chr, va_list ap)
+{
+	unsigned long long int	n;
+	char			*num;
+	char			*res;
+
+	flag_star(lst->format, ap);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+				: cast_xxoub(ap, lst->format);
+	if (n == 0)
+		res = xx_zero(lst->format);
+	else
+	{
+		num = ft_ulltoa_base(n, 16);
+		res = xx_n(lst->format, num, (int)ft_strlen(num), 16);
+		free(num);
+	}
+	(lst->format->convers == 'x') ? res = ft_strlowcase(res) : 0;
+	(lst->format->convers == 'X') ? res = ft_strupcase(res) : 0;
+	(*chr)->str = res;
+	(*chr)->len = (int)ft_strlen(res);
+}
+
+void                    conv_b(t_lst *lst, t_chr **chr, va_list ap)
+{
+	unsigned long long int	n;
+	char			*num;
+	char			*res;
+	
+	flag_star(lst->format, ap);
+	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
+				: cast_xxoub(ap, lst->format);
+	if (n == 0)
+		res = xx_zero(lst->format);
+	else
+	{
+		num = ft_itoa_base(n, 2);
+		res = xx_n(lst->format, num, (int)ft_strlen(num), 2);
+		free(num);
+	}
+	(lst->format->convers == 'b') ? ft_strlowcase(res) : 0;
+	(lst->format->convers == 'B') ? ft_strupcase(res) : 0;
+	(*chr)->str = res;
+	(*chr)->len = (int)ft_strlen(res);
 }

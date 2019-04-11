@@ -34,7 +34,7 @@ unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
 	unsigned long long int	n;
 
 	if (fmt->convers == 'U')
-		n = (unsigned long int)va_arg(ap, unsigned int);
+		n = (unsigned long int)va_arg(ap, unsigned long int);
 	else if (ft_strstr(fmt->flag, "hh"))
 		n = (unsigned char)va_arg(ap, unsigned int);
 	else if (ft_strstr(fmt->flag, "h"))
