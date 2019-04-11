@@ -7,7 +7,7 @@ char	*ft_poslltoa(long long int n)
 	char		*res;
 
 	if (n == LLONG_MIN)
-		return ("9223372036854775808");
+		return (ft_strdup("9223372036854775808"));
 	if (n < 0)
 		n *= -1;
 	tmp = n;
