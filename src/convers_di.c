@@ -44,7 +44,6 @@ static int		w_di_annex(char **res, t_format *fmt, char *nbr, int len_nbr)
 {
 	int		i;
 
-	i = -1;
 	if (ft_strchr(fmt->flag, '-'))
 	{
 		i = -1;
@@ -180,5 +179,7 @@ void			conv_di(t_lst *lst, t_chr **chr, va_list ap)
 	{
 		num = ft_poslltoa(n);
 		di_n(chr, lst->format, num, sign);
+		free(num);
+		num = NULL;
 	}
 }
