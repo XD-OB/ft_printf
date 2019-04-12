@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/12 04:14:22 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:31:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static char		*o_nres(t_format *fmt, char *nbr, int len_nbr, char c)
 	}
 	else
 	{
-		i = 0;
+		i = -1;
 		while (++i < len_nbr)
 			res[i] = nbr[i];
 		while (i < fmt->width)
