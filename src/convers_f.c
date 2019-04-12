@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:38:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 23:02:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:21:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 	unsigned long long int	m;
 	long					new_exp;
 	char					*tab;
+	char					*res;
 	unsigned int			size;
 	int						i;
 
@@ -33,7 +34,9 @@ char		*get_entier(long exp, long bin_mantis, int bias, t_format *format)
 		tab = (m & bin_mantis) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		m >>= 1;
 	}
-	return (calcul_entier(tab, size, format));
+	res = calcul_entier(tab, size, format);
+	free(tab);
+	return (res);
 }
 
 char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
@@ -41,6 +44,7 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 	int				len_b;
 	unsigned int	size;
 	char			*tab;
+	char			*res;
 	long			new_exp;
 
 	tab = NULL;
@@ -65,7 +69,9 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 			tab = ((bin_mantis >> len_b) & 1) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		len_b--;
 	}
-	return  (calcul_fract(tab, size, format));
+	res = calcul_fract(tab, size, format);
+	free(tab);
+	return (res);
 }
 
 /*

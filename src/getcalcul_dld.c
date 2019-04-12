@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 22:35:22 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:21:00 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 		count = ft_strmult("2", count, base);
 	}
 	free(count);
-	free(tab);
 	return (entier);
 }
 
@@ -74,6 +73,5 @@ char		*calcul_fract(char *tab, int size, t_format *format)
 		len++;
 	}
 	free(count);
-	free(tab);
 	return (fract);
 }
