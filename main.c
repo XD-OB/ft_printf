@@ -214,9 +214,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%s", "wi32x-3vx++===98234z1esfatr");
 	//printf("\n");
-	ft_printf("%.5hho|%-.5hho|%#.5hho|%0.5hho", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
+	ft_printf("%30.20p", "Random string");
 	printf("\n");
-	printf("%.5hho|%-.5hho|%#.5hho|%0.5hho", ULLONG_MAX, ULLONG_MAX, ULLONG_MAX, ULLONG_MAX);
+	printf("%30.20p", "Random string");
 	printf("\n");
 	return (0);
 }

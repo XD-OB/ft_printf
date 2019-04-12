@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 04:08:02 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/10 00:21:52 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:15:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,10 @@ char			*xx_zero(t_format *fmt)
 static void		xx_nres_annex(char **res, char *nbr, int len_nbr, int width)
 {
 	int		i;
-	int		j;
 
-	i = 0;
-	j = 0;
-	while (j < len_nbr)
-		(*res)[i++] = nbr[j++];
+	i = -1;
+	while (++i < len_nbr)
+		(*res)[i] = nbr[i];
 	while (i < width)
 		(*res)[i++] = ' ';
 }

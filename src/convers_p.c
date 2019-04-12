@@ -6,150 +6,93 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/05 14:12:58 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 03:44:44 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/12 04:10:52 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char		*all_zero_p(char *nbr, int precis, int width)
+static char		*p_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
 {
-	char		*res;
-	int			len;
-	int			len_nbr;
+	char		*nbr;
 	int			i;
 	int			j;
 
-	len_nbr = (int)ft_strlen(nbr) - 2;
-	len = precis;
-	if (!width)
-		len += 2;
-	res = ft_strnew(len);
-	i = 0;
-	j = 2;
-	res[i++] = '0';
-	res[i++] = 'X';
-	while (i < (len - len_nbr))
-		res[i++] = '0';
-	while (i < len)
-		res[i++] = nbr[j++];
-	return (res);
+	*len_nbr = ft_max(len_num, fmt->precis) + 2;
+	nbr = (char*)malloc(sizeof(char) * (*len_nbr + 1));
+	nbr[*len_nbr] = '\0';
+	i = *len_nbr;
+	j = len_num;
+	while (--j >= 0)
+		nbr[--i] = num[j];
+	while (--i >= 0)
+		nbr[i] = '0';
+	nbr[1] = 'X';
+	return (nbr);
 }
 
-/*
-**	i:		i[0]: i			i[1]: j
-*/
-
-static void		precis_p(char **str, t_format *fmt, size_t nbr_len)
+static void		p_res_minus(char **res, t_format *fmt, char *nbr, int len_nbr)
 {
-	int			i[2];
-	int			len;
-	char		*nbr;
+	char		c;
+	int			i;
+	int			j;
 
-	len = nbr_len - 2;
-	if (ft_strchr(fmt->flag, '-'))
+	c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
+	i = fmt->width;
+	j = len_nbr;
+	while (--j >= 0)
+		(*res)[--i] = nbr[j];
+	while (--i >= 0)
+		(*res)[i] = c;
+	if (c == '0')
 	{
-		i[0] = 0;
-		i[1] = 2;
-		nbr = ft_strdup(*str);
-		(*str)[i[0]++] = '0';
-		(*str)[i[0]++] = 'X';
-		while (i[0] < fmt->precis - len + 2)
-			(*str)[i[0]++] = '0';
-		while (i[1] < (int)nbr_len)
-			(*str)[i[0]++] = nbr[i[1]++];
-		free(nbr);
-		return ;
+		(*res)[1] = 'X';
+		(*res)[fmt->width - len_nbr + 1] = '0';
 	}
-	i[0] = ft_strlen(*str) - len - 1;
-	i[1] = fmt->precis - len;
-	while (i[1]-- && i[0] >= 0)
-		(*str)[i[0]--] = '0';
-	(*str)[i[0]--] = 'X';
-	(*str)[i[0]] = '0';
 }
 
-static void		flag_plus_p(t_format *fmt, char **str)
+static char		*p_n(t_format *fmt, char *num, int len_num)
 {
+	char		*nbr;
 	char		*res;
+	int			len_nbr;
 	int			i;
 
-	(fmt->convers == 'p') ? *str = ft_strlowcase(*str) : 0;
-	if (!ft_strchr(fmt->flag, '+'))
-		return ;
-	if ((*str)[0] != ' ')
+	nbr = p_nbr(fmt, num, len_num, &len_nbr);
+	if (fmt->width > len_nbr)
 	{
-		res = ft_strjoin("+", *str);
-		free(*str);
-		if (res[ft_strlen(res) - 1] == ' ')
-			res[ft_strlen(res) - 1] = '\0';
-		*str = res;
-		return ;
+		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+		res[fmt->width] = '\0';
+		if (!ft_strchr(fmt->flag, '-'))
+			p_res_minus(&res, fmt, nbr, len_nbr);
+		else
+		{
+			i = -1;
+			while (++i < len_nbr)
+				res[i] = nbr[i];
+			while (i < fmt->width)
+				res[i++] = ' ';
+		}
+		free(nbr);
+		return (res);
 	}
-	i = 0;
-	while ((*str)[i] == ' ')
-		i++;
-	(*str)[i - 1] = '+';
-	return ;
+	return (nbr);
 }
 
-static char		*str_p(t_format *fmt, char *nbr, int size, int ln)
+void			conv_p(t_lst *lst, t_chr **chr, va_list ap)
 {
-	char	*str;
-	int		i;
-
-	str = ft_strnew(size);
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		ft_strcpy(str, nbr);
-		i = ft_strlen(nbr);
-		while (i < size)
-			str[i++] = ' ';
-	}
-	else
-	{
-		i = 0;
-		while (i < size - ln + 1)
-			str[i++] = ' ';
-		ft_strcpy(&str[--i], nbr);
-	}
-	(fmt->precis > 0 && fmt->precis < fmt->width) ? precis_p(&str, fmt, ln) : 0;
-	(fmt->precis >= fmt->width) ? str = all_zero_p(nbr, fmt->precis, 0) : 0;
-	if (ft_strchr(fmt->flag, '0') && fmt->width > ln
-			&& !ft_strchr(fmt->flag, '-'))
-		str = all_zero_p(nbr, fmt->width, 1);
-	return (str);
-}
-
-/*
-**	n:		n[0]: n				n[1]: size
-*/
-
-void			conv_p(t_lst *lst, t_chr **mychr, va_list ap)
-{
-	char		*str;
-	char		*nbr;
-	size_t		n[2];
+	uintptr_t	n;
+	char		*num;
+	char		*res;
 
 	flag_star(lst->format, ap);
-	n[0] = (flag_dollar(lst)) ?
-		(size_t)va_arg(*(lst->arglist), void*) : (size_t)va_arg(ap, void*);
-	if (n[0] == 0 && !lst->format->precis)
-		(*mychr)->str = ft_strnew(0);
-	else
-	{
-		nbr = ft_utoa_base(n[0], 16);
-		flag_dash(&nbr, 16);
-		flag_apostrophe(&nbr, lst->format);
-		n[1] = ft_max(ft_strlen(nbr), lst->format->width);
-		str = str_p(lst->format, nbr, n[1], (int)ft_strlen(nbr));
-		if (ft_strchr(lst->format->flag, '0')
-				&& lst->format->width > (int)ft_strlen(nbr)
-				&& !ft_strchr(lst->format->flag, '-'))
-			str = all_zero_p(nbr, lst->format->width, 1);
-		flag_plus_p(lst->format, &str);
-		(*mychr)->str = str;
-		free(nbr);
-	}
-	(*mychr)->len = ft_strlen(str);
+	n = (flag_dollar(lst)) ? va_arg(*(lst->arglist), uintptr_t)
+							: va_arg(ap, uintptr_t);
+	num = ft_ulltoa_base(n, 16);
+	res = p_n(lst->format, num, (int)ft_strlen(num));
+	if (lst->format->convers == 'p')
+		ft_strlowcase(res);
+	free(num);
+	(*chr)->str = res;
+	(*chr)->len = (int)ft_strlen(res);
 }
