@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/10 03:30:25 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/12 02:38:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,6 @@ unsigned long long	cast_xxoub(va_list ap, t_format *format);
 char				*add_sign(char *str, int sign);
 void				conv_k(t_format *format, t_chr **mychr, va_list ap);
 void				conv_color(t_lst *lst, t_chr **mychr);
-char				*all_zero_o(t_format *fmt, char *nbr, int precis, int dash);
-void				precis_o(char **str, t_format *fmt, size_t nbr_len);
 void				conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_s(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_p(t_lst *lst, t_chr **mychr, va_list ap);

@@ -6,134 +6,149 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/10 03:38:51 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/12 02:39:35 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static	int		conv_o_1(t_lst *lst, t_chr **mychr, char c, int n)
+static char		*o_zerores(t_format *fmt, char *nbr, int len_nbr, char c)
 {
-	if (n == 0 && !lst->format->precis)
-	{
-		if (!ft_strchr(lst->format->flag, '#'))
-		{
-			(*mychr)->str = ft_strcnew(lst->format->width, ' ');
-			((*mychr)->str)[lst->format->width] = '\0';
-			(*mychr)->len = lst->format->width;
-		}
-		else
-		{
-			(!lst->format->width) ? lst->format->width++ : 0;
-			c = (ft_strchr(lst->format->flag, '0')
-					&& lst->format->precis == -1) ? '0' : ' ';
-			(*mychr)->str = ft_strcnew(lst->format->width, c);
-			((*mychr)->str)[lst->format->width] = '\0';
-			if (ft_strchr(lst->format->flag, '-'))
-				((*mychr)->str)[0] = '0';
-			else
-				((*mychr)->str)[lst->format->width - 1] = '0';
-			(*mychr)->len = lst->format->width;
-		}
-		return (-1);
-	}
-	return (0);
-}
-
-static int		conv_o_2(t_lst *lst, char **nbr, char **str, int n)
-{
-	size_t		size;
+	char		*res;
 	int			i;
+	int			j;
 
-	if (n && ft_strchr(lst->format->flag, '#'))
-		flag_dash(nbr, 8);
-	flag_apostrophe(nbr, lst->format);
-	size = ft_max(ft_strlen(*nbr), lst->format->width);
-	if (!(*str = ft_strnew(size)))
-		return (-1);
-	if (ft_strchr(lst->format->flag, '-'))
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (!ft_strchr(fmt->flag, '-'))
 	{
-		ft_strcpy(*str, *nbr);
-		i = ft_strlen(*nbr);
-		while (i < (int)size)
-			(*str)[i++] = ' ';
+		i = fmt->width;
+		j = len_nbr;
+		while (--j >= 0)
+			res[--i] = nbr[j];
+		while (--i >= 0)
+			res[i] = c;
 	}
 	else
 	{
 		i = 0;
-		while (i < (int)(size - ft_strlen(*nbr) + 1))
-			(*str)[i++] = ' ';
-		ft_strcpy(&(*str)[--i], *nbr);
+		j = 0;
+		while (j < len_nbr)
+			res[i++] = nbr[j++];
+		while (i < fmt->width)
+			res[i++] = c;
 	}
-	return (0);
+	return (res);
 }
 
-void			conv_o_3(t_lst *lst, char **str, char *nbr)
+static char		*o_zero(t_format *fmt)
 {
-	size_t		size;
+	char		*res;
+	int			len_nbr;
+	char		*nbr;
 	char		c;
-	int			i;
 
-	size = ft_strlen(nbr);
-	c = (ft_strchr(lst->format->flag, '0')) ? '0' : ' ';
-	if (lst->format->width > (int)size)
+	len_nbr = fmt->precis;
+	if (fmt->precis == -1
+			|| (!fmt->precis && ft_strchr(fmt->flag, '#')))
+		len_nbr = 1;
+	nbr = ft_strcnew(len_nbr, '0');
+	if (fmt->width > len_nbr)
 	{
-		if (!ft_strchr(lst->format->flag, '-'))
-		{
-			i = lst->format->width - lst->format->precis - 1;
-			while (++i < lst->format->width - (int)size)
-				(*str)[i] = c;
-		}
-		else
-		{
-			i = (int)size - 1;
-			while (++i < lst->format->precis)
-				(*str)[i] = c;
-		}
+		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
+				&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		res = o_zerores(fmt, nbr, len_nbr, c);
+		free(nbr);
+		return (res);
 	}
+	return (nbr);
 }
 
-int				conv_o_4(t_lst *lst, char **str, char *nbr, int n)
+static char		*o_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
 {
-	if (conv_o_2(lst, &nbr, str, n) == -1)
-		return (-1);
-	if (!ft_strchr(lst->format->flag, '0') && lst->format->precis > 0
-			&& lst->format->precis < lst->format->width)
-		precis_o(str, lst->format, ft_strlen(nbr));
-	else if (lst->format->precis >= lst->format->width)
-		*str = all_zero_o(lst->format, nbr, lst->format->precis,
-				(ft_strchr(lst->format->flag, '#')) ? 1 : 0);
-	else if (ft_strchr(lst->format->flag, '0')
-			&& lst->format->width > (int)ft_strlen(nbr)
-			&& !ft_strchr(lst->format->flag, '-')
-			&& lst->format->precis <= 0)
+	char		*nbr;
+	int			dash;
+	int			i;
+	int			j;
+
+	dash = (ft_strchr(fmt->flag, '#')) ? 1 : 0;
+	*len_nbr = ft_max(len_num + dash, fmt->precis);
+	nbr = (char*)malloc(sizeof(char) * (*len_nbr + 1));
+	nbr[*len_nbr] = '\0';
+	i = *len_nbr;
+	j = len_num;
+	while (--j >= 0)
+		nbr[--i] = num[j];
+	while (--i >= 0)
+		nbr[i] = '0';
+	return (nbr);
+}
+
+static char		*o_nres(t_format *fmt, char *nbr, int len_nbr, char c)
+{
+	char		*res;
+	int			i;
+	int			j;
+
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (!ft_strchr(fmt->flag, '-'))
 	{
-		*str = all_zero_o(lst->format, nbr, lst->format->width,
-				(ft_strchr(lst->format->flag, '#')) ? 1 : 0);
+		i = -1;
+		while (++i < fmt->width - len_nbr)
+			res[i] = c;
+		j = -1;
+		while (++j < len_nbr)
+			res[i++] = nbr[j];
 	}
 	else
-		conv_o_3(lst, str, nbr);
-	free(nbr);
-	return (0);
+	{
+		i = 0;
+		j = 0;
+		while (j < len_nbr)
+			res[i++] = nbr[j++];
+		while (i < fmt->width)
+			res[i++] = ' ';
+	}
+	return (res);
 }
 
-void			conv_o(t_lst *lst, t_chr **mychr, va_list ap)
+static char		*o_n(t_format *fmt, char *num, int len_num)
 {
-	char		*str;
+	char		*res;
 	char		*nbr;
-	size_t		n;
+	int			len_nbr;
+	char		c;
+
+	nbr = o_nbr(fmt, num, len_num, &len_nbr);
+	if (fmt->width - len_nbr > 0)
+	{
+		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
+				&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		res = o_nres(fmt, nbr, len_nbr, c);
+		free(nbr);
+		return (res);
+	}
+	return (nbr);
+}
+
+void			conv_o(t_lst *lst, t_chr **chr, va_list ap)
+{
+	unsigned long long int	n;
+	char					*num;
+	char					*res;
 
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
 		: cast_xxoub(ap, lst->format);
-	if (conv_o_1(lst, mychr, 0, n) == -1)
-		return ;
+	if (n == 0)
+		res = o_zero(lst->format);
 	else
 	{
-		nbr = ft_utoa_base(n, 8);
-		if (conv_o_4(lst, &str, nbr, n) == -1)
-			return ;
-		(*mychr)->str = str;
+		num = ft_ulltoa_base(n, 8);
+		res = o_n(lst->format, num, (int)ft_strlen(num));
+		free(num);
 	}
-	(*mychr)->len = ft_strlen(str);
+	(*chr)->str = res;
+	(*chr)->len = ft_strlen(res);
 }
