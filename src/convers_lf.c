@@ -14,10 +14,11 @@
 
 char		*get_entierld(long exp, t_ldouble db, t_format *format)
 {
-	long	new_exp;
-	long	bin_mantis;
-	char	*tab;
-	unsigned int		size;
+	long		new_exp;
+	long		bin_mantis;
+	char		*tab;
+	char		*res;
+	unsigned int	size;
 	int		i;
 
 	tab = NULL;
@@ -38,7 +39,9 @@ char		*get_entierld(long exp, t_ldouble db, t_format *format)
 		tab = int_add(tab, &size, 0);
 		new_exp--;
 	}
-	return (calcul_entier(tab, size, format));
+	res = calcul_entier(tab, size, format);
+	free(tab);
+	return (res);
 }
 
 char		*get_fractld(long exp, t_ldouble db, t_format *format)
@@ -46,6 +49,7 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 	int			len_b;
 	unsigned int		size;
 	char			*tab;
+	char			*res;
 	long			new_exp;
 	long			bin_mantis;
 
@@ -72,47 +76,42 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 			tab = ((bin_mantis >> len_b) & 1) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 		len_b--;
 	}
-	return  (calcul_fract(tab, size, format));
+	res = calcul_fract(tab, size, format);
+	free(tab);
+	return (res);
 }
 
-void            conv_llf(t_lst *lst, t_chr **mychr, va_list ap)
+void            conv_llf(t_lst *lst, t_chr **chr, va_list ap)
 {
-	t_ldouble                       db;
-	char                            *fract;
-	char                            *entier;
-	int             		       len_e;
-	int         		           len_f;
-	char                            *tmp;
-	char                            *final;
-	int                             carry;
+	t_ldouble	db;
+	unsigned int	len;
+	char		*fract;
+	char		*entier;
+	char		*str;
+	char		*tmp;
+	int		carry;
 
 	carry = 0;
 	flag_star(lst->format, ap);
 	db.ld = (flag_dollar(lst)) ? va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
-	if (pre_ld_calc(db, mychr, lst))
+	if (pre_ld_calc(db, chr, lst))
 		return ;
 	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
-	fract = ft_fprecis(fract, lst->format->precis, &carry);
+	fprecis(&fract, lst->format->precis, &carry, 10);
 	if (carry == 1)
-		entier = ft_strsum(entier, "1", 10);
-	if (db.zone.sign)
-		entier = add_sign(entier, (int)(db.zone.sign));
-	len_e = ft_strlen(entier);
-	len_f = ft_strlen(fract);
-	if (lst->format->width > (int)(len_e + len_f + 1) && !ft_strchr(lst->format->flag, '-'))
-		entier = ft_fwidth(entier, len_e, lst->format, len_f);
-	else if (ft_strchr(lst->format->flag, ' ') && !ft_strchr(lst->format->flag, '-'))
-		flag_space(&entier, lst->format->flag);
-	tmp = (ft_strchr(lst->format->flag, '#') || lst->format->precis != 0) ?
-		ft_strjoin(entier, ".") : ft_strdup(entier);
-	final = (lst->format->precis > 0) ? ft_strjoin(tmp, fract) : ft_strjoin(tmp, "");
-	free(tmp);
-	free(fract);
+	{
+		tmp = entier;
+		entier = ft_strsum(tmp, "1", 10);
+		free(tmp);
+	}
+	str = ft_pointjoin(lst->format, entier, fract, &len);
+	(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
+					: add_sign_f(lst->format, &str, &len, db.zone.sign);
 	free(entier);
-	(*mychr)->str = final;
-	(*mychr)->len = ft_strlen(final);
+	free(fract);
+	(*chr)->str = str;
+	(*chr)->len = len;
 }
-
