@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 23:02:23 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/15 16:34:35 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char		*get_entierld(long exp, t_ldouble db, t_format *format)
 		tab = int_add(tab, &size, 0);
 		new_exp--;
 	}
+	i = -1;
 	res = calcul_entier(tab, size, format);
 	free(tab);
 	return (res);

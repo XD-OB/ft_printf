@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 01:02:57 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/12 04:21:00 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/15 17:50:41 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,14 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	while(tab[debut] == '0')
 		debut++;
 	i = size;
-	while (--i >= debut)
+	while (--i >= debut && tab[i] == '0')
+		count = ft_strmult(count, "2", 10);
+	while (i >= debut)
 	{
 		if (tab[i] == '1')
 			entier = ft_strsum(entier, count, base);
 		count = ft_strmult("2", count, base);
+		i--;
 	}
 	free(count);
 	return (entier);

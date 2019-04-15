@@ -4,7 +4,7 @@
 static char		*ft_strzero(t_format *fmt, unsigned int *len)
 {
 	char		*res;
-	
+
 	*len = fmt->precis + 1;
 	(*len > 1 || ft_strchr(fmt->flag, '#')) ? (*len)++ : 0;
 	res = ft_strcnew(*len, '0');
@@ -45,11 +45,11 @@ static void		custom_nanf(t_format *fmt, char **str, unsigned int *len)
 	*str = res;
 }
 
-static void	custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
+static void		custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
 {
 	unsigned int	i;
 	unsigned int	j;
-	char		*res;
+	char			*res;
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
@@ -94,36 +94,36 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 	char		*str;
 	unsigned int	len;
 
-        if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
-        {
-                str = ft_strzero(lst->format, &len);
+	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
+	{
+		str = ft_strzero(lst->format, &len);
 		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
-						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
-        {
-                str = ft_strdup("inf");
-                len = 3;
+		return (1);
+	}
+	if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
+	{
+		str = ft_strdup("inf");
+		len = 3;
 		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
-						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
-        {
-                str = ft_strdup("nan");
-                len = 3;
+		return (1);
+	}
+	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
+	{
+		str = ft_strdup("nan");
+		len = 3;
 		if (lst->format->width > (int)len)
 			custom_nanf(lst->format, &str, &len);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        return (0);
+		return (1);
+	}
+	return (0);
 }
 
 
@@ -132,58 +132,58 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst)
 	char		*str;
 	unsigned int	len;
 
-        if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
-        {
-                str = ft_strzero(lst->format, &len);
+	if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
+	{
+		str = ft_strzero(lst->format, &len);
 		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
-						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
-        {
-                str = ft_strdup("inf");
-                len = 3;
+		return (1);
+	}
+	if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
+	{
+		str = ft_strdup("inf");
+		len = 3;
 		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
-						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
-        {
-                str = ft_strdup("nan");
-                len = 3;
+		return (1);
+	}
+	if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
+	{
+		str = ft_strdup("nan");
+		len = 3;
 		if (lst->format->width > (int)len)
 			custom_nanf(lst->format, &str, &len);
 		(*chr)->str = str;
 		(*chr)->len = len;
-                return (1);
-        }
-        return (0);
+		return (1);
+	}
+	return (0);
 }
 
 long            int_exp(long bin_exp, int bias)
 {
-        long    ref;
-        long	int_exp;
+	long    ref;
+	long	int_exp;
 
-        int_exp = 0;
-        ref = (bias == D_BIAS) ? 2048 : 32768;
-        while (ref >>= 1)
-			int_exp += (bin_exp & ref);
-        return (int_exp);
+	int_exp = 0;
+	ref = (bias == D_BIAS) ? 2048 : 32768;
+	while (ref >>= 1)
+		int_exp += (bin_exp & ref);
+	return (int_exp);
 }
 
 long long		int_mants(long bin_mants, int bias)
 {
-        int				ref;
-        long long    	int_mants;
+	int				ref;
+	long long    	int_mants;
 
-        int_mants = 0;
-        ref = (bias == D_BIAS) ? 53 : 63;
-        while (--ref)
-                int_mants += ((bin_mants >> ref) & 1);
-        return (int_mants);
+	int_mants = 0;
+	ref = (bias == D_BIAS) ? 53 : 63;
+	while (--ref)
+		int_mants += ((bin_mants >> ref) & 1);
+	return (int_mants);
 }

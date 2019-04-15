@@ -214,9 +214,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%s", "wi32x-3vx++===98234z1esfatr");
 	//printf("\n");
-	ft_printf("ft: %.f|%.f|%.f|%.f|%.f", 44.5, 44.4, 44.6, 44.50001, 44.5 + 1e-52);
+	printf("pt: %e", 13.14);
 	printf("\n");
-	printf("pt: %.f|%.f|%.f|%.f|%.f", 44.5, 44.4, 44.6, 44.50001, 44.5 + 1e-52);
+	ft_printf("ft: %e", 13.14);
 	printf("\n");
 	return (0);
 }

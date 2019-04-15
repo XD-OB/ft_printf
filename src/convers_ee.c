@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:48:46 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 06:46:57 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/15 18:19:32 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ char		*final_ee(t_format *fmt, char **entier, char *fract, int *a)
 /*
  ** a[0] = len_e | a[1] = len_f | a[2] = carry | a[3] = p
  */
-
+/*
 void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 {
 	char			*final;
@@ -150,6 +150,58 @@ void		conv_ee(t_lst *lst, t_chr **mychr, t_double db)
 	(*mychr)->str = final;
 	(*mychr)->len = ft_strlen(final);
 }
+*/
+
+static void		new_ee(char **entier, char **fract, int *len)
+{
+	char	*new_entier;
+	char	*new_fract;
+	int		i;
+
+	if (len[0] == 1)
+		return;
+	new_entier = ft_strndup(*entier, 1);
+	new_fract = (char*)malloc(sizeof(char) * (len[0] + len[1]));
+	new_fract[len[0] + len[1] - 1] = '\0';
+	i = 0;
+	while (++i < len[0])
+		new_fract[i - 1] = (*entier)[i];
+	i = -1;
+	while (++i < len[1])
+		new_fract[i + len[0] - 1] = (*fract)[i];
+	len[0] = 1;
+	len[1] = len[1] + len[0] - 1;
+	free(*entier);
+	free(*fract);
+	*entier = new_entier;
+	*fract = new_fract;
+}
+
+/*
+** len[2]:		len[0]: len_e		len[1]: len_f
+*/
+
+void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
+{
+	char	*entier;
+	char	*fract;
+	char	*res;
+	int		len[2];
+
+	if (pre_d_calc(db, chr, lst))
+		return ;
+	entier = get_entier(int_exp(db.zone.exponent, D_BIAS),
+			db.zone.mantissa, D_BIAS, lst->format);
+	fract = get_fract(int_exp(db.zone.exponent, D_BIAS),
+			db.zone.mantissa, D_BIAS, lst->format);
+	len[0] = ft_strlen(entier);
+	len[1] = ft_strlen(fract);
+	new_ee(&entier, &fract, len);
+	res = ft_strjoin(entier, fract);
+	(*chr)->str = res;
+	(*chr)->len = ft_strlen(res);
+}
+
 
 void		conv_lee(t_lst *lst, t_chr **mychr, va_list ap)
 {

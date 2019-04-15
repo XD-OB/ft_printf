@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:38:44 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/12 04:21:33 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/15 16:29:22 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 		}
 		else if (new_exp == -1)
 		{
-			tab = (exp) ? int_add(tab, &size, 1) : int_add(tab, &size, 1);
+			tab = (exp) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
 			new_exp++;
 		}
 		else
