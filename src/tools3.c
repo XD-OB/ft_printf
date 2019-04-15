@@ -70,3 +70,31 @@ char			*int_add(char *tab, unsigned int *oldsize, int data)
 	(*oldsize)++;
 	return (new);
 }
+
+char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
+{
+	unsigned int	len_s1;
+	unsigned int	len_s2;
+	unsigned int	i;
+	char		*str;
+
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	*len = len_s1 + len_s2 + 1;
+	if (len_s2 == 0 && !ft_strchr(fmt->flag, '#'))
+		(*len)--;
+	str = (char*)malloc(sizeof(char) * (*len + 1));
+	str[*len] = '\0';
+	i = 0;
+	while (i < len_s1)
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	if (i == *len)
+		return (str);
+	str[i] = '.';
+	while (++i < *len)
+		str[i] = s2[i - len_s1 - 1];
+	return (str);
+}

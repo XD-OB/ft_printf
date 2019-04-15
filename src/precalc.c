@@ -1,80 +1,164 @@
 #include <stdio.h>
 #include "ft_printf.h"
 
-static char		*ft_strzero(t_lst *lst, int sign)
+static char		*ft_strzero(t_format *fmt, unsigned int *len)
 {
-	char		*entier;
-	char		*fract;
 	char		*res;
-
-	fract = ft_strcnew(lst->format->precis, '0');
-	if (lst->format->width > lst->format->precis + 1)
-	{
-		entier = ft_strcnew((lst->format->width - lst->format->precis - 1), (ft_strchr(lst->format->flag, '0')) ? '0' : ' ');
-		entier[lst->format->width - lst->format->precis - 2] = '0';
-	}
-	else
-		entier = ft_strcnew(1, '0');
-	if (sign == 1 || ft_strchr(lst->format->flag, '+') || ft_strchr(lst->format->flag, ' '))
-	{
-		if (ft_strlen(entier) == 1)
-		{
-			free(entier);
-			entier = ft_strcnew(2, '0');
-		}
-		entier[0] = (sign == 1) ? '-' : ((ft_strchr(lst->format->flag, '+')) ? '+' : ' ');
-	}
-	res = ft_strnew(ft_strlen(entier) + lst->format->precis + 1);
-	ft_strcat(res, entier);
-	ft_strcat(res, ".");
-	ft_strcat(res, fract);
-	free(entier);
-	free(fract);
+	
+	*len = fmt->precis + 1;
+	(*len > 1 || ft_strchr(fmt->flag, '#')) ? (*len)++ : 0;
+	res = ft_strcnew(*len, '0');
+	if (*len > 1)
+		res[1] = '.';
 	return (res);
 }
 
-int             pre_d_calc(t_double db, t_chr **mychr, t_lst *lst)
+static void		custom_nanf(t_format *fmt, char **str, unsigned int *len)
 {
+	unsigned int	i;
+	unsigned int	j;
+	char		*res;
+
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (ft_strchr(fmt->flag, '-'))
+	{
+		i = 0;
+		j = 0;
+		while (j < *len)
+			res[i++] = (*str)[j++];
+		*len = fmt->width;
+		while (i < *len)
+			res[i++] = ' ';
+	}
+	else
+	{
+		i = fmt->width;
+		j = *len;
+		while (j > 0)
+			res[--i] = (*str)[--j];
+		while (i > 0)
+			res[--i] = ' ';
+		*len = fmt->width;
+	}
+	free(*str);
+	*str = res;
+}
+
+static void	custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
+{
+	unsigned int	i;
+	unsigned int	j;
+	char		*res;
+
+	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
+	res[fmt->width] = '\0';
+	if (ft_strchr(fmt->flag, '-'))
+	{
+		i = 0;
+		j = 0;
+		if (sign)
+			res[i++] = '-';
+		else if (ft_strchr(fmt->flag, '+'))
+			res[i++] = '+';
+		else if (ft_strchr(fmt->flag, ' '))
+			res[i++] = ' ';
+		while (j < *len)
+			res[i++] = (*str)[j++];
+		*len = fmt->width;
+		while (i < *len)
+			res[i++] = ' ';
+	}
+	else
+	{
+		i = fmt->width;
+		j = *len;
+		while (j > 0)
+			res[--i] = (*str)[--j];
+		if (sign)
+			res[--i] = '-';
+		else if (ft_strchr(fmt->flag, '+'))
+			res[--i] = '+';
+		else if (ft_strchr(fmt->flag, ' '))
+			res[--i] = ' ';
+		while (i > 0)
+			res[--i] = ' ';
+		*len = fmt->width;
+	}
+	free(*str);
+	*str = res;
+}
+
+int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
+{
+	char		*str;
+	unsigned int	len;
+
         if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
         {
-                (*mychr)->str = ft_strzero(lst, db.zone.sign);
-                (*mychr)->len = ft_strlen((*mychr)->str);
+                str = ft_strzero(lst->format, &len);
+		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
+						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
         {
-                (*mychr)->str = (db.zone.sign) ? ft_strdup("-inf") : ft_strdup("inf");
-                (*mychr)->len = (db.zone.sign) ? 4 : 3;
+                str = ft_strdup("inf");
+                len = 3;
+		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
+						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
         {
-                (*mychr)->str = ft_strdup("nan");
-                (*mychr)->len = 3;
+                str = ft_strdup("nan");
+                len = 3;
+		if (lst->format->width > (int)len)
+			custom_nanf(lst->format, &str, &len);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         return (0);
 }
 
 
-int             pre_ld_calc(t_ldouble db, t_chr **mychr, t_lst *lst)
+int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst)
 {
+	char		*str;
+	unsigned int	len;
+
         if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
         {
-                (*mychr)->str = ft_strzero(lst, db.zone.sign);
-                (*mychr)->len = ft_strlen((*mychr)->str);
+                str = ft_strzero(lst->format, &len);
+		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
+						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
         {
-                (*mychr)->str = (db.zone.sign) ? ft_strdup("-inf") : ft_strdup("inf");
-                (*mychr)->len = (db.zone.sign) ? 4 : 3;
+                str = ft_strdup("inf");
+                len = 3;
+		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
+						: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
         {
-                (*mychr)->str = ft_strdup("nan");
-                (*mychr)->len = 3;
+                str = ft_strdup("nan");
+                len = 3;
+		if (lst->format->width > (int)len)
+			custom_nanf(lst->format, &str, &len);
+		(*chr)->str = str;
+		(*chr)->len = len;
                 return (1);
         }
         return (0);

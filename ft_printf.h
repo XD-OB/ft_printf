@@ -100,6 +100,9 @@ char				*ft_fwidthf(char *str, unsigned int size_str,
 char				*add_sign(char *str, int sign);
 char			*int_add(char *tab, unsigned int *oldsize, int data);
 void				precis_o_udi(char **str, t_format *fmt, size_t nbr_len);
+char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len);
+void				customize_f(t_format *fmt, char **str, unsigned int *len, int sign);
+void				add_sign_f(t_format *fmt, char **str, unsigned int *len, int sign);
 char				*calcul_entier(char *tab, int size, t_format *format);
 char				*calcul_fract(char *bat, int size, t_format *format);
 int					ft_printf(const char *format, ...);

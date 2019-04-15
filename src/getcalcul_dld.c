@@ -47,7 +47,7 @@ static unsigned int	ft_strupdatelen(char *str, unsigned int old)
 	return (len);
 }
 
-char		*calcul_fract(char *tab, int size, t_format *format)
+char		*calcul_fract(char *tab, int size, t_format *fmt)
 {
 	char		*fract;
 	char		*count;
@@ -56,9 +56,9 @@ char		*calcul_fract(char *tab, int size, t_format *format)
 	int		i;
 
 	i = -1;
-	base = (format->convers == 'H') ? 16 : 10;
-	fract = ft_strdup("0");
 	len = 1;
+	base = (fmt->convers == 'H') ? 16 : 10;
+	fract = ft_strdup("0");
 	count = ft_strdup("5");
 	while (tab[--size] == '0');
 	while (++i <= size)
