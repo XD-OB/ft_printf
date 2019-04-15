@@ -257,7 +257,7 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 	char	*entier;
 	char	*fract;
 	char	*str;
-	int		len[4];
+	int	len[4];
 	int	carry;
 
 	carry = 0;
@@ -278,8 +278,12 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 		free(str);
 	}
 	str = ejoin(lst->format, entier, fract, len);
-	(*chr)->str = str;
 	(*chr)->len = len[3];
+	(lst->format->width > (int)len) ? customize_f(lst->format, &str, &((*chr)->len), db.zone.sign)
+					: add_sign_f(lst->format, &str, &((*chr)->len), db.zone.sign);
+	free(entier);
+	free(fract);	
+	(*chr)->str = str;
 }
 
 

@@ -92,6 +92,7 @@ static void		custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
 int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 {
 	char		*str;
+	char		*tmp;
 	unsigned int	len;
 
 	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
@@ -99,6 +100,13 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 		str = ft_strzero(lst->format, &len);
 		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
 			: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		if (ft_strchr("eE", lst->format->convers))
+		{
+			tmp = ft_strjoin(str, "e+00");
+			free(str);
+			str = tmp;
+			len += 4;
+		}
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
