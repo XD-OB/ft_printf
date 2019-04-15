@@ -13,7 +13,6 @@ void	_vfunction(const char *format, ...)
 	ft_vprintf(format, ap);
 }
 
-
 int	main(void)
 {
 	char		*str;
