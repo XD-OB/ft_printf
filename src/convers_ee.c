@@ -121,8 +121,8 @@ char		*eprefix(t_format *fmt, int *len)
 	if (fmt->convers == 'E')
 		ft_strupcase(sc_e);
 	num_e = ft_utoa(ABS(len[2]));
-	len[3] = ft_strlen(num_e);
 	prefix = ft_strjoin(sc_e, num_e);
+	len[3] = ft_strlen(prefix);
 	free(num_e);
 	free(sc_e);
 	return (prefix);
@@ -135,14 +135,25 @@ char		*ejoin(t_format *fmt, char *entier, char *fract, int *len)
 	char	*str;
 
 	prefix = eprefix(fmt, len);
-	str = ft_strjoin(entier, ".");
-	tmp = ft_strjoin(str, fract);
-	free(str);
+	len[3] += len[0];
+	if (ft_strcmp(fract, "\0") || ft_strchr(fmt->flag, '#'))
+	{
+		str = ft_strjoin(entier, ".");
+		len[3]++;
+	}
+	else
+		str = ft_strdup(entier);
+	if (ft_strcmp(fract, "\0"))
+	{
+		tmp = ft_strjoin(str, fract);
+		len[3] += len[1];
+		free(str);
+	}
+	else
+		tmp = str;
 	str = ft_strjoin(tmp, prefix);
 	free(prefix);
 	free(tmp);
-	len[3] += (len[3] == 1) ? 3 : 2;
-	len[3] += len[0] + len[1] + 1;
 	return (str);
 }
 
@@ -173,7 +184,7 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 	}
 	str = ejoin(lst->format, entier, fract, len);
 	(*chr)->len = len[3];
-	(lst->format->width > (int)len) ? customize_f(lst->format, &str, &((*chr)->len), db.zone.sign)
+	(lst->format->width > len[3]) ? customize_f(lst->format, &str, &((*chr)->len), db.zone.sign)
 					: add_sign_f(lst->format, &str, &((*chr)->len), db.zone.sign);
 	free(entier);
 	free(fract);	

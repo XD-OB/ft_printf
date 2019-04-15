@@ -98,8 +98,6 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
 	{
 		str = ft_strzero(lst->format, &len);
-		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
-			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		if (ft_strchr("eE", lst->format->convers))
 		{
 			tmp = ft_strjoin(str, "e+00");
@@ -107,6 +105,8 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 			str = tmp;
 			len += 4;
 		}
+		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
+			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
@@ -138,11 +138,19 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst)
 {
 	char		*str;
+	char		*tmp;
 	unsigned int	len;
 
 	if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
 	{
 		str = ft_strzero(lst->format, &len);
+		if (ft_strchr("eE", lst->format->convers))
+		{
+			tmp = ft_strjoin(str, "e+00");
+			free(str);
+			str = tmp;
+			len += 4;
+		}
 		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
 			: add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
