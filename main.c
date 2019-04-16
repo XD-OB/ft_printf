@@ -217,9 +217,9 @@ int	main(void)
 	//printf("\n");
 	//printf("%.f|%-.f|%+.f|% .f|%#.f|%0.f", 0., 0., 0., 0., 0., 0.);
 	//printf("\n");
-	ft_printf("%.5000Lf", LDBL_MIN);
+	ft_printf("%g|%-g|%+g|% g|%#g|%0g", 0., 0., 0., 0., 0., 0.);
 	printf("\n");
-	printf("%.5000Lf", LDBL_MIN);
+	printf("%g|%-g|%+g|% g|%#g|%0g", 0., 0., 0., 0., 0., 0.);
 	printf("\n");
 	return (0);
 }

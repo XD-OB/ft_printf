@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include "ft_printf.h"
 
-static char		*ft_strzero(t_format *fmt, unsigned int *len)
+static char		*ft_strzero(t_format *fmt, unsigned int *len, int is_g)
 {
 	char		*res;
 
-	*len = fmt->precis + 1;
+	if (is_g && (!ft_strchr(fmt->flag, '#') || !fmt->precis))
+		*len = 1;
+	else
+	{
+		if (is_g)
+			fmt->precis = ft_max(fmt->precis - 1, 0);
+		*len = fmt->precis + 1;
+	}
 	(*len > 1 || ft_strchr(fmt->flag, '#')) ? (*len)++ : 0;
 	res = ft_strcnew(*len, '0');
 	if (*len > 1)
@@ -95,11 +102,9 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 	char		*tmp;
 	unsigned int	len;
 
-	if (is_g)
-		lst->format->precis = ft_max(lst->format->precis - 1, 0);
 	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
 	{
-		str = ft_strzero(lst->format, &len);
+		str = ft_strzero(lst->format, &len, is_g);
 		if (ft_strchr("eE", lst->format->convers))
 		{
 			tmp = ft_strjoin(str, "e+00");
@@ -147,7 +152,7 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 		lst->format->precis = ft_max(lst->format->precis - 1, 0);
 	if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
 	{
-		str = ft_strzero(lst->format, &len);
+		str = ft_strzero(lst->format, &len, is_g);
 		if (ft_strchr("eE", lst->format->convers))
 		{
 			tmp = ft_strjoin(str, "e+00");

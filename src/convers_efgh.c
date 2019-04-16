@@ -56,7 +56,7 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 		(is_long) ? conv_lee(lst, mychr, ap, 0) : conv_ee(lst, mychr, db, 0);
 	else
 	{
-		(lst->format->precis == 0) ? lst->format->precis++ : 0;
+		//(lst->format->precis == 0) ? lst->format->precis++ : 0;
 		if (ft_strchr(lst->format->flag, '#'))
 			lst->format->precis = 6;
 		exp = int_exp(db.zone.mantissa, (is_long) ? LD_BIAS : D_BIAS);
@@ -68,6 +68,6 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 		}
 		else
 			(is_long) ? conv_llf(lst, mychr, ap, 1) : conv_lfh(lst, mychr, db, 1);
-		gclean(lst->format, mychr);
+		//gclean(lst->format, mychr);
 	}
 }
