@@ -89,12 +89,14 @@ static void		custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
 	*str = res;
 }
 
-int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
+int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 {
 	char		*str;
 	char		*tmp;
 	unsigned int	len;
 
+	if (is_g)
+		lst->format->precis = ft_max(lst->format->precis - 1, 0);
 	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
 	{
 		str = ft_strzero(lst->format, &len);
@@ -135,12 +137,14 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst)
 }
 
 
-int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst)
+int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 {
 	char		*str;
 	char		*tmp;
 	unsigned int	len;
 
+	if (is_g)
+		lst->format->precis = ft_max(lst->format->precis - 1, 0);
 	if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
 	{
 		str = ft_strzero(lst->format, &len);

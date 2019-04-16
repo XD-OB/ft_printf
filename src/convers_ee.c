@@ -157,7 +157,7 @@ char		*ejoin(t_format *fmt, char *entier, char *fract, long *len)
 	return (str);
 }
 
-void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
+void		conv_ee(t_lst *lst, t_chr **chr, t_double db, int is_g)
 {
 	char	*entier;
 	char	*fract;
@@ -166,7 +166,7 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 	int	carry;
 
 	carry = 0;
-	if (pre_d_calc(db, chr, lst))
+	if (pre_d_calc(db, chr, lst, is_g))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS),
 			db.zone.mantissa, D_BIAS, lst->format);
@@ -174,6 +174,8 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 			db.zone.mantissa, D_BIAS, lst->format);
 	len[0] = ft_strlen(entier);
 	len[1] = ft_strlen(fract);
+	if (is_g)
+		lst->format->precis = ft_max(0, (lst->format->precis - (long)ft_strlen(entier)));
 	len[2] = addjust_ee(&entier, &fract, len);
 	eprecis(&fract, lst->format->precis, &carry, &len[1]);
 	if (carry == 1)
@@ -198,7 +200,7 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 }
 
 
-void		conv_lee(t_lst *lst, t_chr **chr, va_list ap)
+void		conv_lee(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 {
 	t_ldouble		db;
 	char	*entier;
@@ -211,13 +213,14 @@ void		conv_lee(t_lst *lst, t_chr **chr, va_list ap)
 	flag_star(lst->format, ap);
 	db.ld = (flag_dollar(lst)) ? va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
-	if (pre_ld_calc(db, chr, lst))
+	if (pre_ld_calc(db, chr, lst, is_g))
 		return ;
 	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
-	(ft_strchr("gG", lst->format->convers)) ? lst->format->precis-- : 0;
 	len[0] = ft_strlen(entier);
 	len[1] = ft_strlen(fract);
+	if (is_g)
+		lst->format->precis = ft_max(0, (lst->format->precis - len[0]));
 	len[2] = addjust_ee(&entier, &fract, len);
 	eprecis(&fract, lst->format->precis, &carry, &len[1]);
 	if (carry == 1)

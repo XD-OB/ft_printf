@@ -82,7 +82,7 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 	return (res);
 }
 
-void            conv_llf(t_lst *lst, t_chr **chr, va_list ap)
+void            conv_llf(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 {
 	t_ldouble	db;
 	unsigned int	len;
@@ -96,11 +96,13 @@ void            conv_llf(t_lst *lst, t_chr **chr, va_list ap)
 	flag_star(lst->format, ap);
 	db.ld = (flag_dollar(lst)) ? va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
-	if (pre_ld_calc(db, chr, lst))
+	if (pre_ld_calc(db, chr, lst, is_g))
 		return ;
 	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
+	if (is_g)
+		lst->format->precis = ft_max(0, (lst->format->precis - (long)ft_strlen(entier)));
 	fprecis(&fract, lst->format->precis, &carry, 10);
 	if (carry == 1)
 	{

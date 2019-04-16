@@ -211,7 +211,7 @@ void		add_sign_f(t_format *fmt, char **str, unsigned int *len, int sign)
 	}
 }
 
-void		conv_lfh(t_lst *lst, t_chr **chr, t_double db)
+void		conv_lfh(t_lst *lst, t_chr **chr, t_double db, int is_g)
 {
 	unsigned int	len;
 	char		*fract;
@@ -223,12 +223,14 @@ void		conv_lfh(t_lst *lst, t_chr **chr, t_double db)
 
 	carry = 0;
 	base = (lst->format->convers == 'H') ? 16 : 10;
-	if (pre_d_calc(db, chr, lst))
+	if (pre_d_calc(db, chr, lst, is_g))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	(base == 16) ? flag_dash(&entier, 16) : 0;
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
+	if (is_g)
+		lst->format->precis =  ft_max((lst->format->precis - ft_strlen(entier)), 1);
 	fprecis(&fract, lst->format->precis, &carry, base);
 	if (carry == 1)
 	{
