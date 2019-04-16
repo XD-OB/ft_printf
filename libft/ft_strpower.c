@@ -32,12 +32,13 @@ char	*ft_strpower(int x, int n)
 	int 	res_size; 
 	int 	temp; 
 	int		i;
+	int		j;
 
 	if (n == 0)
 		return (ft_strdup("1")); 
 	res_size = 0;
 	temp = x;
-	s = ft_strnew(0);
+	//s = ft_strnew(0);
 	while (temp) 
 	{ 
 		res[res_size++] = temp % 10; 
@@ -46,13 +47,15 @@ char	*ft_strpower(int x, int n)
 	i = 2;  
 	while (i++ <= n) 
 		res_size = multiply(x, res, res_size);
-	//s = ft_strnew(res_size);
+	s = ft_strnew(res_size);
+	j = 0;
 	i = res_size - 1; 
 	while (i >= 0) 
 	{
-		//s[i] = res[i] + 48;
-		s = ft_str_pushback(s, (res[i] + 48));
+		s[j] = res[i] + 48;
+		//s = ft_str_pushback(s, (res[i] + 48));
 		i--;
+		j++;
 	}
 	return (s);
 } 

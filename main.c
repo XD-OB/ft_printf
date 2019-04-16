@@ -213,9 +213,13 @@ int	main(void)
 	//printf("\n");
 	//printf("%s", "wi32x-3vx++===98234z1esfatr");
 	//printf("\n");
-	ft_printf("%.f|%-.f|%+.f|% .f|%#.f|%0.f", 0., 0., 0., 0., 0., 0.);
+	//ft_printf("%.f|%-.f|%+.f|% .f|%#.f|%0.f", 0., 0., 0., 0., 0., 0.);
+	//printf("\n");
+	//printf("%.f|%-.f|%+.f|% .f|%#.f|%0.f", 0., 0., 0., 0., 0., 0.);
+	//printf("\n");
+	ft_printf("%.5000Lf", LDBL_MIN);
 	printf("\n");
-	printf("%.f|%-.f|%+.f|% .f|%#.f|%0.f", 0., 0., 0., 0., 0., 0.);
+	printf("%.5000Lf", LDBL_MIN);
 	printf("\n");
 	return (0);
 }

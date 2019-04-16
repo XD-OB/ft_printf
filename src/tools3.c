@@ -12,19 +12,20 @@
 
 #include "ft_printf.h"
 
-void	foisdix(char **str, unsigned int len)
+void	foisdix(char **str, int *len)
 {
-	char			*new;
-	unsigned int	i;
+	char	*new;
+	int	i;
 
 	i = 0;
-	new = ft_strnew(len  + 1);
-	while (i < len)
+	new = ft_strnew(*len  + 1);
+	while (i < *len)
 	{
 		new[i] = (*str)[i];
 		i++;
 	}
 	new[i] = '0';
+	(*len)++;
 	free(*str);
 	*str = new;
 }
@@ -97,4 +98,24 @@ char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
 	while (++i < *len)
 		str[i] = s2[i - len_s1 - 1];
 	return (str);
+}
+
+void		sumstr(char **s1, char *s2, int base)
+{
+	char	*tmp;
+
+	tmp = *s1;
+	*s1 = ft_strsum(*s1, s2, base);
+	free(tmp);
+	tmp = NULL;
+}
+
+void		multstr(char **s1, char *s2, int base)
+{
+	char	*tmp;
+
+	tmp = *s1;
+	*s1 = ft_strmult(*s1, s2, base);
+	free(tmp);
+	tmp = NULL;
 }

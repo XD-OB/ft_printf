@@ -16,47 +16,33 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 {
 	char		*entier;
 	char		*count;
-	char		*tmp;
 	int 		debut;
-	int 		i;
 	int		base;
+	int 		i;
 
 	base = (format->convers == 'H') ? 16 : 10;
 	entier = ft_strdup("0");
-	count = ft_strdup("1");
 	debut = 0;
 	while(tab[debut] == '0')
 		debut++;
-	i = size;
-	while (--i >= debut && tab[i] == '0')
-	{
-		tmp = count;
-		count = ft_strmult(count, "2", 10);
-		free(tmp);
-		tmp = NULL;
-	}
+	i = size - 1;
+	while (i >= debut && tab[i] == '0')
+		i--;
+	count = ft_strpower(2, (size - i - 1));
 	while (i >= debut)
 	{
 		if (tab[i] == '1')
-		{
-			tmp = entier;
-			entier = ft_strsum(entier, count, base);
-			free(tmp);
-			tmp = NULL;
-		}
-		tmp = count;
-		count = ft_strmult("2", count, base);
-		free(tmp);
-		tmp = NULL;
+			sumstr(&entier, count, base);
+		multstr(&count, "2", base);
 		i--;
 	}
 	free(count);
 	return (entier);
 }
 
-static unsigned int	ft_strupdatelen(char *str, unsigned int old)
+static int	ft_strupdatelen(char *str, int old)
 {
-	unsigned int	len;
+	int	len;
 
 	len = old;
 	while (str[len])
@@ -64,37 +50,34 @@ static unsigned int	ft_strupdatelen(char *str, unsigned int old)
 	return (len);
 }
 
+/*
+**	var[3]: 	0: i	1: base	   2: len
+*/
+
 char		*calcul_fract(char *tab, int size, t_format *fmt)
 {
 	char		*fract;
 	char		*count;
-	char		*tmp;
-	unsigned int	len;
-	int		base;
-	int		i;
+	int		var[3];
 
-	i = -1;
-	len = 1;
-	base = (fmt->convers == 'H') ? 16 : 10;
-	fract = ft_strdup("0");
-	count = ft_strdup("5");
+	var[0] = 0;
+	var[2] = 1;
+	var[1] = (fmt->convers == 'H') ? 16 : 10;
 	while (tab[--size] == '0');
-	while (++i <= size)
+	while (var[0] <= size && tab[var[0]] == '0')
+		(var[0])++;
+	count = ft_strpower(5, var[0] + 1);
+	fract = ft_strcnew(var[0] + 1, '0');
+	while (var[0] <= size)
 	{
-		if (tab[i] == '1')
+		if (tab[var[0]] == '1')
 		{
-			tmp = fract;
-			fract = ft_strsum(fract, count, base);
-			free(tmp);
-			tmp = NULL;
-			len = ft_strupdatelen(fract, len);
+			sumstr(&fract, count, var[1]);
+			var[2] = ft_strupdatelen(fract, var[2]);
 		}
-		tmp = count;
-		count = ft_strmult("5", count, base);
-		free(tmp);
-		tmp = NULL;
-		foisdix(&fract, len);
-		len++;
+		multstr(&count, "5", var[1]);
+		foisdix(&fract, &(var[2]));
+		(var[0])++;
 	}
 	free(count);
 	return (fract);

@@ -89,7 +89,6 @@ void            conv_llf(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 	char		*fract;
 	char		*entier;
 	char		*str;
-	char		*tmp;
 	int		carry;
 
 	carry = 0;
@@ -104,12 +103,7 @@ void            conv_llf(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 	if (is_g)
 		lst->format->precis = ft_max(0, (lst->format->precis - (long)ft_strlen(entier)));
 	fprecis(&fract, lst->format->precis, &carry, 10);
-	if (carry == 1)
-	{
-		tmp = entier;
-		entier = ft_strsum(tmp, "1", 10);
-		free(tmp);
-	}
+	(carry == 1) ? sumstr(&entier, "1", 10) : 0;
 	str = ft_pointjoin(lst->format, entier, fract, &len);
 	(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
 					: add_sign_f(lst->format, &str, &len, db.zone.sign);
