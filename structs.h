@@ -52,8 +52,8 @@ typedef struct		s_format
 {
 	char			convers;
 	char			*flag;
-	int				precis;
-	int				width;
+	long				precis;
+	long				width;
 	int				pos;
 	int				argn;
 }					t_format;

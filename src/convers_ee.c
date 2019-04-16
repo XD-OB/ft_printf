@@ -17,10 +17,10 @@
 ** 	len[3]:	len[0]: len_e	len[1]: len_f	len[2]: pos   len[3]: len
 */
 
-static void	fix_esize(char **str, int len_s, int size)
+static void	fix_esize(char **str, long len_s, long size)
 {
 	char	*res;
-	int	i;
+	long	i;
 
 	res = (char*)malloc(sizeof(char) * (size + 1));
 	res[size] = '\0';
@@ -36,7 +36,7 @@ static void	fix_esize(char **str, int len_s, int size)
 	*str = res;
 }
 
-void		eprecis(char **str, int precis, int *carry, int *len_s)
+void		eprecis(char **str, long precis, int *carry, long *len_s)
 {
 	char	*fract;
 	char	*tmp;
@@ -71,11 +71,11 @@ void		eprecis(char **str, int precis, int *carry, int *len_s)
 	*str = fract;
 }
 
-static int	addjust_ee(char **entier, char **fract, int *len)
+static int	addjust_ee(char **entier, char **fract, long *len)
 {
 	char	*new[2];
-	int	i;
-	int	p;
+	long	i;
+	long	p;
 
 	if ((*entier)[0] != '0' && len[0] == 1)
 		return (0);
@@ -104,7 +104,7 @@ static int	addjust_ee(char **entier, char **fract, int *len)
 	return (p);
 }
 
-char		*eprefix(t_format *fmt, int *len)
+char		*eprefix(t_format *fmt, long *len)
 {
 	char	*prefix;
 	char	*sc_e;
@@ -128,7 +128,7 @@ char		*eprefix(t_format *fmt, int *len)
 	return (prefix);
 }
 
-char		*ejoin(t_format *fmt, char *entier, char *fract, int *len)
+char		*ejoin(t_format *fmt, char *entier, char *fract, long *len)
 {
 	char	*prefix;
 	char	*tmp;
@@ -162,7 +162,7 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 	char	*entier;
 	char	*fract;
 	char	*str;
-	int	len[4];
+	long	len[4];
 	int	carry;
 
 	carry = 0;
@@ -180,6 +180,12 @@ void		conv_ee(t_lst *lst, t_chr **chr, t_double db)
 	{
 		str = entier;
 		entier = ft_strsum(str, "1", 10);
+		if (ft_strlen(entier) > 1)
+		{
+			str = entier;
+			entier = ft_strndup(entier, 1);
+			(len[3] >= 0) ? len[2]++ : len[2]--;
+		}
 		free(str);
 	}
 	str = ejoin(lst->format, entier, fract, len);
@@ -198,7 +204,7 @@ void		conv_lee(t_lst *lst, t_chr **chr, va_list ap)
 	char	*entier;
 	char	*fract;
 	char	*str;
-	int	len[4];
+	long	len[4];
 	int	carry;
 
 	carry = 0;

@@ -74,10 +74,10 @@ char		*get_fract(long exp, long bin_mantis, int bias, t_format *format)
 	return (res);
 }
 
-static void	fix_fsize(char **str, int len_s, int size)
+static void	fix_fsize(char **str, long len_s, long size)
 {
 	char	*res;
-	int	i;
+	long	i;
 
 	res = (char*)malloc(sizeof(char) * (size + 1));
 	res[size] = '\0';
@@ -93,11 +93,11 @@ static void	fix_fsize(char **str, int len_s, int size)
 	*str = res;
 }
 
-void		fprecis(char **str, int precis, int *carry, int base)
+void		fprecis(char **str, long precis, int *carry, int base)
 {
 	char	*fract;
 	char	*tmp;
-	int	len_s;
+	long	len_s;
 
 	if (precis == 0)
 	{

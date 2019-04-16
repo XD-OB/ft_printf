@@ -27,12 +27,14 @@ double			ft_dpow(int a, int b)
 	return (res);
 }
 
-void			gclean(t_chr **mychr)
+void			gclean(t_format *fmt, t_chr **mychr)
 {
 	char	*clean;
 	int		size;
 	int		i;
 
+	if (ft_strchr(fmt->flag, '#'))
+		return ;
 	size = (*mychr)->len - 1;
 	while (size >= 0 && ((*mychr)->str)[size] == '0')
 		size--;
@@ -68,7 +70,9 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 	{
 		if (lst->format->precis == 0)
 			lst->format->precis++;
-		if (db.d < 0.001 || db.d >= ft_dpow(10, lst->format->precis))
+		if (ft_strchr(lst->format->flag, '#'))
+			lst->format->precis = 6;
+		if ((db.d > 0 && (db.d < 0.001 || db.d >= 400)) || (db.d < 0 && (db.d <= -400 && db.d >= -0.01)))
 		{
 			if (lst->format->convers == 'G')
 				lst->format->convers = 'E';
@@ -77,6 +81,6 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 		}
 		else
 			conv_lfh(lst, mychr, db);
-		gclean(mychr);
+		gclean(lst->format, mychr);
 	}
 }
