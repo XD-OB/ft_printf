@@ -16,6 +16,7 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 {
 	char		*entier;
 	char		*count;
+	char		*tmp;
 	int 		debut;
 	int 		i;
 	int		base;
@@ -28,12 +29,25 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 		debut++;
 	i = size;
 	while (--i >= debut && tab[i] == '0')
+	{
+		tmp = count;
 		count = ft_strmult(count, "2", 10);
+		free(tmp);
+		tmp = NULL;
+	}
 	while (i >= debut)
 	{
 		if (tab[i] == '1')
+		{
+			tmp = entier;
 			entier = ft_strsum(entier, count, base);
+			free(tmp);
+			tmp = NULL;
+		}
+		tmp = count;
 		count = ft_strmult("2", count, base);
+		free(tmp);
+		tmp = NULL;
 		i--;
 	}
 	free(count);
@@ -54,6 +68,7 @@ char		*calcul_fract(char *tab, int size, t_format *fmt)
 {
 	char		*fract;
 	char		*count;
+	char		*tmp;
 	unsigned int	len;
 	int		base;
 	int		i;
@@ -68,11 +83,17 @@ char		*calcul_fract(char *tab, int size, t_format *fmt)
 	{
 		if (tab[i] == '1')
 		{
+			tmp = fract;
 			fract = ft_strsum(fract, count, base);
+			free(tmp);
+			tmp = NULL;
 			len = ft_strupdatelen(fract, len);
 		}
+		tmp = count;
 		count = ft_strmult("5", count, base);
-		fract = foisdix(fract, len);
+		free(tmp);
+		tmp = NULL;
+		foisdix(&fract, len);
 		len++;
 	}
 	free(count);

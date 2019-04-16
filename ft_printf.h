@@ -35,7 +35,7 @@ int					is_postflag(char c);
 int					is_preflag(char c);
 int					is_valid(char *str);
 int					lstlen(t_lst *lst);
-char				*foisdix(char *str, unsigned int len);
+void				foisdix(char **str, unsigned int len);
 void				put_spstr(char *str);
 void				print_lst(t_lst *lst);
 void				free_lst(t_lst **lst);

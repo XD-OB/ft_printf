@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-char		*foisdix(char *str, unsigned int len)
+void	foisdix(char **str, unsigned int len)
 {
 	char			*new;
 	unsigned int	i;
@@ -21,12 +21,12 @@ char		*foisdix(char *str, unsigned int len)
 	new = ft_strnew(len  + 1);
 	while (i < len)
 	{
-		new[i] = str[i];
+		new[i] = (*str)[i];
 		i++;
 	}
 	new[i] = '0';
-	free(str);
-	return (new);
+	free(*str);
+	*str = new;
 }
 
 unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
