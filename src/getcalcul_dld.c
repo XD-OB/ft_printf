@@ -28,7 +28,7 @@ char            *calcul_entier(char *tab, int size, t_format *format)
 	i = size - 1;
 	while (i >= debut && tab[i] == '0')
 		i--;
-	count = ft_strpower(2, (size - i - 1));
+	count = ft_strpower(2, (size - i - 1), base);
 	while (i >= debut)
 	{
 		if (tab[i] == '1')
@@ -66,7 +66,7 @@ char		*calcul_fract(char *tab, int size, t_format *fmt)
 	while (tab[--size] == '0');
 	while (var[0] <= size && tab[var[0]] == '0')
 		(var[0])++;
-	count = ft_strpower(5, var[0] + 1);
+	count = ft_strpower(5, var[0] + 1, var[1]);
 	fract = ft_strcnew(var[0] + 1, '0');
 	while (var[0] <= size)
 	{

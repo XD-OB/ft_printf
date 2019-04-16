@@ -230,7 +230,7 @@ void		conv_lfh(t_lst *lst, t_chr **chr, t_double db, int is_g)
 	flag_apostrophe(&entier, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS), db.zone.mantissa, D_BIAS, lst->format);
 	if (is_g)
-		lst->format->precis =  ft_max((lst->format->precis - ft_strlen(entier)), 1);
+		lst->format->precis = ft_max((lst->format->precis - ft_strlen(entier)), 1);
 	fprecis(&fract, lst->format->precis, &carry, base);
 	if (carry == 1)
 	{

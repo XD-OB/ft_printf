@@ -68,6 +68,7 @@ void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
 		}
 		else
 			(is_long) ? conv_llf(lst, mychr, ap, 1) : conv_lfh(lst, mychr, db, 1);
-		//gclean(lst->format, mychr);
+		if (ft_strlen((*mychr)->str) > 1 + (ft_strpbrk(lst->format->flag, "+ ") ? 1 : 0))
+			gclean(lst->format, mychr);
 	}
 }

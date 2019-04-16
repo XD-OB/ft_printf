@@ -2,7 +2,7 @@
 
 #define MAX 100000 
 
-static int	multiply(int x, int *res, int res_size) { 
+static int	multiply(int x, int *res, int res_size, int base) { 
 
 	int		carry;
 	int		i;
@@ -12,20 +12,20 @@ static int	multiply(int x, int *res, int res_size) {
 	while (i < res_size)
 	{ 
 		int prod = res[i] * x + carry; 
-		res[i] = prod % 10; 
-		carry = prod / 10;
+		res[i] = prod % base; 
+		carry = prod / base;
 		i++;
 	} 
 	while (carry)
 	{ 
-		res[res_size] = carry % 10; 
-		carry = carry / 10; 
+		res[res_size] = carry % base; 
+		carry = carry / base; 
 		res_size++; 
 	} 
 	return (res_size); 
 } 
 
-char	*ft_strpower(int x, int n)
+char	*ft_strpower(int x, int n, int base)
 { 
 	char	*s;
 	int 	res[MAX]; 
@@ -38,22 +38,20 @@ char	*ft_strpower(int x, int n)
 		return (ft_strdup("1")); 
 	res_size = 0;
 	temp = x;
-	//s = ft_strnew(0);
 	while (temp) 
 	{ 
-		res[res_size++] = temp % 10; 
-		temp = temp / 10; 
+		res[res_size++] = temp % base; 
+		temp = temp / base; 
 	}
 	i = 2;  
 	while (i++ <= n) 
-		res_size = multiply(x, res, res_size);
+		res_size = multiply(x, res, res_size, base);
 	s = ft_strnew(res_size);
 	j = 0;
 	i = res_size - 1; 
 	while (i >= 0) 
 	{
-		s[j] = res[i] + 48;
-		//s = ft_str_pushback(s, (res[i] + 48));
+		s[j] = (res[i] < 10) ? res[i] + '0' : res[i] + 'a' - 10;
 		i--;
 		j++;
 	}
