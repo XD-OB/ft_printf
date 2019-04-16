@@ -122,6 +122,7 @@ char				*ft_str_pushback(char *str, char c);
 char				*ft_strsum(char *str1, char *str2, int base);
 char				*ft_strcnew(size_t size, char c);
 char				*ft_strmult(char *num1, char *num2, int base);
+char				*ft_strpower(int base, int exponent);
 int				ft_max(int a, int b);
 int				ft_min(int a, int b);
 char				*ft_poslltoa(long long int n);
