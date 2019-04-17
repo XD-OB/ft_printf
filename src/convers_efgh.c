@@ -6,69 +6,77 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:57:10 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 01:25:18 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 16:22:09 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void			gclean(t_format *fmt, t_chr **mychr)
+static void		gclean(t_format *fmt, t_chr **chr)
 {
-	char	*clean;
-	int		size;
-	int		i;
+	char		*clean;
+	int			size;
+	int			i;
 
 	if (!ft_strchr(fmt->flag, '#'))
 	{
-		size = (*mychr)->len - 1;
-		while (size >= 0 && ((*mychr)->str)[size] == '0')
+		size = (*chr)->len - 1;
+		while (size >= 0 && ((*chr)->str)[size] == '0')
 			size--;
-		if (((*mychr)->str)[size] == '.')
+		if (((*chr)->str)[size] == '.')
 			size--;
-		if (size != (int)((*mychr)->len))
+		if (size != (int)((*chr)->len))
 		{
 			clean = (char*)malloc(sizeof(char) * size + 2);
 			clean[size + 1] = '\0';
 			i = -1;
 			while (++i <= size)
-				clean[i] = ((*mychr)->str)[i];
-			free((*mychr)->str);
-			(*mychr)->str = clean;
-			(*mychr)->len = size + 1;
+				clean[i] = ((*chr)->str)[i];
+			free((*chr)->str);
+			(*chr)->str = clean;
+			(*chr)->len = size + 1;
 		}
 	}
 }
 
-void			conv_d_efgh(t_lst *lst, t_chr **mychr, va_list ap)
+static void		efgh_annex(t_chr **chr, t_lst *lst)
+{
+	size_t		a;
+
+	a = (ft_strpbrk(lst->format->flag, "+ ")) ? 2 : 1;
+	if (ft_strlen((*chr)->str) > 1 + a)
+		gclean(lst->format, chr);
+}
+
+/*
+**	v[2]:		0: exp		1: is_long
+*/
+
+void			conv_d_efgh(t_lst *lst, t_chr **chr, va_list ap)
 {
 	t_double	db;
-	int		is_long;
-	int		exp;
+	int			v[2];
 
-	is_long = (ft_strchr(lst->format->flag, 'L') ? 1 : 0);
+	v[1] = (ft_strchr(lst->format->flag, 'L') ? 1 : 0);
 	flag_star(lst->format, ap);
 	db.d = (flag_dollar(lst)) ?
 			va_arg(*(lst->arglist), double) : va_arg(ap, double);
 	(lst->format->precis == -1) ? lst->format->precis = 6 : 0;
 	if (ft_strchr("fH", lst->format->convers))
-		(is_long) ? conv_llf(lst, mychr, ap, 0) : conv_lfh(lst, mychr, db, 0);
+		(v[1]) ? conv_llf(lst, chr, ap, 0) : conv_lfh(lst, chr, db, 0);
 	else if (ft_strchr("eE", lst->format->convers))
-		(is_long) ? conv_lee(lst, mychr, ap, 0) : conv_ee(lst, mychr, db, 0);
+		(v[1]) ? conv_lee(lst, chr, ap, 0) : conv_ee(lst, chr, db, 0);
 	else
 	{
-		//(lst->format->precis == 0) ? lst->format->precis++ : 0;
-		if (ft_strchr(lst->format->flag, '#'))
-			lst->format->precis = 6;
-		exp = int_exp(db.zone.mantissa, (is_long) ? LD_BIAS : D_BIAS);
-		if (exp < -4 || exp >= (int)(lst->format->precis))
+		(ft_strchr(lst->format->flag, '#')) ? lst->format->precis = 6 : 0;
+		v[0] = int_exp(db.zone.mantissa, (v[1]) ? LD_BIAS : D_BIAS);
+		if (v[0] < -4 || v[0] >= (int)(lst->format->precis))
 		{
-			if (lst->format->convers == 'G')
-				lst->format->convers = 'E';
-			(is_long) ? conv_lee(lst, mychr, ap, 1) : conv_ee(lst, mychr, db, 1);
+			(lst->format->convers == 'G') ? lst->format->convers = 'E' : 0;
+			(v[1]) ? conv_lee(lst, chr, ap, 1) : conv_ee(lst, chr, db, 1);
 		}
 		else
-			(is_long) ? conv_llf(lst, mychr, ap, 1) : conv_lfh(lst, mychr, db, 1);
-		if (ft_strlen((*mychr)->str) > 1 + (ft_strpbrk(lst->format->flag, "+ ") ? 1 : 0))
-			gclean(lst->format, mychr);
+			(v[1]) ? conv_llf(lst, chr, ap, 1) : conv_lfh(lst, chr, db, 1);
+		efgh_annex(chr, lst);
 	}
 }

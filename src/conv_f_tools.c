@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 13:36:30 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 13:38:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 16:32:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	fix_fsize(char **str, long len_s, long size)
 	*str = res;
 }
 
-static char	*fprecis_zero(char *str, int *carry, long precis)
+static char	*fprecis_zero(char *str, long *carry, long precis)
 {
 	char	*s;
 
@@ -45,7 +45,7 @@ static char	*fprecis_zero(char *str, int *carry, long precis)
 	return (NULL);
 }
 
-void		fprecis(char **str, long precis, int *carry, int base)
+void		fprecis(char **str, long precis, long *carry, long base)
 {
 	char	*fract;
 	char	*tmp;

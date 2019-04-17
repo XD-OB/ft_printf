@@ -225,9 +225,13 @@ int	main(void)
 	//printf("\n");
 	//printf("%g|%-g|%+g|% g|%#g|%0g", 0., 0., 0., 0., 0., 0.);
 	//printf("\n");
-	ft_printf("%%-%|%%+%|%% %|%%#%");
+	//ft_printf("%%-%|%%+%|%% %|%%#%");
+	//printf("\n");
+	//printf("%%-%|%%+%|%% %|%%#%");
+	//printf("\n");
+	ft_printf("%.38f", 2507.000000);
 	printf("\n");
-	printf("%%-%|%%+%|%% %|%%#%");
+	printf("%.38f", 2507.000000);
 	printf("\n");
 	return (0);
 }

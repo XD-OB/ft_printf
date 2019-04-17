@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 13:03:50 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 16:31:16 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void				int_add(char **tab, unsigned int *oldsize, int data);
 char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len);
 void				customize_f(t_format *fmt, char **str, long *len, int sign);
 void				add_sign_f(t_format *fmt, char **str, long *len, int sign);
-void				fprecis(char **str, long precis, int *carry, int base);
+void				fprecis(char **str, long precis, long *carry, long base);
 char				*width_di(t_format *fmt, char *nbr, int len_nbr, int sign);
 char				*calcul_entier(char *tab, int size, t_format *format);
 char				*calcul_fract(char *bat, int size, t_format *format);

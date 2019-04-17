@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:20:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 06:27:01 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 17:26:49 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,30 @@ void		conv_invalid(t_chr **mychr, t_format *format, va_list ap)
 	}
 }
 
+static int	conv_bold_color(t_lst *lst, t_chr **mychr)
+{
+	if (!ft_strcmp(lst->format->flag, "RED"))
+		(*mychr)->str = ft_strdup(B_RED);
+	else if (!ft_strcmp(lst->format->flag, "GREEN"))
+		(*mychr)->str = ft_strdup(B_GREEN);
+	else if (!ft_strcmp(lst->format->flag, "YELLOW"))
+		(*mychr)->str = ft_strdup(B_YELLOW);
+	else if (!ft_strcmp(lst->format->flag, "BLUE"))
+		(*mychr)->str = ft_strdup(B_BLUE);
+	else if (!ft_strcmp(lst->format->flag, "PURPLE"))
+		(*mychr)->str = ft_strdup(B_PURPLE);
+	else if (!ft_strcmp(lst->format->flag, "CYAN"))
+		(*mychr)->str = ft_strdup(B_CYAN);
+	else
+		return (0);
+	return (1);
+}
+
 void		conv_color(t_lst *lst, t_chr **mychr)
 {
 	(*mychr)->len = 0;
+	if (conv_bold_color(lst, mychr))
+		return ;
 	if (!ft_strcmp(lst->format->flag, "red"))
 		(*mychr)->str = ft_strdup(RED);
 	else if (!ft_strcmp(lst->format->flag, "green"))
