@@ -6,7 +6,7 @@
 /*   By: obelouch <obelouch@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 11:37:16 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/02/08 10:17:15 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:08:49 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 char		*ft_utoa_base(size_t val, int base)
 {
-	size_t			nb;
-	int			size;
-	char			*res;
+	size_t	nb;
+	int		size;
+	char	*res;
 
 	size = 1;
 	nb = val;
 	while (nb /= base)
 		size++;
 	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
-		return NULL;
+		return (NULL);
 	res[size] = '\0';
 	nb = val;
 	while (size-- > 0)

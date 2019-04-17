@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 01:07:21 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 22:11:01 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 06:20:45 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,19 @@
 # include <stdlib.h>
 # include <limits.h>
 
-typedef struct  		s_mult
+typedef struct		s_mult
 {
-        int                     i;
-        int                     j;
-        int             	n1;
-        int             	n2;
-        int                     i_n1;
-        int                     i_n2;
-        int                     carry;
-        int                     sum;
-        int                     *result;
-        char            	*s;
-}                               t_mult;
+	int				i;
+	int				j;
+	int				n1;
+	int				n2;
+	int				i_n1;
+	int				i_n2;
+	int				carry;
+	int				sum;
+	int				*result;
+	char			*s;
+}					t_mult;
 
 typedef struct		s_list
 {
@@ -117,15 +117,14 @@ int					ft_isblank(int c);
 int					ft_isxdigit(int c);
 char				*ft_strnjoin(char *s1, char *s2, size_t len);
 int					ft_atoibase(char *str, char *base_from);
-void 				ft_strswap(char **s1, char **s2);
+void				ft_strswap(char **s1, char **s2);
 char				*ft_str_pushback(char *str, char c);
 char				*ft_strsum(char *str1, char *str2, int base);
 char				*ft_strcnew(size_t size, char c);
 char				*ft_strmult(char *num1, char *num2, int base);
 char				*ft_strpower(int base, int exponent, int x);
-int				ft_max(int a, int b);
-int				ft_min(int a, int b);
+int					ft_max(int a, int b);
+int					ft_min(int a, int b);
 char				*ft_poslltoa(long long int n);
-
 
 #endif

@@ -6,16 +6,16 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/07 05:13:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:07:39 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char		*ft_ultoa(unsigned long int nbr)
+char					*ft_ultoa(unsigned long int nbr)
 {
 	unsigned long int	tmp;
-	char			*res;
+	char				*res;
 	unsigned long		size;
 
 	size = 1;

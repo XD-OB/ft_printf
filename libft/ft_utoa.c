@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2018/10/08 23:18:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:13:37 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char		*ft_utoa(size_t nbr)
 {
 	size_t	tmp;
 	char	*res;
-	int	size;
+	int		size;
 
 	size = 1;
 	tmp = nbr;

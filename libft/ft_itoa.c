@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/08 05:49:26 by obelouch          #+#    #+#             */
-/*   Updated: 2018/10/08 23:18:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:11:00 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,26 @@ static long long int	nbr_val(long long int nbr)
 	return (nbr);
 }
 
-static int	sign_val(long long int nbr)
+static int				sign_val(long long int nbr)
 {
 	if (nbr < 0)
 		return (1);
 	return (0);
 }
 
-static int	size_val(long long int nbr)
+static int				size_val(long long int nbr)
 {
 	if (nbr < 0)
 		return (2);
 	return (1);
 }
 
-char		*ft_itoa(long long int nbr)
+char					*ft_itoa(long long int nbr)
 {
-	char		*res;
-	long long int	tmp;
-	int		size;
-	int		sign;
+	char				*res;
+	long long int		tmp;
+	int					size;
+	int					sign;
 
 	size = size_val(nbr);
 	sign = sign_val(nbr);

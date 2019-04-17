@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strsum.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/17 06:42:27 by ishaimou          #+#    #+#             */
+/*   Updated: 2019/04/17 06:43:36 by ishaimou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-/*	tab "a" indexes
+/*
+** 	tab "a" indexes
 **	len1 => 0; len2 => 1; i => 2; sum => 3; carry => 4
 */
 
@@ -44,5 +57,5 @@ char		*ft_strsum(char *s1, char *s2, int base)
 	}
 	(a[4]) ? str = ft_str_pushback(str, c_char(a[4])) : 0;
 	str = ft_strrev(str);
-	return (str); 
-} 
+	return (str);
+}
