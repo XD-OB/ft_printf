@@ -54,6 +54,7 @@ int			check_fill(va_list tmp, char *str, int pos,
 	curr->format->pos = pos;
 	if (*str == '{')
 	{
+		free(flag);
 		str++;
 		curr->format->flag = ft_strcolor(str);
 		curr->format->convers = '}';

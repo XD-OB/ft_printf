@@ -48,7 +48,7 @@ int				ft_printf(const char *format, ...)
 		return (-1);
 	}
 	fill_chr(lst, chr, ap);
-	len[0] = put_chr(chr);
+	len[0] = put_chr(lst, chr);
 	free_lst(&lst);
 	free_chr(&chr);
 	va_end(ap);

@@ -12,28 +12,34 @@
 
 #include "ft_printf.h"
 
-int			put_chr(t_chr *chr)
+int			put_chr(t_lst *lst, t_chr *chr)
 {
 	int		len;
 
 	len = 0;
 	while (chr)
 	{
-		write(1, chr->str, chr->len);
+		if (lst->format->convers == '}')
+			ft_putstr(chr->str);
+		else	
+			write(1, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;
 	}
 	return (len);
 }
 
-int			put_chr_fd(int fd, t_chr *chr)
+int			put_chr_fd(int fd, t_lst *lst, t_chr *chr)
 {
 	int		len;
 
 	len = 0;
 	while (chr)
 	{
-		write(fd, chr->str, chr->len);
+		if (lst->format->convers == '}')
+			ft_putstr_fd(chr->str, fd);
+		else	
+			write(fd, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;
 	}

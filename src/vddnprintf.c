@@ -38,7 +38,7 @@ int			ft_vprintf(const char *format, va_list ap)
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
 	fill_chr(lst, mychr, ap);
-	len[0] = put_chr(mychr);
+	len[0] = put_chr(lst, mychr);
 	free_lst(&lst);
 	free_chr(&mychr);
 	va_end(ap);
@@ -72,7 +72,7 @@ int			ft_dprintf(int fd, const char *format, ...)
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
 	fill_chr(lst, mychr, ap);
-	len[0] = put_chr_fd(fd, mychr);
+	len[0] = put_chr_fd(fd, lst, mychr);
 	free_lst(&lst);
 	free_chr(&mychr);
 	va_end(ap);
