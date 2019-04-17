@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 09:27:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 09:41:46 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 12:35:10 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char			*ft_strzero(t_format *fmt, unsigned int *len, int is_g)
+static char			*ft_strzero(t_format *fmt, long *len, int is_g)
 {
 	char			*res;
 
@@ -35,7 +35,7 @@ int					pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 {
 	char			*str;
 	char			*tmp;
-	unsigned int	len;
+	long			len;
 
 	if (!int_mants(db.zone.mantissa, D_BIAS) &&
 		!int_exp(db.zone.exponent, D_BIAS))
@@ -85,7 +85,7 @@ int					pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 {
 	char			*str;
 	char			*tmp;
-	unsigned int	len;
+	long			len;
 
 	if (is_g)
 		lst->format->precis = ft_max(lst->format->precis - 1, 0);

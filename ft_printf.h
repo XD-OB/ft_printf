@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 09:35:29 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:03:50 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void				conv_lee(t_lst *lst, t_chr **mychr, va_list ap, int is_g);
 void				conv_percent(t_chr **mychr, t_lst *lst, va_list ap);
 void				conv_di(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_u(t_lst *lst, t_chr **mychr, va_list ap);
-void				eprecis(char **str, long precis, int *carry, long *len_s);
+void				eprecis(char **str, long precis, long *carry, long *len_s);
 void				precis_u(char **str, t_format *fmt, int nbr_len);
 char				*all_zero_u(char *nbr, int precis);
 void				conv_invalid(t_chr **mychr, t_format *format, va_list ap);
@@ -93,20 +93,16 @@ char				*get_entier(long exp, long bin_mantis,
 char				*get_fractld(long exp, t_ldouble db, t_format *format);
 char				*get_fract(long exp, long bin_mantis,
 							int bias, t_format *format);
-char				*int_add(char *tab, unsigned int *oldsize, int data);
-char				*ft_pointjoin(t_format *fmt, char *s1, char *s2,
-							unsigned int *len);
-void				customize_f(t_format *fmt, char **str, unsigned int *len,
-							int sign);
-void				add_sign_f(t_format *fmt, char **str, unsigned int *len,
-							int sign);
+void				int_add(char **tab, unsigned int *oldsize, int data);
+char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len);
+void				customize_f(t_format *fmt, char **str, long *len, int sign);
+void				add_sign_f(t_format *fmt, char **str, long *len, int sign);
 void				fprecis(char **str, long precis, int *carry, int base);
 char				*width_di(t_format *fmt, char *nbr, int len_nbr, int sign);
 char				*calcul_entier(char *tab, int size, t_format *format);
 char				*calcul_fract(char *bat, int size, t_format *format);
-void				custom_nanf(t_format *fmt, char **str, unsigned int *len);
-void				custom_inff(t_format *fmt, char **str,
-							unsigned int *len, int sign);
+void				custom_nanf(t_format *fmt, char **str, long *len);
+void				custom_inff(t_format *fmt, char **str, long *len, int sign);
 int					ft_printf(const char *format, ...);
 int					ft_sprintf(char **str, const char *format, ...);
 int					ft_vprintf(const char *format, va_list ap);

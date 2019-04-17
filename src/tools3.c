@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 09:01:37 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:03:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void				foisdix(char **str, int *len)
 	*str = new;
 }
 
-char				*int_add(char *tab, unsigned int *oldsize, int data)
+void				int_add(char **tab, unsigned int *oldsize, int data)
 {
 	char			*new;
 	unsigned int	i;
@@ -39,23 +39,22 @@ char				*int_add(char *tab, unsigned int *oldsize, int data)
 	new = ft_strnew(*oldsize + 1);
 	while (i < *oldsize)
 	{
-		new[i] = tab[i];
+		new[i] = (*tab)[i];
 		i++;
 	}
 	new[i] = data + '0';
 	if (*oldsize != 0)
-		free(tab);
+		free(*tab);
 	(*oldsize)++;
-	return (new);
+	*tab = new;
 }
 
-char				*ft_pointjoin(t_format *fmt, char *s1, char *s2,
-							unsigned int *len)
+char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len)
 {
-	unsigned int	len_s1;
-	unsigned int	len_s2;
-	unsigned int	i;
-	char			*str;
+	long		len_s1;
+	long		len_s2;
+	long		i;
+	char		*str;
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);

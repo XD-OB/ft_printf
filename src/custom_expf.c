@@ -6,16 +6,16 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 09:35:51 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 10:21:44 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 12:33:16 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void			nanf_annex(char **res, char *s, unsigned int *len, int wid)
+static void		nanf_annex(char **res, char *s, long *len, int wid)
 {
-	unsigned int	i;
-	unsigned int	j;
+	long		i;
+	long		j;
 
 	i = wid;
 	j = *len;
@@ -26,11 +26,11 @@ static void			nanf_annex(char **res, char *s, unsigned int *len, int wid)
 	*len = wid;
 }
 
-void				custom_nanf(t_format *fmt, char **str, unsigned int *len)
+void			custom_nanf(t_format *fmt, char **str, long *len)
 {
-	unsigned int	i;
-	unsigned int	j;
-	char			*res;
+	long		i;
+	long		j;
+	char		*res;
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
@@ -50,12 +50,11 @@ void				custom_nanf(t_format *fmt, char **str, unsigned int *len)
 	*str = res;
 }
 
-static char			*inff_minus(t_format *fmt, char *str, unsigned int *len,
-							int sign)
+static char		*inff_minus(t_format *fmt, char *str, long *len, int sign)
 {
-	unsigned int	i;
-	unsigned int	j;
-	char			*res;
+	long		i;
+	long		j;
+	char		*res;
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
@@ -79,11 +78,10 @@ static char			*inff_minus(t_format *fmt, char *str, unsigned int *len,
 **	var:	0:i			1:j
 */
 
-void				custom_inff(t_format *fmt, char **str,
-						unsigned int *len, int sign)
+void			custom_inff(t_format *fmt, char **str, long *len, int sign)
 {
-	unsigned int	var[2];
-	char			*res;
+	long		var[2];
+	char		*res;
 
 	if (ft_strchr(fmt->flag, '-'))
 		res = inff_minus(fmt, *str, len, sign);

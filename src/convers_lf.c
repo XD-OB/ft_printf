@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 03:59:42 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/15 16:34:35 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 13:09:14 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,17 @@ char		*get_entierld(long exp, t_ldouble db, t_format *format)
 	new_exp = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
-	tab = (db.zone.int_b) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
+	(db.zone.int_b) ? int_add(&tab, &size, 1) : int_add(&tab, &size, 0);
 	i = 63;
 	while (--i >= 0 && new_exp > 0)
 	{
-		tab = (1 & (bin_mantis >> i)) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
+		(1 & (bin_mantis >> i)) ?
+			int_add(&tab, &size, 1) : int_add(&tab, &size, 0);
 		new_exp--;
 	}
 	while (new_exp > 0)
 	{
-		tab = int_add(tab, &size, 0);
+		int_add(&tab, &size, 0);
 		new_exp--;
 	}
 	i = -1;
@@ -65,16 +66,17 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 	{
 		if (new_exp < -1)
 		{
-			tab = int_add(tab, &size, 0);
+			int_add(&tab, &size, 0);
 			new_exp++;
 		}
 		else if (new_exp == -1)
 		{
-			tab = (db.zone.int_b) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
+			(db.zone.int_b) ? int_add(&tab, &size, 1) : int_add(&tab, &size, 0);
 			new_exp++;
 		}
 		else
-			tab = ((bin_mantis >> len_b) & 1) ? int_add(tab, &size, 1) : int_add(tab, &size, 0);
+			((bin_mantis >> len_b) & 1) ?
+				int_add(&tab, &size, 1) : int_add(&tab, &size, 0);
 		len_b--;
 	}
 	res = calcul_fract(tab, size, format);
@@ -85,7 +87,7 @@ char		*get_fractld(long exp, t_ldouble db, t_format *format)
 void            conv_llf(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 {
 	t_ldouble	db;
-	unsigned int	len;
+	long	len;
 	char		*fract;
 	char		*entier;
 	char		*str;

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:48:46 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 07:15:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 12:46:52 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 **	new[2]:		new[0]: new_entier	new[1]: new_fract
-** 	len[3]:	len[0]: len_e	len[1]: len_f	len[2]: pos   len[3]: len
+** 	len[5]:	0: len_e	1: len_f	2: pos   3: len   4:carry
 */
 
 static void		addj_annex(char **n, char **entier, char **fract, long *l)
@@ -55,48 +55,59 @@ static int		addjust_ee(char **entier, char **fract, long *len)
 	return (p);
 }
 
+void			weapon_ee(char **entier, char **fract, long *len, int x)
+{
+	char		*tmp;
+
+	if (!x)
+	{
+		if (len[4] == 1)
+		{
+			tmp = *entier;
+			*entier = ft_strsum(tmp, "1", 10);
+			if (ft_strlen(*entier) > 1)
+			{
+				tmp = *entier;
+				*entier = ft_strndup(*entier, 1);
+				if (len[3] >= 0)
+					len[2]++;
+				else
+					len[2]--;
+			}
+			free(tmp);
+		}
+		return ;
+	}
+	len[4] = 0;
+	len[0] = ft_strlen(*entier);
+	len[1] = ft_strlen(*fract);
+	len[2] = addjust_ee(entier, fract, len);
+}
+
 void			conv_ee(t_lst *lst, t_chr **chr, t_double db, int is_g)
 {
 	char		*entier;
 	char		*fract;
-	char		*str;
-	long		len[4];
-	int			carry;
+	long		len[5];
 
-	carry = 0;
 	if (pre_d_calc(db, chr, lst, is_g))
 		return ;
 	entier = get_entier(int_exp(db.zone.exponent, D_BIAS),
 			db.zone.mantissa, D_BIAS, lst->format);
 	fract = get_fract(int_exp(db.zone.exponent, D_BIAS),
 			db.zone.mantissa, D_BIAS, lst->format);
-	len[0] = ft_strlen(entier);
-	len[1] = ft_strlen(fract);
+	weapon_ee(&entier, &fract, len, 1);
 	if (is_g)
-		lst->format->precis = ft_max(0,
-				(lst->format->precis - (long)ft_strlen(entier)));
-	len[2] = addjust_ee(&entier, &fract, len);
-	eprecis(&fract, lst->format->precis, &carry, &len[1]);
-	if (carry == 1)
-	{
-		str = entier;
-		entier = ft_strsum(str, "1", 10);
-		if (ft_strlen(entier) > 1)
-		{
-			str = entier;
-			entier = ft_strndup(entier, 1);
-			(len[3] >= 0) ? len[2]++ : len[2]--;
-		}
-		free(str);
-	}
-	str = ejoin(lst->format, entier, fract, len);
-	(*chr)->len = len[3];
+		lst->format->precis = ft_max(0, (lst->format->precis - len[0]));
+	eprecis(&fract, lst->format->precis, &len[4], &len[1]);
+	weapon_ee(&entier, &fract, len, 0);
+	(*chr)->str = ejoin(lst->format, entier, fract, len);
 	(lst->format->width > len[3]) ?
-		customize_f(lst->format, &str, &((*chr)->len), db.zone.sign) :
-		add_sign_f(lst->format, &str, &((*chr)->len), db.zone.sign);
+		customize_f(lst->format, &((*chr)->str), &len[3], db.zone.sign) :
+		add_sign_f(lst->format, &((*chr)->str), &len[3], db.zone.sign);
+	(*chr)->len = len[3];
 	free(entier);
 	free(fract);
-	(*chr)->str = str;
 }
 
 void			conv_lee(t_lst *lst, t_chr **chr, va_list ap, int is_g)
@@ -104,11 +115,8 @@ void			conv_lee(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 	t_ldouble	db;
 	char		*entier;
 	char		*fract;
-	char		*str;
-	long		len[4];
-	int			carry;
+	long		len[5];
 
-	carry = 0;
 	flag_star(lst->format, ap);
 	db.ld = (flag_dollar(lst)) ?
 		va_arg(*(lst->arglist), long double) : va_arg(ap, long double);
@@ -117,24 +125,16 @@ void			conv_lee(t_lst *lst, t_chr **chr, va_list ap, int is_g)
 		return ;
 	entier = get_entierld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
 	fract = get_fractld(int_exp(db.zone.exponent, LD_BIAS), db, lst->format);
-	len[0] = ft_strlen(entier);
-	len[1] = ft_strlen(fract);
+	weapon_ee(&entier, &fract, len, 1);
 	if (is_g)
 		lst->format->precis = ft_max(0, (lst->format->precis - len[0]));
-	len[2] = addjust_ee(&entier, &fract, len);
-	eprecis(&fract, lst->format->precis, &carry, &len[1]);
-	if (carry == 1)
-	{
-		str = entier;
-		entier = ft_strsum(str, "1", 10);
-		free(str);
-	}
-	str = ejoin(lst->format, entier, fract, len);
+	eprecis(&fract, lst->format->precis, &len[4], &len[1]);
+	weapon_ee(&entier, &fract, len, 0);
+	(*chr)->str = ejoin(lst->format, entier, fract, len);
+	(lst->format->width > len[3]) ?
+		customize_f(lst->format, &((*chr)->str), &len[3], db.zone.sign) :
+		add_sign_f(lst->format, &((*chr)->str), &len[3], db.zone.sign);
 	(*chr)->len = len[3];
-	(lst->format->width > (int)len) ?
-		customize_f(lst->format, &str, &((*chr)->len), db.zone.sign) :
-		add_sign_f(lst->format, &str, &((*chr)->len), db.zone.sign);
 	free(entier);
 	free(fract);
-	(*chr)->str = str;
 }
