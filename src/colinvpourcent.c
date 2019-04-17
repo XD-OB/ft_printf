@@ -6,15 +6,15 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:20:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/06 01:14:18 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 06:27:01 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void			conv_invalid(t_chr **mychr, t_format *format, va_list ap)
+void		conv_invalid(t_chr **mychr, t_format *format, va_list ap)
 {
-	int			i;
+	int		i;
 
 	flag_star(format, ap);
 	i = -1;
@@ -34,7 +34,7 @@ void			conv_invalid(t_chr **mychr, t_format *format, va_list ap)
 	}
 }
 
-void			conv_color(t_lst *lst, t_chr **mychr)
+void		conv_color(t_lst *lst, t_chr **mychr)
 {
 	(*mychr)->len = 0;
 	if (!ft_strcmp(lst->format->flag, "red"))

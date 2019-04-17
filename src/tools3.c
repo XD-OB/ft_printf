@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/12 01:09:41 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 06:36:02 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-void	foisdix(char **str, int *len)
+void				foisdix(char **str, int *len)
 {
 	char	*new;
 	int	i;
@@ -30,30 +30,7 @@ void	foisdix(char **str, int *len)
 	*str = new;
 }
 
-unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
-{
-	unsigned long long int	n;
-
-	if (fmt->convers == 'U')
-		n = (unsigned long int)va_arg(ap, unsigned long int);
-	else if (ft_strstr(fmt->flag, "hh"))
-		n = (unsigned char)va_arg(ap, unsigned int);
-	else if (ft_strstr(fmt->flag, "h"))
-		n = (unsigned short int)va_arg(ap, unsigned int);
-	else if (ft_strstr(fmt->flag, "ll"))
-		n = (unsigned long long int)va_arg(ap, unsigned long long int);
-	else if (ft_strstr(fmt->flag, "l"))
-		n = (unsigned long int)va_arg(ap, unsigned long int);
-	else if (ft_strstr(fmt->flag, "z"))
-		n = (size_t)va_arg(ap, size_t);
-	else if (ft_strstr(fmt->flag, "j"))
-		n = (size_t)va_arg(ap, uintmax_t);
-	else
-		n = (unsigned int)va_arg(ap, unsigned int);
-	return (n);
-}
-
-char			*int_add(char *tab, unsigned int *oldsize, int data)
+char				*int_add(char *tab, unsigned int *oldsize, int data)
 {
 	char				*new;
 	unsigned int		i;
@@ -72,7 +49,7 @@ char			*int_add(char *tab, unsigned int *oldsize, int data)
 	return (new);
 }
 
-char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
+char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
 {
 	unsigned int	len_s1;
 	unsigned int	len_s2;
@@ -100,7 +77,7 @@ char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
 	return (str);
 }
 
-void		sumstr(char **s1, char *s2, int base)
+void				sumstr(char **s1, char *s2, int base)
 {
 	char	*tmp;
 
@@ -110,7 +87,7 @@ void		sumstr(char **s1, char *s2, int base)
 	tmp = NULL;
 }
 
-void		multstr(char **s1, char *s2, int base)
+void				multstr(char **s1, char *s2, int base)
 {
 	char	*tmp;
 

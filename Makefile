@@ -17,11 +17,12 @@ LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr ft_printhe
 
 LIBFT_OBJ = $(addprefix libft/, $(addsuffix .o, $(LIBFT)))
 
-LIB_FT_PRINTF = ft_printf check parse tools tools2 tools3 date noprint\
+LIB_FT_PRINTF = ft_printf check parse tools tools2 tools3 date noprint cast\
 			flags flags2 engine convers_c convers_s precalc delete_me put_chr\
 		   	convers_efgh convers_ee convers_xb convers_di colinvpourcent\
-			ssnprintf convers_f vddnprintf convers_o convers_u \
-			convers_u_flag_prec convers_p getcalcul_dld tools_dld convers_lf
+			ssnprintf convers_f vddnprintf convers_o convers_u convers_di_width\
+			convers_u_flag_prec convers_p getcalcul_dld tools_dld convers_lf\
+			convers_ee_tools
 
 LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 

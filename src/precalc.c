@@ -118,7 +118,7 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 		(*chr)->len = len;
 		return (1);
 	}
-	if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
+	if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
 	{
 		str = ft_strdup("inf");
 		len = 3;
@@ -128,7 +128,7 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 		(*chr)->len = len;
 		return (1);
 	}
-	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= 2047))
+	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
 	{
 		str = ft_strdup("nan");
 		len = 3;
@@ -166,7 +166,7 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 		(*chr)->len = len;
 		return (1);
 	}
-	if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
+	if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
 	{
 		str = ft_strdup("inf");
 		len = 3;
@@ -176,7 +176,7 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 		(*chr)->len = len;
 		return (1);
 	}
-	if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= 32767))
+	if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
 	{
 		str = ft_strdup("nan");
 		len = 3;

@@ -6,30 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 15:15:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 07:50:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 06:38:20 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-static long long int	cast_di(va_list ap, char *flag)
-{
-	long long int		d;
-
-	if (ft_strstr(flag, "hh"))
-		d = (char)va_arg(ap, int);
-	else if (ft_strstr(flag, "h"))
-		d = (short int)va_arg(ap, int);
-	else if (ft_strstr(flag, "ll"))
-		d = va_arg(ap, long long int);
-	else if (ft_strstr(flag, "l"))
-		d = va_arg(ap, long int);
-	else if (ft_strstr(flag, "j"))
-		d = va_arg(ap, intmax_t);
-	else
-		d = (int)va_arg(ap, int);
-	return (d);
-}
 
 static int		sign_n(long long int n)
 {
@@ -40,55 +21,10 @@ static int		sign_n(long long int n)
 	return (0);
 }
 
-static int		w_di_annex(char **res, t_format *fmt, char *nbr, int len_nbr)
-{
-	int		i;
-
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		i = -1;
-		while (++i < len_nbr)
-			(*res)[i] = nbr[i];
-		while (i < fmt->width)
-			(*res)[i++] = ' ';
-		return (1);
-	}
-	return (0);
-}
-
-static char		*width_di(t_format *fmt, char *nbr, int len_nbr, int sign)
-{
-	int	z;
-	char	*res;
-	int	i;
-	int	j;
-	char	c;
-
-	z = (sign == 0) ? 1 : -1;
-	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
-	res[fmt->width] = '\0';
-	if (w_di_annex(&res, fmt, nbr, len_nbr) == 1)
-		return (res);
-	c = (ft_strchr(fmt->flag, '0') && fmt->precis == z) ? '0' : ' ';
-	i = fmt->width - 1;
-	j = len_nbr - 1;
-	while (j >= 0)
-		res[i--] = nbr[j--];
-	while (i >= 0)
-		res[i--] = c;
-	if (c == '0' && (ft_strpbrk(fmt->flag, "+ ") || sign == -1))
-	{
-		res[0] = (sign == -1) ? '-' :
-			((ft_strchr(fmt->flag, '+')) ? '+' : ' ');
-		res[fmt->width - len_nbr] = '0';
-	}
-	return (res);
-}
-
 static void		di_zero(t_chr **chr, t_format *fmt)
 {
 	char		*nbr;
-	int		len_nbr;
+	int			len_nbr;
 
 	if (fmt->precis == -1)
 		fmt->precis = 1;
@@ -120,8 +56,8 @@ static void		di_zero(t_chr **chr, t_format *fmt)
 static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
 {
 	char		*nbr;
-	int		i;
-	int		j;
+	int			i;
+	int			j;
 
 	nbr = (char*)malloc(sizeof(char) * (len[0] + 1));
 	nbr[len[0]] = '\0';
@@ -143,7 +79,7 @@ static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
 static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
 {
 	char		*nbr;
-	int		len[2];
+	int			len[2];
 
 	len[1] = ft_strlen(num);
 	len[0] = ft_max(fmt->precis, len[1]);
@@ -166,12 +102,13 @@ static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
 void			conv_di(t_lst *lst, t_chr **chr, va_list ap)
 {
 	long long int	n;
-	int		sign;
-	char		*num;
+	int				sign;
+	char			*num;
 
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ?
-		cast_di(*(lst->arglist), lst->format->flag) : cast_di(ap, lst->format->flag);
+		cast_di(*(lst->arglist), lst->format->flag) :
+		cast_di(ap, lst->format->flag);
 	sign = sign_n(n);
 	if (sign == 0)
 		di_zero(chr, lst->format);

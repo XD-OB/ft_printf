@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:44:15 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/08 03:49:42 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/17 06:24:31 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ typedef struct		s_format
 {
 	char			convers;
 	char			*flag;
-	long				precis;
-	long				width;
+	long			precis;
+	long			width;
 	int				pos;
 	int				argn;
 }					t_format;
