@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 06:36:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 09:01:37 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void				foisdix(char **str, int *len)
 {
 	char	*new;
-	int	i;
+	int		i;
 
 	i = 0;
-	new = ft_strnew(*len  + 1);
+	new = ft_strnew(*len + 1);
 	while (i < *len)
 	{
 		new[i] = (*str)[i];
@@ -32,8 +32,8 @@ void				foisdix(char **str, int *len)
 
 char				*int_add(char *tab, unsigned int *oldsize, int data)
 {
-	char				*new;
-	unsigned int		i;
+	char			*new;
+	unsigned int	i;
 
 	i = 0;
 	new = ft_strnew(*oldsize + 1);
@@ -49,12 +49,13 @@ char				*int_add(char *tab, unsigned int *oldsize, int data)
 	return (new);
 }
 
-char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
+char				*ft_pointjoin(t_format *fmt, char *s1, char *s2,
+							unsigned int *len)
 {
 	unsigned int	len_s1;
 	unsigned int	len_s2;
 	unsigned int	i;
-	char		*str;
+	char			*str;
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
@@ -79,7 +80,7 @@ char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, unsigned int *len)
 
 void				sumstr(char **s1, char *s2, int base)
 {
-	char	*tmp;
+	char			*tmp;
 
 	tmp = *s1;
 	*s1 = ft_strsum(*s1, s2, base);
@@ -89,7 +90,7 @@ void				sumstr(char **s1, char *s2, int base)
 
 void				multstr(char **s1, char *s2, int base)
 {
-	char	*tmp;
+	char			*tmp;
 
 	tmp = *s1;
 	*s1 = ft_strmult(*s1, s2, base);

@@ -1,52 +1,49 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools2.c                                           :+:      :+:    :+:   */
+/*   str_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/03 04:07:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 09:06:32 by obelouch         ###   ########.fr       */
+/*   Created: 2019/04/17 09:02:45 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/17 09:05:45 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int			is_format(char c)
+void		put_spstr(char *str)
 {
-	char	*ref;
-	int		i;
-
-	i = 0;
-	ref = "cspdiouUxXfegrkb}%";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
+	while (*str)
+	{
+		if (*str != '%')
+			ft_putchar(*str);
+		str++;
+	}
 }
 
-int			is_postflag(char c)
+void		put_spstrn(char *str, size_t n)
 {
-	char	*ref;
-	int		i;
+	size_t	i;
 
 	i = 0;
-	ref = "lLh+-rjz";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
+	while (*str && i < n)
+	{
+		if (*str != '%')
+			ft_putchar(*str);
+		str++;
+		i++;
+	}
 }
 
-int			is_preflag(char c)
+char		*cut_str(char *str, int p1, int p2)
 {
-	char	*ref;
+	char	*ret;
 	int		i;
 
-	i = 0;
-	ref = " 0+-#'*$r";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
+	i = p1 - 1;
+	ret = ft_strnew(p2 - p1 + 1);
+	while (++i <= p2)
+		ret[i - p1] = str[i];
+	return (ret);
 }

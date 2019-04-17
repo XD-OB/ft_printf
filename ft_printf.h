@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 07:35:53 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 09:35:29 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,9 @@ void				fprecis(char **str, long precis, int *carry, int base);
 char				*width_di(t_format *fmt, char *nbr, int len_nbr, int sign);
 char				*calcul_entier(char *tab, int size, t_format *format);
 char				*calcul_fract(char *bat, int size, t_format *format);
+void				custom_nanf(t_format *fmt, char **str, unsigned int *len);
+void				custom_inff(t_format *fmt, char **str,
+							unsigned int *len, int sign);
 int					ft_printf(const char *format, ...);
 int					ft_sprintf(char **str, const char *format, ...);
 int					ft_vprintf(const char *format, va_list ap);

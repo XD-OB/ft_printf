@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:40:38 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/04 22:14:03 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 08:36:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,37 @@ void		flag_zero(char **str, t_format *format)
 	}
 }
 
+void		add_minus(char **str)
+{
+	char	*new;
+	int		len;
+
+	len = ft_strlen(*str) + 1;
+	new = (char*)malloc(sizeof(char) * (len + 1));
+	new[len] = '\0';
+	ft_strcpy(new, *str);
+	new[len - 1] = '-';
+	free(*str);
+	*str = new;
+}
+
 void		flag_star(t_format *format, va_list ap)
 {
+	int		n;
+
 	if (ft_strchr(format->flag, '*'))
-		format->width = va_arg(ap, int);
+	{
+		n = va_arg(ap, int);
+		if (n < 0)
+		{
+			n *= -1;
+			if (!ft_strchr(format->flag, '-'))
+				add_minus(&(format->flag));
+		}
+		format->width = n;
+	}
 	if (format->precis == -2)
-		format->precis = (int)va_arg(ap, int);
+		format->precis = va_arg(ap, int);
 }
 
 int			flag_dollar(t_lst *lst)

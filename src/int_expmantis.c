@@ -1,52 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools2.c                                           :+:      :+:    :+:   */
+/*   int_expmantis.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/03 04:07:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 09:06:32 by obelouch         ###   ########.fr       */
+/*   Created: 2019/04/17 09:41:04 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/17 09:41:52 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int			is_format(char c)
+long				int_exp(long bin_exp, int bias)
 {
-	char	*ref;
-	int		i;
+	long			int_exp;
+	long			ref;
 
-	i = 0;
-	ref = "cspdiouUxXfegrkb}%";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
+	int_exp = 0;
+	ref = (bias == D_BIAS) ? 2048 : 32768;
+	while (ref >>= 1)
+		int_exp += (bin_exp & ref);
+	return (int_exp);
 }
 
-int			is_postflag(char c)
+long long			int_mants(long bin_mants, int bias)
 {
-	char	*ref;
-	int		i;
+	long long		int_mants;
+	int				ref;
 
-	i = 0;
-	ref = "lLh+-rjz";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
-}
-
-int			is_preflag(char c)
-{
-	char	*ref;
-	int		i;
-
-	i = 0;
-	ref = " 0+-#'*$r";
-	while (ref[i])
-		if (c == ref[i++])
-			return (1);
-	return (0);
+	int_mants = 0;
+	ref = (bias == D_BIAS) ? 53 : 63;
+	while (--ref)
+		int_mants += ((bin_mants >> ref) & 1);
+	return (int_mants);
 }

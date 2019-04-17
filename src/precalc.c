@@ -1,9 +1,20 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   precalc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/17 09:27:28 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/17 09:41:46 by obelouch         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-static char		*ft_strzero(t_format *fmt, unsigned int *len, int is_g)
+static char			*ft_strzero(t_format *fmt, unsigned int *len, int is_g)
 {
-	char		*res;
+	char			*res;
 
 	if (is_g && (!ft_strchr(fmt->flag, '#') || !fmt->precis))
 		*len = 1;
@@ -20,89 +31,14 @@ static char		*ft_strzero(t_format *fmt, unsigned int *len, int is_g)
 	return (res);
 }
 
-static void		custom_nanf(t_format *fmt, char **str, unsigned int *len)
+int					pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 {
-	unsigned int	i;
-	unsigned int	j;
-	char		*res;
-
-	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
-	res[fmt->width] = '\0';
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		i = 0;
-		j = 0;
-		while (j < *len)
-			res[i++] = (*str)[j++];
-		*len = fmt->width;
-		while (i < *len)
-			res[i++] = ' ';
-	}
-	else
-	{
-		i = fmt->width;
-		j = *len;
-		while (j > 0)
-			res[--i] = (*str)[--j];
-		while (i > 0)
-			res[--i] = ' ';
-		*len = fmt->width;
-	}
-	free(*str);
-	*str = res;
-}
-
-static void		custom_inff(t_format *fmt, char **str, unsigned int *len, int sign)
-{
-	unsigned int	i;
-	unsigned int	j;
-	char			*res;
-
-	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
-	res[fmt->width] = '\0';
-	if (ft_strchr(fmt->flag, '-'))
-	{
-		i = 0;
-		j = 0;
-		if (sign)
-			res[i++] = '-';
-		else if (ft_strchr(fmt->flag, '+'))
-			res[i++] = '+';
-		else if (ft_strchr(fmt->flag, ' '))
-			res[i++] = ' ';
-		while (j < *len)
-			res[i++] = (*str)[j++];
-		*len = fmt->width;
-		while (i < *len)
-			res[i++] = ' ';
-	}
-	else
-	{
-		i = fmt->width;
-		j = *len;
-		while (j > 0)
-			res[--i] = (*str)[--j];
-		if (sign)
-			res[--i] = '-';
-		else if (ft_strchr(fmt->flag, '+'))
-			res[--i] = '+';
-		else if (ft_strchr(fmt->flag, ' '))
-			res[--i] = ' ';
-		while (i > 0)
-			res[--i] = ' ';
-		*len = fmt->width;
-	}
-	free(*str);
-	*str = res;
-}
-
-int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
-{
-	char		*str;
-	char		*tmp;
+	char			*str;
+	char			*tmp;
 	unsigned int	len;
 
-	if (!int_mants(db.zone.mantissa, D_BIAS) && !int_exp(db.zone.exponent, D_BIAS))
+	if (!int_mants(db.zone.mantissa, D_BIAS) &&
+		!int_exp(db.zone.exponent, D_BIAS))
 	{
 		str = ft_strzero(lst->format, &len, is_g);
 		if (ft_strchr("eE", lst->format->convers))
@@ -112,23 +48,27 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 			str = tmp;
 			len += 4;
 		}
-		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
-			: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(lst->format->width > (int)len) ?
+			customize_f(lst->format, &str, &len, db.zone.sign) :
+			add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
 	}
-	if (!int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
+	if (!int_mants(db.zone.mantissa, D_BIAS) &&
+		(int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
 	{
 		str = ft_strdup("inf");
 		len = 3;
-		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
-			: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(lst->format->width > (int)len) ?
+			custom_inff(lst->format, &str, &len, db.zone.sign) :
+			add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
 	}
-	if (int_mants(db.zone.mantissa, D_BIAS) && (int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
+	if (int_mants(db.zone.mantissa, D_BIAS) &&
+		(int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
 	{
 		str = ft_strdup("nan");
 		len = 3;
@@ -141,16 +81,16 @@ int             pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 	return (0);
 }
 
-
-int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
+int					pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 {
-	char		*str;
-	char		*tmp;
+	char			*str;
+	char			*tmp;
 	unsigned int	len;
 
 	if (is_g)
 		lst->format->precis = ft_max(lst->format->precis - 1, 0);
-	if (!int_mants(db.zone.mantissa, LD_BIAS) && !int_exp(db.zone.exponent, LD_BIAS))
+	if (!int_mants(db.zone.mantissa, LD_BIAS) &&
+		!int_exp(db.zone.exponent, LD_BIAS))
 	{
 		str = ft_strzero(lst->format, &len, is_g);
 		if (ft_strchr("eE", lst->format->convers))
@@ -160,23 +100,27 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 			str = tmp;
 			len += 4;
 		}
-		(lst->format->width > (int)len) ? customize_f(lst->format, &str, &len, db.zone.sign)
-			: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(lst->format->width > (int)len) ?
+			customize_f(lst->format, &str, &len, db.zone.sign) :
+			add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
 	}
-	if (!int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
+	if (!int_mants(db.zone.mantissa, LD_BIAS) &&
+		(int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
 	{
 		str = ft_strdup("inf");
 		len = 3;
-		(lst->format->width > (int)len) ? custom_inff(lst->format, &str, &len, db.zone.sign)
-			: add_sign_f(lst->format, &str, &len, db.zone.sign);
+		(lst->format->width > (int)len) ?
+			custom_inff(lst->format, &str, &len, db.zone.sign) :
+			add_sign_f(lst->format, &str, &len, db.zone.sign);
 		(*chr)->str = str;
 		(*chr)->len = len;
 		return (1);
 	}
-	if (int_mants(db.zone.mantissa, LD_BIAS) && (int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
+	if (int_mants(db.zone.mantissa, LD_BIAS) &&
+		(int_exp(db.zone.exponent, LD_BIAS) >= MAX_LD))
 	{
 		str = ft_strdup("nan");
 		len = 3;
@@ -187,28 +131,4 @@ int             pre_ld_calc(t_ldouble db, t_chr **chr, t_lst *lst, int is_g)
 		return (1);
 	}
 	return (0);
-}
-
-long            int_exp(long bin_exp, int bias)
-{
-	long    ref;
-	long	int_exp;
-
-	int_exp = 0;
-	ref = (bias == D_BIAS) ? 2048 : 32768;
-	while (ref >>= 1)
-		int_exp += (bin_exp & ref);
-	return (int_exp);
-}
-
-long long		int_mants(long bin_mants, int bias)
-{
-	int				ref;
-	long long    	int_mants;
-
-	int_mants = 0;
-	ref = (bias == D_BIAS) ? 53 : 63;
-	while (--ref)
-		int_mants += ((bin_mants >> ref) & 1);
-	return (int_mants);
 }

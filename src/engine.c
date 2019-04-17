@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 07:07:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 08:53:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,21 @@ void			semi_load(char *format, t_lst *lst, int *p, t_chr **curr)
 	}
 }
 
+char			*strnspdup(char *s, unsigned int *size)
+{
+	int			len;
+	len = ft_strlen(s);
+	if (s[len - 1] == '%')
+		len--;
+	else
+	{
+		*size = len;
+		return (ft_strdup(s));
+	}
+	*size = len;
+	return (ft_strndup(s, len));
+}
+
 t_chr			*load_chr(char *format, t_lst *lst)
 {
 	t_chr		*mychr;
@@ -57,8 +72,7 @@ t_chr			*load_chr(char *format, t_lst *lst)
 	{
 		curr->next = (t_chr*)malloc(sizeof(t_chr));
 		curr = curr->next;
-		curr->str = ft_strdup(&format[p[0]]);
-		curr->len = ft_strlen(&format[p[0]]);
+		curr->str = strnspdup(&format[p[0]], &(curr->len));
 		curr->next = NULL;
 	}
 	return (mychr);
