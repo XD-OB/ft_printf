@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 06:54:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:35:53 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void				sumstr(char **s1, char *s2, int base);
 void				multstr(char **s1, char *s2, int base);
 void				foisdix(char **str, int *len);
 void				put_spstr(char *str);
+void				put_spstrn(char *str, size_t n);
 void				print_lst(t_lst *lst);
 void				free_lst(t_lst **lst);
 t_lst				*parse_format(va_list ap, char *str, int *pflag);

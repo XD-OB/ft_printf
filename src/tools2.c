@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 04:07:35 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/10 00:30:01 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 07:35:30 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,21 @@ void		put_spstr(char *str)
 		if (*str != '%')
 			ft_putchar(*str);
 		str++;
+	}
+}
+
+
+void		put_spstrn(char *str, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (*str && i < n)
+	{
+		if (*str != '%')
+			ft_putchar(*str);
+		str++;
+		i++;
 	}
 }
 
