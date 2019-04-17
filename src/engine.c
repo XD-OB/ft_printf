@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 08:53:47 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:00:00 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void			semi_load(char *format, t_lst *lst, int *p, t_chr **curr)
 char			*strnspdup(char *s, unsigned int *size)
 {
 	int			len;
+
 	len = ft_strlen(s);
 	if (s[len - 1] == '%')
 		len--;

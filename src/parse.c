@@ -6,14 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:15:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/08 06:02:18 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:32:06 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
-int		has_color(char *str)
+int			has_color(char *str)
 {
 	int	len;
 
@@ -28,7 +27,7 @@ int		has_color(char *str)
 	return (len);
 }
 
-char	*ft_strcolor(char *str)
+char		*ft_strcolor(char *str)
 {
 	char	*res;
 	int		len;
@@ -44,10 +43,11 @@ char	*ft_strcolor(char *str)
 	return (res);
 }
 
-int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
+int			check_fill(va_list tmp, char *str, int pos,
+					t_lst *curr)
 {
-	char		*flag;
-	char		*p;
+	char	*flag;
+	char	*p;
 
 	flag = ft_strnew(100);
 	p = flag;
@@ -88,7 +88,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		{
 			curr->format->width = ft_atoi(str);
 			while (ft_isdigit(*str))
-				str++;	
+				str++;
 		}
 		if (!*str)
 		{
@@ -110,8 +110,9 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		}
 		while (is_postflag(*str))
 		{
-			if ((*str == 'l' && !ft_strstr(flag, "ll")) || !ft_strchr(flag, *str)
-					|| (*str == 'h' && !ft_strstr(flag, "hh")))
+			if ((*str == 'l' && !ft_strstr(flag, "ll"))
+				|| !ft_strchr(flag, *str)
+				|| (*str == 'h' && !ft_strstr(flag, "hh")))
 			{
 				*p = *str;
 				p++;
@@ -129,7 +130,7 @@ int		check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 	return (0);
 }
 
-void	init_node(t_lst *node)
+void		init_node(t_lst *node)
 {
 	node->arglist = NULL;
 	node->format->precis = -1;
@@ -139,9 +140,8 @@ void	init_node(t_lst *node)
 	node->format->argn = 0;
 }
 
-t_lst	*parse_format(va_list ap, char *str, int *pflag)
+t_lst		*parse_format(va_list ap, char *str, int *pflag)
 {
-
 	t_lst	*head;
 	t_lst	*node;
 	int		i;
@@ -161,9 +161,7 @@ t_lst	*parse_format(va_list ap, char *str, int *pflag)
 			i++;
 			if (check_fill(ap, &str[i], i - 1, node) != -1)
 			{
-
 				head = add_node(head, node);
-				//i++;
 				while (str[i] && str[i] != node->format->convers)
 					i++;
 			}

@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 02:48:52 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/03 04:55:11 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 17:59:06 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,12 +99,12 @@ static char				*e_date(char **times, int len)
 **	var:		var[0] : s		var[1] : y		var[2] : i
 */
 
-void				conv_k(t_format *format, t_chr **mychr, va_list ap)
+void					conv_k(t_format *format, t_chr **mychr, va_list ap)
 {
-	long int		var[3];
+	long int			var[3];
 	unsigned int		date[5];
-	char			*res;
-	char			*times[6];
+	char				*times[6];
+	char				*res;
 	unsigned int		len;
 
 	var[0] = (long int)va_arg(ap, long int);

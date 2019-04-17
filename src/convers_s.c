@@ -6,15 +6,15 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 03:21:07 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 03:08:27 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 17:50:26 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*null_str(t_format *fmt, int *len_str)
+static char		*null_str(t_format *fmt, int *len_str)
 {
-	char	*str;
+	char		*str;
 
 	if (fmt->precis == 0)
 	{
@@ -37,11 +37,11 @@ static char	*null_str(t_format *fmt, int *len_str)
 	return (str);
 }
 
-static char	*s_str(t_format *fmt, char *str, int *len_str)
+static char		*s_str(t_format *fmt, char *str, int *len_str)
 {
-	char	*res;
-	char	c;
-	int	i;
+	char		*res;
+	char		c;
+	int			i;
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
@@ -66,9 +66,9 @@ static char	*s_str(t_format *fmt, char *str, int *len_str)
 	return (res);
 }
 
-static char	*mystr(t_format *fmt, char *s, int *len_str)
+static char		*mystr(t_format *fmt, char *s, int *len_str)
 {
-	char	*str;
+	char		*str;
 
 	if (!s)
 		str = null_str(fmt, len_str);
@@ -86,11 +86,11 @@ static char	*mystr(t_format *fmt, char *s, int *len_str)
 	return (str);
 }
 
-void		conv_s(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_s(t_lst *lst, t_chr **chr, va_list ap)
 {
-	char	*s;
-	char	*str;
-	int	len_str;
+	int			len_str;
+	char		*str;
+	char		*s;
 
 	flag_star(lst->format, ap);
 	if (flag_dollar(lst))

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   convers_xxoub.c                                    :+:      :+:    :+:   */
+/*   convers_xb_tools.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/03 17:35:22 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 17:48:51 by obelouch         ###   ########.fr       */
+/*   Created: 2019/04/17 17:54:35 by obelouch          #+#    #+#             */
+/*   Updated: 2019/04/17 17:54:57 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char		*o_zerores(t_format *fmt, char *nbr, int len_nbr, char c)
+static char		*xx_zero_res(t_format *fmt, char *nbr, int len_nbr, char c)
 {
 	char		*res;
 	int			i;
@@ -41,46 +41,24 @@ static char		*o_zerores(t_format *fmt, char *nbr, int len_nbr, char c)
 	return (res);
 }
 
-static char		*o_zero(t_format *fmt)
+char			*xx_zero(t_format *fmt)
 {
-	char		*res;
 	int			len_nbr;
 	char		*nbr;
+	char		*res;
 	char		c;
 
 	len_nbr = fmt->precis;
-	if (fmt->precis == -1
-			|| (!fmt->precis && ft_strchr(fmt->flag, '#')))
+	if (fmt->precis == -1)
 		len_nbr = 1;
 	nbr = ft_strcnew(len_nbr, '0');
 	if (fmt->width > len_nbr)
 	{
 		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
 				&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
-		res = o_zerores(fmt, nbr, len_nbr, c);
+		res = xx_zero_res(fmt, nbr, len_nbr, c);
 		free(nbr);
 		return (res);
 	}
 	return (nbr);
-}
-
-void			conv_o(t_lst *lst, t_chr **chr, va_list ap)
-{
-	unsigned long long int	n;
-	char					*num;
-	char					*res;
-
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-		: cast_xxoub(ap, lst->format);
-	if (n == 0)
-		res = o_zero(lst->format);
-	else
-	{
-		num = ft_ulltoa_base(n, 8);
-		res = o_n(lst->format, num, (int)ft_strlen(num));
-		free(num);
-	}
-	(*chr)->str = res;
-	(*chr)->len = ft_strlen(res);
 }

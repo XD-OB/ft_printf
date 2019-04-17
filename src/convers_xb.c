@@ -6,66 +6,15 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 04:08:02 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/12 04:15:24 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 17:56:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char		*xx_zero_res(t_format *fmt, char *nbr, int len_nbr, char c)
-{
-	char		*res;
-	int		i;
-	int		j;
-
-	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
-	res[fmt->width] = '\0';
-	if (!ft_strchr(fmt->flag, '-'))
-	{
-		i = fmt->width;
-		j = len_nbr;
-		while (--j >= 0)
-			res[--i] = nbr[j];
-		while (--i >= 0)
-			res[i] = c;
-	}
-	else
-	{
-		i = 0;
-		j = 0;
-		while (j < len_nbr)
-			res[i++] = nbr[j++];
-		while (i < fmt->width)
-			res[i++] = c;
-	}
-	return (res);
-}
-
-char			*xx_zero(t_format *fmt)
-{
-	int		len_nbr;
-	char		*nbr;
-	char		*res;
-	char		c;
-
-	len_nbr = fmt->precis;
-	if (fmt->precis == -1)
-		len_nbr = 1;
-	nbr = ft_strcnew(len_nbr, '0');
-	if (fmt->width > len_nbr)
-	{
-		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0') 
-			&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
-		res = xx_zero_res(fmt, nbr, len_nbr, c);
-		free(nbr);
-		return (res);
-	}
-	return (nbr);
-}
-
 static void		xx_nres_annex(char **res, char *nbr, int len_nbr, int width)
 {
-	int		i;
+	int			i;
 
 	i = -1;
 	while (++i < len_nbr)
@@ -80,11 +29,11 @@ static void		xx_nres_annex(char **res, char *nbr, int len_nbr, int width)
 
 static char		*xx_nres(t_format *fmt, char *nbr, int len_nbr, int base)
 {
-	int		var[2];
+	int			var[2];
 	char		*res;
 	char		c;
 
-	c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0') 
+	c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
 		&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
@@ -113,8 +62,8 @@ static char		*xx_nres(t_format *fmt, char *nbr, int len_nbr, int base)
 
 static char		*xx_n(t_format *fmt, char *num, int len_num, int base)
 {
-	int		len_nbr;
-	int		var[3];
+	int			len_nbr;
+	int			var[3];
 	char		*res;
 	char		*nbr;
 
@@ -139,11 +88,11 @@ static char		*xx_n(t_format *fmt, char *num, int len_num, int base)
 	return (nbr);
 }
 
-void                    conv_xx(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_xx(t_lst *lst, t_chr **chr, va_list ap)
 {
 	unsigned long long int	n;
-	char			*num;
-	char			*res;
+	char					*num;
+	char					*res;
 
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
@@ -159,15 +108,15 @@ void                    conv_xx(t_lst *lst, t_chr **chr, va_list ap)
 	(lst->format->convers == 'x') ? res = ft_strlowcase(res) : 0;
 	(lst->format->convers == 'X') ? res = ft_strupcase(res) : 0;
 	(*chr)->str = res;
-	(*chr)->len = (int)ft_strlen(res);
+	(*chr)->len = ft_strlen(res);
 }
 
-void                    conv_b(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_b(t_lst *lst, t_chr **chr, va_list ap)
 {
 	unsigned long long int	n;
-	char			*num;
-	char			*res;
-	
+	char					*num;
+	char					*res;
+
 	flag_star(lst->format, ap);
 	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
 				: cast_xxoub(ap, lst->format);
@@ -182,5 +131,5 @@ void                    conv_b(t_lst *lst, t_chr **chr, va_list ap)
 	(lst->format->convers == 'b') ? ft_strlowcase(res) : 0;
 	(lst->format->convers == 'B') ? ft_strupcase(res) : 0;
 	(*chr)->str = res;
-	(*chr)->len = (int)ft_strlen(res);
+	(*chr)->len = ft_strlen(res);
 }

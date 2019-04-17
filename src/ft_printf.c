@@ -6,46 +6,51 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 08:55:14 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 18:09:55 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		ft_printf(const char *format, ...)
+/*
+**	len[3]:		0: len		1: len_format		2: pflag
+*/
+
+static int		exception(char *format, int *len)
 {
-	t_chr		*mychr;
+	if (len[2] == -1)
+		return (0);
+	put_spstr(format);
+	if (format[len[2] - 1] == '%')
+		return (-1);
+	return (ft_strlen(format));
+}
+
+int				ft_printf(const char *format, ...)
+{
+	t_chr		*chr;
 	t_lst		*lst;
 	va_list		ap;
-	int		len;
-	int		len_format;
-	int		pflag;
+	int			len[3];
 
-	pflag = 0;
-	len = 0;
-	len_format = 0;
-	while (format[len_format])
-		len_format++;
+	len[0] = 0;
+	len[1] = 0;
+	len[2] = 0;
+	while (format[len[1]])
+		len[1]++;
 	va_start(ap, format);
-	lst = parse_format(ap, (char*)format, &pflag);
+	lst = parse_format(ap, (char*)format, &len[2]);
 	if (!lst)
-	{
-		if (pflag == -1)
-			return (0);
-		put_spstr((char*)format);
-		if (format[len_format - 1] == '%')
-			return (-1);
-		return (ft_strlen(format));
-	}
-	if (!(mychr = load_chr((char*)format, lst)))
+		return (exception((char*)format, len));
+	if (!(chr = load_chr((char*)format, lst)))
 	{
 		free_lst(&lst);
 		return (-1);
 	}
-	fill_chr(lst, mychr, ap);
-	len = put_chr(mychr);
+	fill_chr(lst, chr, ap);
+	len[0] = put_chr(chr);
 	free_lst(&lst);
-	free_chr(&mychr);
+	free_chr(&chr);
 	va_end(ap);
-	return (len);
+	return (len[0]);
 }

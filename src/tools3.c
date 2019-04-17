@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 00:49:23 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 13:03:02 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/17 19:00:44 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ void				int_add(char **tab, unsigned int *oldsize, int data)
 	*tab = new;
 }
 
-char			*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len)
+char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len)
 {
-	long		len_s1;
-	long		len_s2;
-	long		i;
-	char		*str;
+	long			len_s1;
+	long			len_s2;
+	char			*str;
+	long			i;
 
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
