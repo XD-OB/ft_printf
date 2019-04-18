@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/18 06:50:24 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:15:33 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ t_lst				*add_node(t_lst *head, t_lst *node);
 unsigned long long	cast_xxoub(va_list ap, t_format *format);
 long long int		cast_di(va_list ap, char *flag);
 char				*add_sign(char *str, int sign);
-void				conv_k(t_format *format, t_chr **mychr, va_list ap);
+void				conv_k(t_chr **mychr, va_list ap);
 void				conv_color(t_lst *lst, t_chr **mychr);
 void				conv_c(t_lst *lst, t_chr **mychr, va_list ap);
 void				conv_s(t_lst *lst, t_chr **mychr, va_list ap);

@@ -6,13 +6,13 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 05:14:25 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/18 08:01:58 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:16:46 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int					conv_u_1(t_lst *lst, char **str, char *nbr)
+static int			conv_u_1(t_lst *lst, char **str, char *nbr)
 {
 	char			c;
 	int				i;
@@ -39,7 +39,7 @@ int					conv_u_1(t_lst *lst, char **str, char *nbr)
 	return (0);
 }
 
-void				conv_u_2(t_lst *lst, char **str, char *nbr, t_chr **mychr)
+static void			conv_u_2(t_lst *lst, char **str, char *nbr, t_chr **mychr)
 {
 	if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
 		precis_u(str, lst->format, ft_strlen(nbr));

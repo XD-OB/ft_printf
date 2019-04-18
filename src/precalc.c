@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 09:27:28 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 18:59:34 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:14:56 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static char			*precalc_inf(t_format *fmt, long *len, long sign)
 {
 	char			*str;
 
-	str = ft_strdup("inf");
+	str = (fmt->convers < 97) ? ft_strdup("INF") : ft_strdup("inf");
 	*len = 3;
 	if (fmt->width > *len)
 		custom_inff(fmt, &str, len, sign);
@@ -68,7 +68,7 @@ int					pre_d_calc(t_double db, t_chr **chr, t_lst *lst, int is_g)
 	else if (int_mants(db.zone.mantissa, D_BIAS) &&
 		(int_exp(db.zone.exponent, D_BIAS) >= MAX_D))
 	{
-		str = ft_strdup("nan");
+		str = (fmt->convers < 97) ? ft_strdup("NAN") : ft_strdup("nan");
 		len = 3;
 		(lst->format->width > len) ? custom_nanf(lst->format, &str, &len) : 0;
 	}

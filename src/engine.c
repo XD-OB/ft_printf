@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:26:36 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 18:00:00 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:15:48 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void		some_convers(t_lst *lst, t_chr *chr, va_list ap)
 	else if (lst->format->convers == 'o')
 		conv_o(lst, &chr, ap);
 	else if (lst->format->convers == 'k')
-		conv_k(lst->format, &chr, ap);
+		conv_k(&chr, ap);
 	else if (lst->format->convers == '}')
 		conv_color(lst, &chr);
 	else if (ft_strchr("pP", lst->format->convers))
