@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 02:48:52 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/18 06:03:51 by ishaimou         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:28:32 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static unsigned int		fill_times(long int y, char **times, int size,
 	times[0] = ft_utoa(y);
 	times[1] = ft_utoa(date[0]);
 	times[2] = ft_utoa(date[1]);
-	
 	if (date[0] <= 9)
 	{
 		tmp = times[1];
@@ -60,7 +59,6 @@ static unsigned int		fill_times(long int y, char **times, int size,
 		times[2] = ft_strjoin("0", times[2]);
 		free(tmp);
 	}
-	
 	while (i < size)
 		len += ft_strlen(times[i++]);
 	return (len);
@@ -71,7 +69,6 @@ static char				*c_date(char **times, int len)
 	char				*res;
 
 	len += 2;
-	
 	res = ft_strnew(len);
 	ft_strcat(res, times[0]);
 	ft_strcat(res, "-");
