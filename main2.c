@@ -71,8 +71,8 @@ int				main(void)
 	ft_printf("%15.8f|%-15.8f|%+15.8f|% 15.8f|%#15.8f|%015.8f\n", 42., 42., 42., 42., 42., 42.);
 	ft_printf("%+8.14f|%+ 8.14f|%+-8.14f|%+#8.14f|%+08.14f|%+ -#08.14f\n", -0.00246, -0.00246, -0.00246, -0.00246, -0.00246, -0.00246);
 	ft_printf("%15.8lf|%-15.8lf|%+15.8lf|% 15.8lf|%#15.8lf|%015.8lf\n", 38546.5849, 38546.5849, 38546.5849, 38546.5849, 38546.5849, 38546.5849);	
-	ft_printf("%k\n", 125468);
-	ft_printf("%{blue}bluetesttext%{eoc}%{RED}boldredtxttst%{eoc}\n");
+	ft_printf("%k\n", 1555560232);
+	ft_printf("%{blue}bluetesttext%{eoc}%{RED}boldredtesttext%{eoc}\n");
 	
 	//while (1);
 	return (0);

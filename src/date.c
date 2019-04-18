@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 02:48:52 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 17:59:06 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 06:03:51 by ishaimou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,12 @@ static void				date_conv(long int s, long int *y, unsigned int *date)
 	else
 		date[0] = ey[3] - 9;
 	*y += (date[0] <= 2);
-	date[2] = (s / 3600) - ((*y - 1970) * 8766) - (date[0] - 1) * 730.5
-		- (date[1] - 1) * 24;
-	date[3] = (s / 60) - ((*y - 1970) * 525960) - (date[0] - 1) * 43830
-		- (date[1] - 1) * 1440 - date[2] * 60;
-	date[4] = s - ((*y - 1970) * 31557600) - (date[0] - 1) * 2629800
-		- (date[1] - 1) * 86400 - date[2] * 3600 - date[3] * 60;
 }
 
 static unsigned int		fill_times(long int y, char **times, int size,
 											unsigned int *date)
 {
+	char				*tmp;
 	int					i;
 	unsigned int		len;
 
@@ -52,9 +47,20 @@ static unsigned int		fill_times(long int y, char **times, int size,
 	times[0] = ft_utoa(y);
 	times[1] = ft_utoa(date[0]);
 	times[2] = ft_utoa(date[1]);
-	times[3] = ft_utoa(date[2]);
-	times[4] = ft_utoa(date[3]);
-	times[5] = ft_utoa(date[4]);
+	
+	if (date[0] <= 9)
+	{
+		tmp = times[1];
+		times[1] = ft_strjoin("0", times[1]);
+		free(tmp);
+	}
+	if (date[1] <= 9)
+	{
+		tmp = times[2];
+		times[2] = ft_strjoin("0", times[2]);
+		free(tmp);
+	}
+	
 	while (i < size)
 		len += ft_strlen(times[i++]);
 	return (len);
@@ -64,34 +70,14 @@ static char				*c_date(char **times, int len)
 {
 	char				*res;
 
-	len -= ft_strlen(times[5]) - ft_strlen(times[4]) - ft_strlen(times[3]);
-	res = (char*)malloc(sizeof(char) * (len + 1));
-	res[len] = '\0';
+	len += 2;
+	
+	res = ft_strnew(len);
 	ft_strcat(res, times[0]);
 	ft_strcat(res, "-");
 	ft_strcat(res, times[1]);
 	ft_strcat(res, "-");
 	ft_strcat(res, times[2]);
-	return (res);
-}
-
-static char				*e_date(char **times, int len)
-{
-	char				*res;
-
-	res = (char*)malloc(sizeof(char) * len + 1);
-	res[len] = '\0';
-	ft_strcat(res, times[0]);
-	ft_strcat(res, "/");
-	ft_strcat(res, times[1]);
-	ft_strcat(res, "/");
-	ft_strcat(res, times[2]);
-	ft_strcat(res, " ");
-	ft_strcat(res, times[3]);
-	ft_strcat(res, ":");
-	ft_strcat(res, times[4]);
-	ft_strcat(res, ":");
-	ft_strcat(res, times[5]);
 	return (res);
 }
 
@@ -99,24 +85,21 @@ static char				*e_date(char **times, int len)
 **	var:		var[0] : s		var[1] : y		var[2] : i
 */
 
-void					conv_k(t_format *format, t_chr **mychr, va_list ap)
+void					conv_k(t_chr **mychr, va_list ap)
 {
 	long int			var[3];
-	unsigned int		date[5];
-	char				*times[6];
+	unsigned int		date[3];
+	char				*times[3];
 	char				*res;
 	unsigned int		len;
 
 	var[0] = (long int)va_arg(ap, long int);
 	date_conv(var[0], &var[1], date);
-	len = fill_times(var[1], times, 6, date);
-	if (ft_strchr(format->flag, '0'))
-		res = c_date(times, len);
-	else
-		res = e_date(times, len + 5);
+	len = fill_times(var[1], times, 3, date);
+	res = c_date(times, len);
 	(*mychr)->str = res;
 	(*mychr)->len = ft_strlen(res);
 	var[2] = -1;
-	while (++var[2] < 6)
+	while (++var[2] < 3)
 		free(times[var[2]]);
 }
