@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 05:14:25 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/09 21:01:24 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 08:01:58 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ void				conv_u_2(t_lst *lst, char **str, char *nbr, t_chr **mychr)
 	if (lst->format->precis > 0 && lst->format->precis < lst->format->width)
 		precis_u(str, lst->format, ft_strlen(nbr));
 	else if (lst->format->precis >= lst->format->width)
+	{
+		free(*str);
 		*str = all_zero_u(nbr, lst->format->precis);
+	}
 	(*mychr)->str = *str;
 	free(nbr);
 	(*mychr)->len = ft_strlen(*str);
