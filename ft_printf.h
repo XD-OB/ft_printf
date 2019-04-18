@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 17:55:46 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 06:50:24 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int					lstlen(t_lst *lst);
 void				sumstr(char **s1, char *s2, int base);
 void				multstr(char **s1, char *s2, int base);
 void				foisdix(char **str, int *len);
+int					check_fill(va_list tmp, char *str, int pos, t_lst *curr);
 void				put_spstr(char *str);
 void				put_spstrn(char *str, size_t n);
 void				print_lst(t_lst *lst);
@@ -85,6 +86,8 @@ void				fill_chr(t_lst *lst, t_chr *chr, va_list ap);
 int					put_chr(t_lst *lst, t_chr *chr);
 int					put_chr_fd(int fd, t_lst *lst, t_chr *chr);
 int					put_chr_nfd(int fd, size_t n, t_chr *chr);
+char				*ft_strcolor(char *str);
+int					adv_freeflag(char **str);
 int					pre_d_calc(t_double db, t_chr **mychr, t_lst *lst, int g);
 int					pre_ld_calc(t_ldouble db, t_chr **mychr, t_lst *lst, int g);
 long				int_exp(long bin_exp, int bias);

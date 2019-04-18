@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 18:09:55 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 07:26:51 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,29 @@
 **	len[3]:		0: len		1: len_format		2: pflag
 */
 
-static int		exception(char *format, int *len)
+static int			exception(char *format, int *len)
 {
+	unsigned int	i;
+
 	if (len[2] == -1)
+	{
+		i = 0;
+		while (format[i] && format[i] != '%')
+			ft_putchar(format[i++]);
 		return (0);
+	}
 	put_spstr(format);
 	if (format[len[2] - 1] == '%')
 		return (-1);
 	return (ft_strlen(format));
 }
 
-int				ft_printf(const char *format, ...)
+int					ft_printf(const char *format, ...)
 {
-	t_chr		*chr;
-	t_lst		*lst;
-	va_list		ap;
-	int			len[3];
+	t_chr			*chr;
+	t_lst			*lst;
+	va_list			ap;
+	int				len[3];
 
 	len[0] = 0;
 	len[1] = 0;

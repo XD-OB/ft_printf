@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 17:38:59 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 08:38:01 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 06:55:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int			put_chr(t_lst *lst, t_chr *chr)
 	{
 		if (lst->format->convers == '}')
 			ft_putstr(chr->str);
-		else	
+		else
 			write(1, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;
@@ -38,7 +38,7 @@ int			put_chr_fd(int fd, t_lst *lst, t_chr *chr)
 	{
 		if (lst->format->convers == '}')
 			ft_putstr_fd(chr->str, fd);
-		else	
+		else
 			write(fd, chr->str, chr->len);
 		len += chr->len;
 		chr = chr->next;

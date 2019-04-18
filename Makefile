@@ -23,7 +23,7 @@ LIB_FT_PRINTF = ft_printf check parse tools tools2 tools3 date noprint cast\
 			ssnprintf convers_f vddnprintf convers_o convers_u convers_di_width\
 			convers_u_flag_prec convers_p getcalcul_dld convers_lf gets\
 			convers_ee_tools str_tools custom_expf int_expmantis conv_f_tools\
-			convers_o_tools convers_xb_tools
+			convers_o_tools convers_xb_tools check_fill fill_tools
 
 LIB_FT_PRINTF_SRC = $(addprefix src/, $(addsuffix .c, $(LIB_FT_PRINTF)))
 
