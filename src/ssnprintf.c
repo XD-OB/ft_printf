@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 09:06:58 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 09:26:46 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 09:12:11 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,26 @@ static char				*str_chr(t_chr *mychr, unsigned int len_str)
 
 static int				sprintf_null(char *format, int *len, long n)
 {
+	int					l;
+
+	l = 0;
 	if (len[2] == -1)
 		return (0);
 	if (n == INT_MIN)
 	{
-		put_spstr((char*)format);
+		l = put_spstr((char*)format);
 		if (format[len[1] - 1] == '%')
 			return (-1);
-		return (ft_strlen(format));
+		return (l);
 	}
 	else
 	{
 		if (len[2] == -1)
 			return (0);
-		put_spstrn((char*)format, (size_t)n);
+		l = put_spstrn((char*)format, (size_t)n);
 		if (format[len[1] - 1] == '%')
 			return (-1);
-		return (n);
+		return (l);
 	}
 }
 

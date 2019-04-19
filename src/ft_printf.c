@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/03/05 14:46:18 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/18 07:26:51 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 09:14:34 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@
 static int			exception(char *format, int *len)
 {
 	unsigned int	i;
+	int				l;
 
+	l = 0;
 	if (len[2] == -1)
 	{
 		i = 0;
@@ -27,10 +29,10 @@ static int			exception(char *format, int *len)
 			ft_putchar(format[i++]);
 		return (0);
 	}
-	put_spstr(format);
+	l = put_spstr(format);
 	if (format[len[2] - 1] == '%')
 		return (-1);
-	return (ft_strlen(format));
+	return (l);
 }
 
 int					ft_printf(const char *format, ...)

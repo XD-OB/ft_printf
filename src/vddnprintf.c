@@ -6,7 +6,7 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/03 03:27:29 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/17 07:42:36 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/04/18 09:13:07 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int			ft_vprintf(const char *format, va_list ap)
 {
 	t_chr	*mychr;
 	t_lst	*lst;
-	int		len[3];
+	int		len[4];
 
 	len[0] = 0;
 	len[1] = 0;
@@ -32,8 +32,8 @@ int			ft_vprintf(const char *format, va_list ap)
 	{
 		if (len[2] == -1)
 			return (0);
-		put_spstr((char*)format);
-		return ((format[len[1] - 1] == '%') ? -1 : (int)ft_strlen(format));
+		len[3] = put_spstr((char*)format);
+		return ((format[len[1] - 1] == '%') ? -1 : len[3]);
 	}
 	if (!(mychr = load_chr((char*)format, lst)))
 		return (-1);
@@ -47,10 +47,12 @@ int			ft_vprintf(const char *format, va_list ap)
 
 static int	dprintf_null(char *format, int *len)
 {
+	int		l;
+
 	if (len[2] == -1)
 		return (0);
-	put_spstr((char*)format);
-	return ((format[len[1] - 1] == '%') ? -1 : (int)ft_strlen(format));
+	l = put_spstr((char*)format);
+	return ((format[len[1] - 1] == '%') ? -1 : l);
 }
 
 int			ft_dprintf(int fd, const char *format, ...)
