@@ -1,5 +1,5 @@
-TEAM: (A7ssen printf)
-# OBELOUCH:ISHAIMOU
+*       TEAM: (A7ssen printf) 
+# FT_PRINTF
 
 By now, you must be fed up alternating the ft_putstr and ft_putnbr functions when doing your printing. Are you not allowed to use printf? You can recode yours! It will be a chance for you to discover a feature of the C language – variadic functions – and to practice detailed management of the printing options. You will then be allowed to use your ft_printf in all your future projects.
 The versatility of the printf function in C represents a great exercise in programming for us. This project is of moderate difficulty. It will enable you to discover variadic functions in C in a particularly relevant context as well as learn about a great example of a basic “dispatcher” in C via the use of an array of function’s pointers.
