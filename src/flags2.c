@@ -40,7 +40,7 @@ void		flag_dash(char **nbr, int base)
 	free(tmp);
 }
 
-void		flag_apostrophe(char **str, t_format *fmt)
+void		flag_apostrophe(char **str, t_fmt *fmt)
 {
 	int		prev_len;
 	int		count;

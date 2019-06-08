@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 
 char				*get_entier(long exp, long bin_mantis, int bias,
-							t_format *format)
+							t_fmt *format)
 {
 	unsigned long long	m;
 	unsigned int		v[2];
@@ -58,7 +58,7 @@ static int			fill_tab(char **tab, unsigned int *size, long *new_exp,
 }
 
 char				*get_fract(long exp, long bin_mantis, int bias,
-							t_format *format)
+							t_fmt *format)
 {
 	unsigned int	size;
 	long			new_exp;
@@ -97,7 +97,7 @@ static void			get_eld_annex(char **tab, unsigned int *size, long new_exp)
 **	v[2]:	0: bin_mantis		1: new_exp
 */
 
-char				*get_entierld(long exp, t_ldouble db, t_format *format)
+char				*get_entierld(long exp, t_ldouble db, t_fmt *format)
 {
 	long			v[2];
 	char			*tab;

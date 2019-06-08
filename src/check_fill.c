@@ -12,13 +12,13 @@
 
 #include "ft_printf.h"
 
-static int		part_check1(char **flag, char **str, t_lst **curr)
+static int		part_check1(char **flag, char **str, t_fmt **curr)
 {
 	if (!**str)
 		return (adv_freeflag(flag));
 	if (ft_isdigit(**str))
 	{
-		(*curr)->format->width = ft_atoi(*str);
+		(*curr)->width = ft_atoi(*str);
 		while (ft_isdigit(**str))
 			(*str)++;
 	}
@@ -29,11 +29,11 @@ static int		part_check1(char **flag, char **str, t_lst **curr)
 		(*str)++;
 		if (**str == '*')
 		{
-			(*curr)->format->precis = -2;
+			(*curr)->precis = -2;
 			(*str)++;
 		}
 		else
-			(*curr)->format->precis = ft_atoi(*str);
+			(*curr)->precis = ft_atoi(*str);
 		while (ft_isdigit(**str))
 			(*str)++;
 	}
@@ -51,21 +51,21 @@ static void		part_check2(char **str, char **flag, char **p)
 	(*str)++;
 }
 
-static int		part_check3(t_lst **curr, char **str, char **flag, int pos)
+static int		part_check3(t_fmt **curr, char **str, char **flag, int pos)
 {
-	(*curr)->format->pos = pos;
+	(*curr)->pos = pos;
 	if (**str == '{')
 	{
 		(*str)++;
-		(*curr)->format->flag = ft_strcolor(*str);
-		(*curr)->format->convers = '}';
+		(*curr)->flag = ft_strcolor(*str);
+		(*curr)->convers = '}';
 		return (1);
 	}
 	*flag = ft_strnew(200);
 	return (0);
 }
 
-static void		part_check4(t_lst **curr, char **str, char **p, va_list tmp)
+static void		part_check4(t_fmt **curr, char **str, char **p, va_list tmp)
 {
 	**p = **str;
 	if (**str == '$')
@@ -73,14 +73,14 @@ static void		part_check4(t_lst **curr, char **str, char **p, va_list tmp)
 		(*str)++;
 		(*curr)->arglist = (va_list*)malloc(sizeof(va_list));
 		va_copy(*((*curr)->arglist), tmp);
-		(*curr)->format->argn = ft_atoi(*str);
+		(*curr)->argn = ft_atoi(*str);
 		while (ft_isdigit(**str))
 			(*str)++;
 	}
 	(*p)++;
 }
 
-int				check_fill(va_list tmp, char *str, int pos, t_lst *curr)
+int				check_fill(va_list tmp, char *str, int pos, t_fmt *curr)
 {
 	char		*flag;
 	char		*p;
@@ -101,7 +101,7 @@ int				check_fill(va_list tmp, char *str, int pos, t_lst *curr)
 		part_check2(&str, &flag, &p);
 	if (!*str)
 		return (adv_freeflag(&flag));
-	curr->format->convers = *str;
-	curr->format->flag = flag;
+	curr->convers = *str;
+	curr->flag = flag;
 	return (0);
 }

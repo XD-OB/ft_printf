@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static char		*xx_zero_res(t_format *fmt, char *nbr, int len_nbr, char c)
+static char		*xx_zero_res(t_fmt *fmt, char *nbr, int len_nbr, char c)
 {
 	char		*res;
 	int			i;
@@ -41,7 +41,7 @@ static char		*xx_zero_res(t_format *fmt, char *nbr, int len_nbr, char c)
 	return (res);
 }
 
-char			*xx_zero(t_format *fmt)
+char			*xx_zero(t_fmt *fmt)
 {
 	int			len_nbr;
 	char		*nbr;

@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static char		*o_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
+static char		*o_nbr(t_fmt *fmt, char *num, int len_num, int *len_nbr)
 {
 	char		*nbr;
 	int			dash;
@@ -32,7 +32,7 @@ static char		*o_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
 	return (nbr);
 }
 
-static char		*o_nres(t_format *fmt, char *nbr, int len_nbr, char c)
+static char		*o_nres(t_fmt *fmt, char *nbr, int len_nbr, char c)
 {
 	char		*res;
 	int			i;
@@ -60,7 +60,7 @@ static char		*o_nres(t_format *fmt, char *nbr, int len_nbr, char c)
 	return (res);
 }
 
-char			*o_n(t_format *fmt, char *num, int len_num)
+char			*o_n(t_fmt *fmt, char *num, int len_num)
 {
 	char		*res;
 	char		*nbr;

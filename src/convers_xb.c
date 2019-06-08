@@ -27,7 +27,7 @@ static void		xx_nres_annex(char **res, char *nbr, int len_nbr, int width)
 **	var[2]		0: i	1: j
 */
 
-static char		*xx_nres(t_format *fmt, char *nbr, int len_nbr, int base)
+static char		*xx_nres(t_fmt *fmt, char *nbr, int len_nbr, int base)
 {
 	int			var[2];
 	char		*res;
@@ -60,7 +60,7 @@ static char		*xx_nres(t_format *fmt, char *nbr, int len_nbr, int base)
 **	var[3]		0: is_dash	1: i	2: j
 */
 
-static char		*xx_n(t_format *fmt, char *num, int len_num, int base)
+static char		*xx_n(t_fmt *fmt, char *num, int len_num, int base)
 {
 	int			len_nbr;
 	int			var[3];
@@ -88,48 +88,48 @@ static char		*xx_n(t_format *fmt, char *num, int len_num, int base)
 	return (nbr);
 }
 
-void			conv_xx(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_xx(t_fmt *fmt, t_chr **chr, va_list ap)
 {
 	unsigned long long int	n;
 	char					*num;
 	char					*res;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-				: cast_xxoub(ap, lst->format);
+	flag_star(fmt, ap);
+	n = (flag_dollar(fmt)) ? cast_xxoub(*(fmt->arglist), fmt)
+				: cast_xxoub(ap, fmt);
 	if (n == 0)
-		res = xx_zero(lst->format);
+		res = xx_zero(fmt);
 	else
 	{
 		num = ft_ulltoa_base(n, 16);
-		res = xx_n(lst->format, num, (int)ft_strlen(num), 16);
+		res = xx_n(fmt, num, (int)ft_strlen(num), 16);
 		free(num);
 	}
-	(lst->format->convers == 'x') ? res = ft_strlowcase(res) : 0;
-	(lst->format->convers == 'X') ? res = ft_strupcase(res) : 0;
+	(fmt->convers == 'x') ? res = ft_strlowcase(res) : 0;
+	(fmt->convers == 'X') ? res = ft_strupcase(res) : 0;
 	(*chr)->str = res;
 	(*chr)->len = ft_strlen(res);
 }
 
-void			conv_b(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_b(t_fmt *fmt, t_chr **chr, va_list ap)
 {
 	unsigned long long int	n;
 	char					*num;
 	char					*res;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-				: cast_xxoub(ap, lst->format);
+	flag_star(fmt, ap);
+	n = (flag_dollar(fmt)) ? cast_xxoub(*(fmt->arglist), fmt)
+				: cast_xxoub(ap, fmt);
 	if (n == 0)
-		res = xx_zero(lst->format);
+		res = xx_zero(fmt);
 	else
 	{
 		num = ft_itoa_base(n, 2);
-		res = xx_n(lst->format, num, (int)ft_strlen(num), 2);
+		res = xx_n(fmt, num, (int)ft_strlen(num), 2);
 		free(num);
 	}
-	(lst->format->convers == 'b') ? ft_strlowcase(res) : 0;
-	(lst->format->convers == 'B') ? ft_strupcase(res) : 0;
+	(fmt->convers == 'b') ? ft_strlowcase(res) : 0;
+	(fmt->convers == 'B') ? ft_strupcase(res) : 0;
 	(*chr)->str = res;
 	(*chr)->len = ft_strlen(res);
 }

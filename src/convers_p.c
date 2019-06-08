@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static char		*p_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
+static char		*p_nbr(t_fmt *fmt, char *num, int len_num, int *len_nbr)
 {
 	char		*nbr;
 	int			i;
@@ -31,7 +31,7 @@ static char		*p_nbr(t_format *fmt, char *num, int len_num, int *len_nbr)
 	return (nbr);
 }
 
-static void		p_res_minus(char **res, t_format *fmt, char *nbr, int len_nbr)
+static void		p_res_minus(char **res, t_fmt *fmt, char *nbr, int len_nbr)
 {
 	char		c;
 	int			i;
@@ -51,7 +51,7 @@ static void		p_res_minus(char **res, t_format *fmt, char *nbr, int len_nbr)
 	}
 }
 
-static char		*p_n(t_format *fmt, char *num, int len_num)
+static char		*p_n(t_fmt *fmt, char *num, int len_num)
 {
 	char		*nbr;
 	char		*res;
@@ -79,18 +79,18 @@ static char		*p_n(t_format *fmt, char *num, int len_num)
 	return (nbr);
 }
 
-void			conv_p(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_p(t_fmt *fmt, t_chr **chr, va_list ap)
 {
 	uintptr_t	n;
 	char		*num;
 	char		*res;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? va_arg(*(lst->arglist), uintptr_t)
+	flag_star(fmt, ap);
+	n = (flag_dollar(fmt)) ? va_arg(*(fmt->arglist), uintptr_t)
 							: va_arg(ap, uintptr_t);
 	num = ft_ulltoa_base(n, 16);
-	res = p_n(lst->format, num, (int)ft_strlen(num));
-	if (lst->format->convers == 'p')
+	res = p_n(fmt, num, (int)ft_strlen(num));
+	if (fmt->convers == 'p')
 		ft_strlowcase(res);
 	free(num);
 	(*chr)->str = res;

@@ -12,14 +12,14 @@
 
 #include "ft_printf.h"
 
-static int		w_di_annex(char **res, t_format *fmt, char *nbr, int len_nbr)
+static int		w_di_annex(char **res, t_fmt *fmt, char *nbr, int len)
 {
 	int			i;
 
 	if (ft_strchr(fmt->flag, '-'))
 	{
 		i = -1;
-		while (++i < len_nbr)
+		while (++i < len)
 			(*res)[i] = nbr[i];
 		while (i < fmt->width)
 			(*res)[i++] = ' ';
@@ -32,7 +32,7 @@ static int		w_di_annex(char **res, t_format *fmt, char *nbr, int len_nbr)
 **	v[3]:		0:i		1:j		2:z
 */
 
-char			*width_di(t_format *fmt, char *nbr, int len_nbr, int sign)
+char			*width_di(t_fmt *fmt, char *nbr, int len_nbr, int sign)
 {
 	char		*res;
 	int			v[3];

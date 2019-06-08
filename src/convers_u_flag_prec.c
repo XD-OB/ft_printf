@@ -34,7 +34,7 @@ char				*all_zero_u(char *nbr, int precis)
 	return (ft_strdup(nbr));
 }
 
-static int			precis_u_annex(t_format *fmt, int nbr_len, char **str)
+static int			precis_u_annex(t_fmt *fmt, int nbr_len, char **str)
 {
 	char			*new;
 	int				i;
@@ -62,7 +62,7 @@ static int			precis_u_annex(t_format *fmt, int nbr_len, char **str)
 	return (ft_strlen(new));
 }
 
-void				precis_u(char **str, t_format *fmt, int nbr_len)
+void				precis_u(char **str, t_fmt *fmt, int nbr_len)
 {
 	int				i;
 	int				j;

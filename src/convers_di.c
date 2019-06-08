@@ -21,7 +21,7 @@ static int		sign_n(long long int n)
 	return (0);
 }
 
-static void		di_zero(t_chr **chr, t_format *fmt)
+static void		di_zero(t_chr **chr, t_fmt *fmt)
 {
 	char		*nbr;
 	int			len_nbr;
@@ -53,7 +53,7 @@ static void		di_zero(t_chr **chr, t_format *fmt)
 ** len[2]       0: len_nbr		1: len_num
 */
 
-static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
+static char		*di_nbr(t_fmt *fmt, char *num, int *len, int sign)
 {
 	char		*nbr;
 	int			i;
@@ -76,7 +76,7 @@ static char		*di_nbr(t_format *fmt, char *num, int *len, int sign)
 	return (nbr);
 }
 
-static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
+static void		di_n(t_chr **chr, t_fmt *fmt, char *num, int sign)
 {
 	char		*nbr;
 	int			len[2];
@@ -99,23 +99,23 @@ static void		di_n(t_chr **chr, t_format *fmt, char *num, int sign)
 	}
 }
 
-void			conv_di(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_di(t_fmt *fmt, t_chr **chr, va_list ap)
 {
 	long long int	n;
 	int				sign;
 	char			*num;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ?
-		cast_di(*(lst->arglist), lst->format->flag) :
-		cast_di(ap, lst->format->flag);
+	flag_star(fmt, ap);
+	n = (flag_dollar(fmt)) ?
+		cast_di(*(fmt->arglist), fmt->flag) :
+		cast_di(ap, fmt->flag);
 	sign = sign_n(n);
 	if (sign == 0)
-		di_zero(chr, lst->format);
+		di_zero(chr, fmt);
 	else
 	{
 		num = ft_poslltoa(n);
-		di_n(chr, lst->format, num, sign);
+		di_n(chr, fmt, num, sign);
 		free(num);
 		num = NULL;
 	}

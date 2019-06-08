@@ -54,22 +54,39 @@ typedef union		u_ldouble
 	long double		ld;
 }					t_ldouble;
 
-typedef struct		s_format
+typedef struct		s_icase
+{
+	int				n;
+	struct s_icase	*next;
+}					t_icase;
+
+typedef struct		s_fmt
 {
 	char			convers;
+	int				zero:1;
+	int				dash:1;
+	int				dollar:1;
+	int				space:1;
+	int				minus:1;
+	int				plus:1;
+	int				quote:1;
+	int				cap_l:1;
+	int				l:1;
+	int				h:1;
+	int				ll:1;
+	int				hh:1;
+	int				r:1;
+	int				j:1;
+	int				z:1;
+	char			*color;
 	char			*flag;
 	long			precis;
 	long			width;
 	int				pos;
 	int				argn;
-}					t_format;
-
-typedef struct		s_lst
-{
-	t_format		*format;
 	va_list			*arglist;
-	struct s_lst	*next;
-}					t_lst;
+	struct s_fmt	*next;
+}					t_fmt;
 
 typedef struct		s_chr
 {

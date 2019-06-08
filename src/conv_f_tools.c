@@ -74,7 +74,7 @@ void		fprecis(char **str, long precis, long *carry, long base)
 	*str = fract;
 }
 
-void		add_sign_f(t_format *fmt, char **str, long *len, int sign)
+void		add_sign_f(t_fmt *fmt, char **str, long *len, int sign)
 {
 	char	*res;
 	long	i;

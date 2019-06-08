@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static char		*o_zerores(t_format *fmt, char *nbr, int len_nbr, char c)
+static char		*o_zerores(t_fmt *fmt, char *nbr, int len_nbr, char c)
 {
 	char		*res;
 	int			i;
@@ -41,7 +41,7 @@ static char		*o_zerores(t_format *fmt, char *nbr, int len_nbr, char c)
 	return (res);
 }
 
-static char		*o_zero(t_format *fmt)
+static char		*o_zero(t_fmt *fmt)
 {
 	char		*res;
 	int			len_nbr;
@@ -64,21 +64,21 @@ static char		*o_zero(t_format *fmt)
 	return (nbr);
 }
 
-void			conv_o(t_lst *lst, t_chr **chr, va_list ap)
+void			conv_o(t_fmt *fmt, t_chr **chr, va_list ap)
 {
 	unsigned long long int	n;
 	char					*num;
 	char					*res;
 
-	flag_star(lst->format, ap);
-	n = (flag_dollar(lst)) ? cast_xxoub(*(lst->arglist), lst->format)
-		: cast_xxoub(ap, lst->format);
+	flag_star(fmt, ap);
+	n = (flag_dollar(fmt)) ? cast_xxoub(*(fmt->arglist), fmt)
+							: cast_xxoub(ap, fmt);
 	if (n == 0)
-		res = o_zero(lst->format);
+		res = o_zero(fmt);
 	else
 	{
 		num = ft_ulltoa_base(n, 8);
-		res = o_n(lst->format, num, (int)ft_strlen(num));
+		res = o_n(fmt, num, (int)ft_strlen(num));
 		free(num);
 	}
 	(*chr)->str = res;

@@ -49,7 +49,7 @@ void				int_add(char **tab, unsigned int *oldsize, int data)
 	*tab = new;
 }
 
-char				*ft_pointjoin(t_format *fmt, char *s1, char *s2, long *len)
+char				*ft_pointjoin(t_fmt *fmt, char *s1, char *s2, long *len)
 {
 	long			len_s1;
 	long			len_s2;

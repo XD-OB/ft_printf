@@ -26,7 +26,7 @@ static void		nanf_annex(char **res, char *s, long *len, int wid)
 	*len = wid;
 }
 
-void			custom_nanf(t_format *fmt, char **str, long *len)
+void			custom_nanf(t_fmt *fmt, char **str, long *len)
 {
 	long		i;
 	long		j;
@@ -50,7 +50,7 @@ void			custom_nanf(t_format *fmt, char **str, long *len)
 	*str = res;
 }
 
-static char		*inff_minus(t_format *fmt, char *str, long *len, int sign)
+static char		*inff_minus(t_fmt *fmt, char *str, long *len, int sign)
 {
 	long		i;
 	long		j;
@@ -78,7 +78,7 @@ static char		*inff_minus(t_format *fmt, char *str, long *len, int sign)
 **	var:	0:i			1:j
 */
 
-void			custom_inff(t_format *fmt, char **str, long *len, int sign)
+void			custom_inff(t_fmt *fmt, char **str, long *len, int sign)
 {
 	long		var[2];
 	char		*res;

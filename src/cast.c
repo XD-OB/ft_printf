@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-unsigned long long int		cast_xxoub(va_list ap, t_format *fmt)
+unsigned long long int		cast_xxoub(va_list ap, t_fmt *fmt)
 {
 	unsigned long long int	n;
 

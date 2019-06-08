@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-char			*calcul_entier(char *tab, int size, t_format *format)
+char			*calcul_entier(char *tab, int size, t_fmt *format)
 {
 	char		*entier;
 	char		*count;
@@ -65,7 +65,7 @@ static void		init_fractcalc(int *var, int *size, int *i, char convers)
 	(*size)--;
 }
 
-char			*calcul_fract(char *tab, int size, t_format *fmt)
+char			*calcul_fract(char *tab, int size, t_fmt *fmt)
 {
 	char		*fract;
 	char		*count;
