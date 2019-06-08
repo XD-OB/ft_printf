@@ -36,8 +36,7 @@ void		flag_star(t_fmt *format, va_list ap)
 		if (n < 0)
 		{
 			n *= -1;
-			if (!format->minus)
-				add_minus(&(format->flag));
+			format->minus = 1;
 		}
 		format->width = n;
 	}

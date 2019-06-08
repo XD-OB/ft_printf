@@ -105,36 +105,6 @@ int				put_postflag(t_fmt *curr, char flag, char next)
 		return (0);
 	return (1);
 }
-/*
-static void		part_check2(char **str, char **flag, char **p)
-{
-	if ((**str == 'l' && !ft_strstr(*flag, "ll")) || !ft_strchr(*flag, **str)
-				|| (**str == 'h' && !ft_strstr(*flag, "hh")))
-	{
-		**p = **str;
-		(*p)++;
-	}
-	(*str)++;
-}
-
-static int		part_check4(t_fmt **curr, char **str, char **p, va_list tmp)
-{
-	if (!put_preflag(*curr, **str))
-		return (0);
-	**p = **str;
-	if (**str == '$')
-	{
-		(*str)++;
-		(*curr)->arglist = (va_list*)malloc(sizeof(va_list));
-		va_copy(*((*curr)->arglist), tmp);
-		(*curr)->argn = ft_atoi(*str);
-		while (ft_isdigit(**str))
-			(*str)++;
-	}
-	(*p)++;
-	return (1);
-}
-*/
 
 int				check_fill(va_list tmp, char *str, int pos, t_fmt *curr)
 {
@@ -142,7 +112,7 @@ int				check_fill(va_list tmp, char *str, int pos, t_fmt *curr)
 	if (*str == '{')
 	{
 		(*str)++;
-		curr->flag = ft_strcolor(str);
+		curr->color = ft_strcolor(str);
 		curr->convers = '}';
 		return (0);
 	}
@@ -155,6 +125,5 @@ int				check_fill(va_list tmp, char *str, int pos, t_fmt *curr)
 	if (!*str)
 		return (1);
 	curr->convers = *str;
-	curr->flag = NULL;
 	return (0);
 }

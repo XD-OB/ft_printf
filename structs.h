@@ -80,7 +80,6 @@ typedef struct		s_fmt
 	int				j:1;
 	int				z:1;
 	char			*color;
-	char			*flag;
 	long			precis;
 	long			width;
 	int				pos;

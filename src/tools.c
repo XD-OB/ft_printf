@@ -73,8 +73,8 @@ void		free_fmt(t_fmt **fmt)
 	while (curr)
 	{
 		next = curr->next;
-		if (curr->flag)
-			free(curr->flag);
+		if (curr->color)
+			free(curr->color);
 		if (curr->arglist)
 			free(curr->arglist);
 		free(curr);

@@ -15,6 +15,7 @@
 void			init_node(t_fmt *node)
 {
 	node->arglist = NULL;
+	node->color = NULL;
 	node->precis = -1;
 	node->width = 0;
 	node->convers = '\0';
@@ -34,6 +35,10 @@ static t_fmt	*create_node(void)
 
 static void		advance_free(t_fmt **node, int *p)
 {
+	if ((*node)->color)
+		free((*node)->color);
+	if ((*node)->arglist)
+		free((*node)->arglist);
 	free(*node);
 	*p = -1;
 }

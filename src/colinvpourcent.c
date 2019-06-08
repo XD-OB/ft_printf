@@ -36,17 +36,17 @@ void		conv_invalid(t_chr **mychr, t_fmt *format, va_list ap)
 
 static int	conv_bold_color(t_fmt *fmt, t_chr **mychr)
 {
-	if (!ft_strcmp(fmt->flag, "RED"))
+	if (!ft_strcmp(fmt->color, "RED"))
 		(*mychr)->str = ft_strdup(B_RED);
-	else if (!ft_strcmp(fmt->flag, "GREEN"))
+	else if (!ft_strcmp(fmt->color, "GREEN"))
 		(*mychr)->str = ft_strdup(B_GREEN);
-	else if (!ft_strcmp(fmt->flag, "YELLOW"))
+	else if (!ft_strcmp(fmt->color, "YELLOW"))
 		(*mychr)->str = ft_strdup(B_YELLOW);
-	else if (!ft_strcmp(fmt->flag, "BLUE"))
+	else if (!ft_strcmp(fmt->color, "BLUE"))
 		(*mychr)->str = ft_strdup(B_BLUE);
-	else if (!ft_strcmp(fmt->flag, "PURPLE"))
+	else if (!ft_strcmp(fmt->color, "PURPLE"))
 		(*mychr)->str = ft_strdup(B_PURPLE);
-	else if (!ft_strcmp(fmt->flag, "CYAN"))
+	else if (!ft_strcmp(fmt->color, "CYAN"))
 		(*mychr)->str = ft_strdup(B_CYAN);
 	else
 		return (0);
@@ -58,23 +58,23 @@ void		conv_color(t_fmt *fmt, t_chr **mychr)
 	(*mychr)->len = 0;
 	if (conv_bold_color(fmt, mychr))
 		return ;
-	if (!ft_strcmp(fmt->flag, "red"))
+	if (!ft_strcmp(fmt->color, "red"))
 		(*mychr)->str = ft_strdup(RED);
-	else if (!ft_strcmp(fmt->flag, "green"))
+	else if (!ft_strcmp(fmt->color, "green"))
 		(*mychr)->str = ft_strdup(GREEN);
-	else if (!ft_strcmp(fmt->flag, "yellow"))
+	else if (!ft_strcmp(fmt->color, "yellow"))
 		(*mychr)->str = ft_strdup(YELLOW);
-	else if (!ft_strcmp(fmt->flag, "blue"))
+	else if (!ft_strcmp(fmt->color, "blue"))
 		(*mychr)->str = ft_strdup(BLUE);
-	else if (!ft_strcmp(fmt->flag, "purple"))
+	else if (!ft_strcmp(fmt->color, "purple"))
 		(*mychr)->str = ft_strdup(PURPLE);
-	else if (!ft_strcmp(fmt->flag, "cyan"))
+	else if (!ft_strcmp(fmt->color, "cyan"))
 		(*mychr)->str = ft_strdup(CYAN);
-	else if (!ft_strcmp(fmt->flag, "eoc"))
+	else if (!ft_strcmp(fmt->color, "eoc"))
 		(*mychr)->str = ft_strdup(EOC);
 	else
 	{
-		(*mychr)->str = ft_strdup(fmt->flag);
+		(*mychr)->str = ft_strdup(fmt->color);
 		(*mychr)->len = ft_strlen((*mychr)->str);
 	}
 }
