@@ -33,16 +33,15 @@ static char		*xx_nres(t_fmt *fmt, char *nbr, int len_nbr, int base)
 	char		*res;
 	char		c;
 
-	c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
-		&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+	c = (fmt->precis == -1 && fmt->zero && !fmt->minus) ? '0' : ' ';
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
-	if (!ft_strchr(fmt->flag, '-'))
+	if (!fmt->minus)
 	{
 		var[0] = -1;
 		while (++(var[0]) < fmt->width - len_nbr)
 			res[var[0]] = c;
-		if (ft_strchr(fmt->flag, '#') && c == '0')
+		if (fmt->dash && c == '0')
 		{
 			res[1] = (base == 16) ? 'x' : 'b';
 			nbr[1] = '0';
@@ -67,7 +66,7 @@ static char		*xx_n(t_fmt *fmt, char *num, int len_num, int base)
 	char		*res;
 	char		*nbr;
 
-	var[0] = (ft_strchr(fmt->flag, '#')) ? 2 : 0;
+	var[0] = (fmt->dash) ? 2 : 0;
 	len_nbr = ft_max(len_num, fmt->precis) + var[0];
 	nbr = (char*)malloc(sizeof(char) * (len_nbr + 1));
 	nbr[len_nbr] = '\0';

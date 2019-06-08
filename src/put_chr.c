@@ -17,14 +17,23 @@ int			put_chr(t_fmt *fmt, t_chr *chr)
 	int		len;
 
 	len = 0;
-	while (chr)
+	if (fmt->convers == '}')
 	{
-		if (fmt->convers == '}')
+		while (chr)
+		{
 			ft_putstr(chr->str);
-		else
+			len += chr->len;
+			chr = chr->next;
+		}
+	}
+	else
+	{
+		while (chr)
+		{
 			write(1, chr->str, chr->len);
-		len += chr->len;
-		chr = chr->next;
+			len += chr->len;
+			chr = chr->next;
+		}
 	}
 	return (len);
 }
@@ -34,14 +43,23 @@ int			put_chr_fd(int fd, t_fmt *fmt, t_chr *chr)
 	int		len;
 
 	len = 0;
-	while (chr)
+	if (fmt->convers == '}')
 	{
-		if (fmt->convers == '}')
+		while (chr)
+		{
 			ft_putstr_fd(chr->str, fd);
-		else
+			len += chr->len;
+			chr = chr->next;
+		}
+	}
+	else
+	{
+		while (chr)
+		{
 			write(fd, chr->str, chr->len);
-		len += chr->len;
-		chr = chr->next;
+			len += chr->len;
+			chr = chr->next;
+		}
 	}
 	return (len);
 }

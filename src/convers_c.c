@@ -44,7 +44,7 @@ static void		conv_c_annex(t_fmt *fmt, char **str, va_list ap, int len)
 {
 	int			i;
 
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->minus)
 	{
 		i = 0;
 		(*str)[i] = (char)va_arg(ap, int);
@@ -55,7 +55,7 @@ static void		conv_c_annex(t_fmt *fmt, char **str, va_list ap, int len)
 	{
 		i = -1;
 		while (++i < len - 1)
-			(*str)[i] = (ft_strchr(fmt->flag, '0') ? '0' : ' ');
+			(*str)[i] = (fmt->zero) ? '0' : ' ';
 		(*str)[i] = (char)va_arg(ap, unsigned int);
 	}
 }

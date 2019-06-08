@@ -77,21 +77,24 @@ void		fprecis(char **str, long precis, long *carry, long base)
 void		add_sign_f(t_fmt *fmt, char **str, long *len, int sign)
 {
 	char	*res;
+	char	c;
 	long	i;
 
-	if (ft_strpbrk(fmt->flag, "+ ") || sign)
-	{
-		(*len)++;
-		res = (char*)malloc(sizeof(char) * (*len + 1));
-		res[*len] = '\0';
-		if (sign)
-			res[0] = '-';
-		else
-			res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
-		i = 0;
-		while (++i < *len)
-			res[i] = (*str)[i - 1];
-		free(*str);
-		*str = res;
-	}
+	if (sign)
+		c = '-';
+	else if (fmt->plus)
+		c = '+';
+	else if (fmt->space)
+		c = ' ';
+	else
+		return ;
+	(*len)++;
+	res = (char*)malloc(sizeof(char) * (*len + 1));
+	res[*len] = '\0';
+	res[0] = c;
+	i = 0;
+	while (++i < *len)
+		res[i] = (*str)[i - 1];
+	free(*str);
+	*str = res;
 }

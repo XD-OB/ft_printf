@@ -70,6 +70,7 @@ typedef struct		s_fmt
 	int				minus:1;
 	int				plus:1;
 	int				quote:1;
+	int				star:1;
 	int				cap_l:1;
 	int				l:1;
 	int				h:1;

@@ -28,9 +28,9 @@ static char	*custom_fannex2(t_fmt *fmt, char *str, long *len, int sign)
 		res[--i] = '0';
 	if (sign)
 		res[0] = '-';
-	else if (ft_strchr(fmt->flag, '+'))
+	else if (fmt->plus)
 		res[0] = '+';
-	else if (ft_strchr(fmt->flag, ' '))
+	else if (fmt->space)
 		res[0] = ' ';
 	return (res);
 }
@@ -41,7 +41,7 @@ static char	*custom_fannex(t_fmt *fmt, char *str, long *len, int sign)
 	long	j;
 	char	*res;
 
-	if (ft_strchr(fmt->flag, '0'))
+	if (fmt->zero)
 		res = custom_fannex2(fmt, str, len, sign);
 	else
 	{
@@ -53,10 +53,8 @@ static char	*custom_fannex(t_fmt *fmt, char *str, long *len, int sign)
 			res[--i] = str[--j];
 		if (sign)
 			res[--i] = '-';
-		else if (ft_strchr(fmt->flag, '+'))
+		else if (fmt->plus)
 			res[--i] = '+';
-		else if (ft_strchr(fmt->flag, ' '))
-			res[--i] = ' ';
 		while (i > 0)
 			res[--i] = ' ';
 	}
@@ -73,7 +71,7 @@ void		customize_f(t_fmt *fmt, char **str, long *len, int sign)
 	char	*res;
 	long	v[2];
 
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->minus)
 	{
 		v[0] = 0;
 		v[1] = 0;
@@ -81,9 +79,9 @@ void		customize_f(t_fmt *fmt, char **str, long *len, int sign)
 		res[fmt->width] = '\0';
 		if (sign)
 			res[v[0]++] = '-';
-		else if (ft_strchr(fmt->flag, '+'))
+		else if (fmt->plus)
 			res[v[0]++] = '+';
-		else if (ft_strchr(fmt->flag, ' '))
+		else if (fmt->space)
 			res[v[0]++] = ' ';
 		while (v[1] < *len)
 			res[v[0]++] = (*str)[v[1]++];

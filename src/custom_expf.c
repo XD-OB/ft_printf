@@ -34,7 +34,7 @@ void			custom_nanf(t_fmt *fmt, char **str, long *len)
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->minus)
 	{
 		i = 0;
 		j = 0;
@@ -62,9 +62,9 @@ static char		*inff_minus(t_fmt *fmt, char *str, long *len, int sign)
 	j = 0;
 	if (sign)
 		res[i++] = '-';
-	else if (ft_strchr(fmt->flag, '+'))
+	else if (fmt->plus)
 		res[i++] = '+';
-	else if (ft_strchr(fmt->flag, ' '))
+	else if (fmt->space)
 		res[i++] = ' ';
 	while (j < *len)
 		res[i++] = str[j++];
@@ -83,7 +83,7 @@ void			custom_inff(t_fmt *fmt, char **str, long *len, int sign)
 	long		var[2];
 	char		*res;
 
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->minus)
 		res = inff_minus(fmt, *str, len, sign);
 	else
 	{
@@ -95,10 +95,8 @@ void			custom_inff(t_fmt *fmt, char **str, long *len, int sign)
 			res[--(var[0])] = (*str)[--(var[1])];
 		if (sign)
 			res[--(var[0])] = '-';
-		else if (ft_strchr(fmt->flag, '+'))
+		else if (fmt->plus)
 			res[--(var[0])] = '+';
-		else if (ft_strchr(fmt->flag, ' '))
-			res[--(var[0])] = ' ';
 		while (var[0] > 0)
 			res[--(var[0])] = ' ';
 		*len = fmt->width;

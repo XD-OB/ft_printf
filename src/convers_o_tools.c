@@ -19,7 +19,7 @@ static char		*o_nbr(t_fmt *fmt, char *num, int len_num, int *len_nbr)
 	int			i;
 	int			j;
 
-	dash = (ft_strchr(fmt->flag, '#')) ? 1 : 0;
+	dash = (fmt->dash) ? 1 : 0;
 	*len_nbr = ft_max(len_num + dash, fmt->precis);
 	nbr = (char*)malloc(sizeof(char) * (*len_nbr + 1));
 	nbr[*len_nbr] = '\0';
@@ -40,7 +40,7 @@ static char		*o_nres(t_fmt *fmt, char *nbr, int len_nbr, char c)
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
-	if (!ft_strchr(fmt->flag, '-'))
+	if (!fmt->minus)
 	{
 		i = -1;
 		while (++i < fmt->width - len_nbr)
@@ -70,8 +70,10 @@ char			*o_n(t_fmt *fmt, char *num, int len_num)
 	nbr = o_nbr(fmt, num, len_num, &len_nbr);
 	if (fmt->width - len_nbr > 0)
 	{
-		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
-				&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		if (fmt->precis == -1 && fmt->zero && !fmt->minus)
+			c = '0';
+		else
+			c = ' ';
 		res = o_nres(fmt, nbr, len_nbr, c);
 		free(nbr);
 		return (res);

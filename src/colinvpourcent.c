@@ -89,8 +89,8 @@ void		conv_percent(t_chr **mychr, t_fmt *fmt, va_list ap)
 	flag_star(fmt, ap);
 	len = ft_max(1, fmt->width);
 	str = ft_strnew(len);
-	c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
-	if (ft_strchr(fmt->flag, '-'))
+	c = (fmt->zero) ? '0' : ' ';
+	if (fmt->minus)
 	{
 		str[0] = '%';
 		i = 0;

@@ -20,7 +20,7 @@ static char		*o_zerores(t_fmt *fmt, char *nbr, int len_nbr, char c)
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
-	if (!ft_strchr(fmt->flag, '-'))
+	if (!fmt->minus)
 	{
 		i = fmt->width;
 		j = len_nbr;
@@ -49,14 +49,13 @@ static char		*o_zero(t_fmt *fmt)
 	char		c;
 
 	len_nbr = fmt->precis;
-	if (fmt->precis == -1
-			|| (!fmt->precis && ft_strchr(fmt->flag, '#')))
+	if (fmt->precis == -1 || (!fmt->precis && fmt->dash))
 		len_nbr = 1;
 	nbr = ft_strcnew(len_nbr, '0');
 	if (fmt->width > len_nbr)
 	{
-		c = (fmt->precis == -1 && ft_strchr(fmt->flag, '0')
-				&& !ft_strchr(fmt->flag, '-')) ? '0' : ' ';
+		c = (fmt->precis == -1 && fmt->zero)
+				&& (!fmt->minus) ? '0' : ' ';
 		res = o_zerores(fmt, nbr, len_nbr, c);
 		free(nbr);
 		return (res);

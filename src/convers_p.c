@@ -37,7 +37,7 @@ static void		p_res_minus(char **res, t_fmt *fmt, char *nbr, int len_nbr)
 	int			i;
 	int			j;
 
-	c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
+	c = (fmt->zero) ? '0' : ' ';
 	i = fmt->width;
 	j = len_nbr;
 	while (--j >= 0)
@@ -63,7 +63,7 @@ static char		*p_n(t_fmt *fmt, char *num, int len_num)
 	{
 		res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 		res[fmt->width] = '\0';
-		if (!ft_strchr(fmt->flag, '-'))
+		if (!fmt->minus)
 			p_res_minus(&res, fmt, nbr, len_nbr);
 		else
 		{

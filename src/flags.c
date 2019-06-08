@@ -30,13 +30,13 @@ void		flag_star(t_fmt *format, va_list ap)
 {
 	int		n;
 
-	if (ft_strchr(format->flag, '*'))
+	if (format->star)
 	{
 		n = va_arg(ap, int);
 		if (n < 0)
 		{
 			n *= -1;
-			if (!ft_strchr(format->flag, '-'))
+			if (!format->minus)
 				add_minus(&(format->flag));
 		}
 		format->width = n;
@@ -49,7 +49,7 @@ int			flag_dollar(t_fmt *fmt)
 {
 	int		i;
 
-	if (ft_strchr(fmt->flag, '$'))
+	if (fmt->dollar)
 	{
 		i = 0;
 		while (++i < fmt->argn)

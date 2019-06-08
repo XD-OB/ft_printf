@@ -17,14 +17,14 @@ static char			*ft_strzero(t_fmt *fmt, long *len, int is_g, long sign)
 	char			*res;
 	char			*tmp;
 
-	if (is_g && (!ft_strchr(fmt->flag, '#') || !fmt->precis))
+	if (is_g && (!fmt->dash || !fmt->precis))
 		*len = 1;
 	else
 	{
 		(is_g) ? fmt->precis = ft_max(fmt->precis - 1, 0) : 0;
 		*len = fmt->precis + 1;
 	}
-	(*len > 1 || ft_strchr(fmt->flag, '#')) ? (*len)++ : 0;
+	(*len > 1 || fmt->dash) ? (*len)++ : 0;
 	res = ft_strcnew(*len, '0');
 	if (*len > 1)
 		res[1] = '.';

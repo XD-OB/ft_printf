@@ -48,7 +48,7 @@ void		flag_apostrophe(char **str, t_fmt *fmt)
 	int		i;
 	int		j;
 
-	if (ft_strchr(fmt->flag, '\'') && ft_strchr("udif", fmt->convers))
+	if (fmt->quote && ft_strchr("udif", fmt->convers))
 	{
 		prev_len = ft_strlen(*str);
 		i = prev_len;

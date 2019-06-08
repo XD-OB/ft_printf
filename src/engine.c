@@ -93,8 +93,6 @@ static void		some_convers(t_fmt *fmt, t_chr *chr, va_list ap)
 		conv_k(&chr, ap);
 	else if (fmt->convers == '}')
 		conv_color(fmt, &chr);
-	else if (ft_strchr("pP", fmt->convers))
-		conv_p(fmt, &chr, ap);
 	else
 		conv_percent(&chr, fmt, ap);
 }
@@ -109,12 +107,14 @@ void			fill_chr(t_fmt *fmt, t_chr *chr, va_list ap)
 			conv_di(fmt, &chr, ap);
 		else if (ft_strchr("xX", fmt->convers))
 			conv_xx(fmt, &chr, ap);
-		else if (ft_strchr("uUosckpP}%", fmt->convers))
+		else if (ft_strchr("pP", fmt->convers))
+			conv_p(fmt, &chr, ap);
+		else if (ft_strchr("bB", fmt->convers))
+			conv_b(fmt, &chr, ap);
+		else if (ft_strchr("uUosck}%", fmt->convers))
 			some_convers(fmt, chr, ap);
 		else if (ft_strchr("fHeEgG", fmt->convers))
 			conv_d_efgh(fmt, &chr, ap);
-		else if (ft_strchr("bB", fmt->convers))
-			conv_b(fmt, &chr, ap);
 		else
 			conv_invalid(&chr, fmt, ap);
 		fmt = fmt->next;

@@ -18,7 +18,7 @@ static void		gclean(t_fmt *fmt, t_chr **chr)
 	int			size;
 	int			i;
 
-	if (!ft_strchr(fmt->flag, '#'))
+	if (!fmt->dash)
 	{
 		size = (*chr)->len - 1;
 		while (size >= 0 && ((*chr)->str)[size] == '0')
@@ -43,7 +43,7 @@ static void		efgh_annex(t_chr **chr, t_fmt *fmt)
 {
 	size_t		a;
 
-	a = (ft_strpbrk(fmt->flag, "+ ")) ? 2 : 1;
+	a = (fmt->plus || fmt->space) ? 2 : 1;
 	if (ft_strlen((*chr)->str) > 1 + a)
 		gclean(fmt, chr);
 }
@@ -57,7 +57,7 @@ void			conv_d_efgh(t_fmt *fmt, t_chr **chr, va_list ap)
 	t_double	db;
 	int			v[2];
 
-	v[1] = (ft_strchr(fmt->flag, 'L') ? 1 : 0);
+	v[1] = (fmt->cap_l) ? 1 : 0;
 	flag_star(fmt, ap);
 	db.d = (flag_dollar(fmt)) ?
 			va_arg(*(fmt->arglist), double) : va_arg(ap, double);
@@ -68,7 +68,7 @@ void			conv_d_efgh(t_fmt *fmt, t_chr **chr, va_list ap)
 		(v[1]) ? conv_lee(fmt, chr, ap, 0) : conv_ee(fmt, chr, db, 0);
 	else
 	{
-		(ft_strchr(fmt->flag, '#')) ? fmt->precis = 6 : 0;
+		(fmt->dash) ? fmt->precis = 6 : 0;
 		v[0] = int_exp(db.zone.mantissa, (v[1]) ? LD_BIAS : D_BIAS);
 		if (v[0] < -4 || v[0] >= (int)(fmt->precis))
 		{

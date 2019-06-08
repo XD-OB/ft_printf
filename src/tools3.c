@@ -59,7 +59,7 @@ char				*ft_pointjoin(t_fmt *fmt, char *s1, char *s2, long *len)
 	len_s1 = ft_strlen(s1);
 	len_s2 = ft_strlen(s2);
 	*len = len_s1 + len_s2 + 1;
-	if (len_s2 == 0 && !ft_strchr(fmt->flag, '#'))
+	if (len_s2 == 0 && !fmt->dash)
 		(*len)--;
 	str = (char*)malloc(sizeof(char) * (*len + 1));
 	str[*len] = '\0';

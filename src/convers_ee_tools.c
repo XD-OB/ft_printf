@@ -49,7 +49,7 @@ char		*ejoin(t_fmt *fmt, char *entier, char *fract, long *len)
 
 	prefix = eprefix(fmt, len);
 	len[3] += len[0];
-	if (ft_strcmp(fract, "\0") || ft_strchr(fmt->flag, '#'))
+	if (ft_strcmp(fract, "\0") || fmt->dash, '#')
 	{
 		str = ft_strjoin(entier, ".");
 		len[3]++;

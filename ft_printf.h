@@ -31,7 +31,7 @@
 int					is_format(char c);
 int					is_postflag(char c);
 int					is_preflag(char c);
-int					is_valid(char *str);
+//int					is_valid(char *str);
 int					fmtlen(t_fmt *fmt);
 void				sumstr(char **s1, char *s2, int base);
 void				multstr(char **s1, char *s2, int base);
@@ -44,7 +44,7 @@ void				free_fmt(t_fmt **fmt);
 t_fmt				*parse_format(va_list ap, char *str, int *pflag);
 t_fmt				*add_node(t_fmt *head, t_fmt *node);
 unsigned long long	cast_xxoub(va_list ap, t_fmt *format);
-long long int		cast_di(va_list ap, char *flag);
+long long int		cast_di(va_list ap, t_fmt *format);
 char				*add_sign(char *str, int sign);
 void				conv_k(t_chr **mychr, va_list ap);
 void				conv_color(t_fmt *fmt, t_chr **mychr);

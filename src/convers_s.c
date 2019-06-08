@@ -45,9 +45,9 @@ static char		*s_str(t_fmt *fmt, char *str, int *len_str)
 
 	res = (char*)malloc(sizeof(char) * (fmt->width + 1));
 	res[fmt->width] = '\0';
-	if (!ft_strchr(fmt->flag, '-'))
+	if (!fmt->minus)
 	{
-		c = (ft_strchr(fmt->flag, '0')) ? '0' : ' ';
+		c = (fmt->zero) ? '0' : ' ';
 		i = fmt->width;
 		while (--(*len_str) >= 0)
 			res[--i] = str[*len_str];

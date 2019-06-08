@@ -16,7 +16,7 @@ static int		w_di_annex(char **res, t_fmt *fmt, char *nbr, int len)
 {
 	int			i;
 
-	if (ft_strchr(fmt->flag, '-'))
+	if (fmt->minus)
 	{
 		i = -1;
 		while (++i < len)
@@ -43,19 +43,19 @@ char			*width_di(t_fmt *fmt, char *nbr, int len_nbr, int sign)
 	res[fmt->width] = '\0';
 	if (w_di_annex(&res, fmt, nbr, len_nbr) == 1)
 		return (res);
-	c = (ft_strchr(fmt->flag, '0') && fmt->precis == v[2]) ? '0' : ' ';
+	c = (fmt->zero && (fmt->precis == v[2])) ? '0' : ' ';
 	v[0] = fmt->width - 1;
 	v[1] = len_nbr - 1;
 	while (v[1] >= 0)
 		res[(v[0])--] = nbr[(v[1])--];
 	while (v[0] >= 0)
 		res[(v[0])--] = c;
-	if (c == '0' && (ft_strpbrk(fmt->flag, "+ ") || sign == -1))
+	if (c == '0' && (fmt->plus || fmt->space || sign == -1))
 	{
 		if (sign == -1)
 			res[0] = '-';
 		else
-			res[0] = (ft_strchr(fmt->flag, '+')) ? '+' : ' ';
+			res[0] = (fmt->plus) ? '+' : ' ';
 		res[fmt->width - len_nbr] = '0';
 	}
 	return (res);

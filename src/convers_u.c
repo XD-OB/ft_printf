@@ -21,8 +21,8 @@ static int			conv_u_1(t_fmt *fmt, char **str, char *nbr)
 	size = ft_max(ft_strlen(nbr), fmt->width);
 	if (!(*str = ft_strnew(size)))
 		return (-1);
-	c = (ft_strchr(fmt->flag, '0') && fmt->precis) ? '0' : ' ';
-	if (ft_strchr(fmt->flag, '-'))
+	c = (fmt->zero && fmt->precis) ? '0' : ' ';
+	if (fmt->minus)
 	{
 		ft_strcpy(*str, nbr);
 		i = ft_strlen(nbr);
