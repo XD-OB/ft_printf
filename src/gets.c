@@ -12,30 +12,66 @@
 
 #include "ft_printf.h"
 
+void			add_icase(t_icase **icase, int value)
+{
+	t_icase		*node;
+
+	if (!(node = (t_icase*)malloc(sizeof(t_icase))))
+		return ;
+	node->n = value;
+	node->next = (*icase);
+	(*icase) = node;
+}
+
+char				*join_icase(t_icase **icase, int size)
+{
+	char		*res;
+	t_icase		*tmp;
+	int			i;
+
+	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
+		return (NULL);
+	res[size] = '\0';
+	i = size;
+	while (*icase && --i >= 0)
+	{
+		tmp = *icase;
+		res[i] = (*icase)->n + 48;
+		*icase = (*icase)->next;
+		free(tmp);
+	}
+	return (res);
+}
+
 char				*get_entier(long exp, long bin_mantis, int bias,
 							t_fmt *format)
 {
 	unsigned long long	m;
 	unsigned int		v[2];
 	long				new_exp;
-	char				*tab;
+	char				*binary;
 	char				*res;
 
-	v[0] = 0;
+	t_icase				*icase;
+
+	v[0] = 1;
 	v[1] = 0;
-	tab = NULL;
+	binary = NULL;
+		icase = NULL;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
 	m = 2251799813685248;
-	(exp) ? int_add(&tab, &v[0], 1) : int_add(&tab, &v[0], 0);
+	(exp) ? add_icase(&icase, 1) : add_icase(&icase, 0);
 	while ((v[1])++ < new_exp)
 	{
-		(m & bin_mantis) ? int_add(&tab, &v[0], 1) : int_add(&tab, &v[0], 0);
+		(m & bin_mantis) ? add_icase(&icase, 1) : add_icase(&icase, 0);
+		v[0]++;
 		m >>= 1;
 	}
-	res = calcul_entier(tab, v[0], format);
-	free(tab);
+	binary = join_icase(&icase, v[0]);
+	res = calcul_entier(binary, v[0], format);
+	free(binary);
 	return (res);
 }
 

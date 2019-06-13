@@ -241,5 +241,9 @@ int	main(void)
 	printf("\n");
 	printf("ORIG  ---%.38f", 2507.000000);
 	printf("\n");
+	ft_printf("TEST48---%.38f", 8.000000);
+	printf("\n");
+	printf("ORIG  ---%.38f", 8.000000);
+	printf("\n");
 	return (0);
 }
