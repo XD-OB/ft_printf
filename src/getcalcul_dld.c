@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-char			*calcul_entier(char *tab, int size, t_fmt *format)
+static char		*calc_entier(char *tab, int size, t_fmt *format)
 {
 	char		*entier;
 	char		*count;
@@ -38,6 +38,15 @@ char			*calcul_entier(char *tab, int size, t_fmt *format)
 	}
 	free(count);
 	return (entier);
+}
+
+void			calcul_entier(char **tab, int size, t_fmt *format)
+{
+	char		*res;
+
+	res = calc_entier(*tab, size, format);
+	free(*tab);
+	*tab = res;
 }
 
 static int		ft_strupdatelen(char *str, int old)

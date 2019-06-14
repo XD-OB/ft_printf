@@ -104,7 +104,7 @@ void				customize_f(t_fmt *fmt, char **str, long *len, int sign);
 void				add_sign_f(t_fmt *fmt, char **str, long *len, int sign);
 void				fprecis(char **str, long precis, long *carry, long base);
 char				*width_di(t_fmt *fmt, char *nbr, int len_nbr, int sign);
-char				*calcul_entier(char *tab, int size, t_fmt *format);
+void				calcul_entier(char **tab, int size, t_fmt *format);
 char				*calcul_fract(char *bat, int size, t_fmt *format);
 void				custom_nanf(t_fmt *fmt, char **str, long *len);
 void				custom_inff(t_fmt *fmt, char **str, long *len, int sign);
