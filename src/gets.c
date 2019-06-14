@@ -6,53 +6,11 @@
 /*   By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 13:34:52 by obelouch          #+#    #+#             */
-/*   Updated: 2019/04/18 07:52:36 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/06/14 16:42:35 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-void			ic_pushnode(t_icase **icase, int value)
-{
-	t_icase		*node;
-
-	if (!(node = (t_icase*)malloc(sizeof(t_icase))))
-		return ;
-	node->n = value;
-	node->next = (*icase);
-	(*icase) = node;
-}
-
-void			ic_addnode(t_icase **icase, int value)
-{
-	t_icase		*node;
-
-	node = (*icase)->next;
-	if (!(node = (t_icase*)malloc(sizeof(t_icase))))
-		return ;
-	node->n = value;
-	node->next = NULL;
-}
-
-char				*ic_joinstr(t_icase **icase, int size)
-{
-	char		*res;
-	t_icase		*tmp;
-	int			i;
-
-	if (!(res = (char*)malloc(sizeof(char) * (size + 1))))
-		return (NULL);
-	res[size] = '\0';
-	i = size;
-	while (*icase && --i >= 0)
-	{
-		tmp = *icase;
-		res[i] = (*icase)->n + 48;
-		*icase = (*icase)->next;
-		free(tmp);
-	}
-	return (res);
-}
 
 char				*get_entier(long exp, long bin_mantis, int bias,
 							t_fmt *format)
@@ -66,7 +24,7 @@ char				*get_entier(long exp, long bin_mantis, int bias,
 	v[0] = 1;
 	v[1] = 0;
 	binary = NULL;
-		icase = NULL;
+	icase = NULL;
 	new_exp = (exp == 0) ? 1 - bias : exp - bias;
 	if (new_exp < 0)
 		return (ft_strdup("0"));
@@ -83,7 +41,7 @@ char				*get_entier(long exp, long bin_mantis, int bias,
 	return (binary);
 }
 
-static int			fill_tab(t_icase **icase, long *new_exp, long exp)
+int					fill_tab(t_icase **icase, long *new_exp, long exp)
 {
 	if (*new_exp < -1)
 	{
@@ -107,7 +65,6 @@ char				*get_fract(long exp, long bin_mantis, int bias,
 	long			new_exp;
 	int				len_b;
 	char			*binary;
-	char			*res;
 	t_icase			*icase;
 
 	size = 0;
@@ -126,12 +83,12 @@ char				*get_fract(long exp, long bin_mantis, int bias,
 		len_b--;
 	}
 	binary = ic_joinstr(&icase, size);
-	res = calcul_fract(binary, size, format);
-	free(binary);
-	return (res);
+	calcul_fract(&binary, size, format);
+	return (binary);
 }
 
-void			get_eld_annex(t_icase **icase, unsigned int *size, long new_exp)
+static void			get_eld_annex(t_icase **icase, unsigned int *size,
+								long new_exp)
 {
 	while (new_exp > 0)
 	{
@@ -162,12 +119,11 @@ char				*get_entierld(long exp, t_ldouble db, t_fmt *format)
 		return (ft_strdup("0"));
 	(db.zone.int_b) ? ic_pushnode(&icase, 1) : ic_pushnode(&icase, 0);
 	i = 63;
-	while (--i >= 0 && v[1] > 0)
+	while (--i >= 0 && v[1]-- > 0)
 	{
 		(1 & (v[0] >> i)) ?
 			ic_pushnode(&icase, 1) : ic_pushnode(&icase, 0);
 		size++;
-		v[1]--;
 	}
 	get_eld_annex(&icase, &size, v[1]);
 	binary = ic_joinstr(&icase, size);

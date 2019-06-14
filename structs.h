@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:44:15 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/17 17:19:39 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/06/14 17:51:47 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,12 +53,6 @@ typedef union		u_ldouble
 	t_80			zone;
 	long double		ld;
 }					t_ldouble;
-
-typedef struct		s_icase
-{
-	int				n;
-	struct s_icase	*next;
-}					t_icase;
 
 typedef struct		s_fmt
 {

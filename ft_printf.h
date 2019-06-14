@@ -6,7 +6,7 @@
 /*   By: ishaimou <ishaimou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/08 03:31:40 by ishaimou          #+#    #+#             */
-/*   Updated: 2019/04/18 09:09:55 by obelouch         ###   ########.fr       */
+/*   Updated: 2019/06/14 17:54:38 by obelouch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,9 @@ void				customize_f(t_fmt *fmt, char **str, long *len, int sign);
 void				add_sign_f(t_fmt *fmt, char **str, long *len, int sign);
 void				fprecis(char **str, long precis, long *carry, long base);
 char				*width_di(t_fmt *fmt, char *nbr, int len_nbr, int sign);
-void				calcul_entier(char **tab, int size, t_fmt *format);
-char				*calcul_fract(char *bat, int size, t_fmt *format);
+int					fill_tab(t_icase **icase, long *new_exp, long exp);
+void				calcul_entier(char **binary, int size, t_fmt *format);
+void				calcul_fract(char **binary, int size, t_fmt *format);
 void				custom_nanf(t_fmt *fmt, char **str, long *len);
 void				custom_inff(t_fmt *fmt, char **str, long *len, int sign);
 int					ft_printf(const char *format, ...);

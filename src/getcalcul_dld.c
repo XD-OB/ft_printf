@@ -60,45 +60,43 @@ static int		ft_strupdatelen(char *str, int old)
 }
 
 /*
-**	var[2]: 	0: base	   1: len
+**	var[3]: 	0: base	   1: len	2: i
 */
 
-static void		init_fractcalc(int *var, int *size, int *i, char convers)
-{
-	*i = 0;
-	var[1] = 1;
-	if (convers == 'H')
-		var[0] = 16;
-	else
-		var[0] = 10;
-	(*size)--;
-}
-
-char			*calcul_fract(char *tab, int size, t_fmt *fmt)
+static char		*calc_fract(char *tab, int size, t_fmt *fmt)
 {
 	char		*fract;
 	char		*count;
-	int			var[2];
-	int			i;
+	int			var[3];
 
-	init_fractcalc(var, &size, &i, fmt->convers);
-	while (tab[size] == '0')
-		size--;
-	while (i <= size && tab[i] == '0')
-		i++;
-	count = ft_strpower(5, i + 1, var[0]);
-	fract = ft_strcnew(i + 1, '0');
-	while (i <= size)
+	var[1] = 1;
+	var[2] = 0;
+	var[0] = (fmt->convers == 'H') ? 16 : 10;
+	while (var[2] <= size && tab[var[2]] == '0')
+		var[2]++;
+	count = ft_strpower(5, var[2] + 1, var[0]);
+	fract = ft_strcnew(var[2] + 1, '0');
+	while (var[2] <= size)
 	{
-		if (tab[i] == '1')
+		if (tab[var[2]++] == '1')
 		{
 			sumstr(&fract, count, var[0]);
 			var[1] = ft_strupdatelen(fract, var[1]);
 		}
 		multstr(&count, "5", var[0]);
 		foisdix(&fract, &(var[1]));
-		i++;
 	}
 	free(count);
 	return (fract);
+}
+
+void			calcul_fract(char **tab, int size, t_fmt *format)
+{
+	char		*res;
+
+	while ((*tab)[size] == '0')
+		size--;
+	res = calc_fract(*tab, size - 1, format);
+	free(*tab);
+	*tab = res;
 }

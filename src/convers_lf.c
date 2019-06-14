@@ -12,24 +12,6 @@
 
 #include "ft_printf.h"
 
-static int			fill_tabld(char **tab, unsigned int *size,
-							long *new_exp, long exp)
-{
-	if (*new_exp < -1)
-	{
-		int_add(tab, size, 0);
-		(*new_exp)++;
-		return (0);
-	}
-	if (*new_exp == -1)
-	{
-		(exp) ? int_add(tab, size, 1) : int_add(tab, size, 0);
-		(*new_exp)++;
-		return (0);
-	}
-	return (1);
-}
-
 /*
 **	v[2]:		0: new_exp		1: bin_mantis
 */
@@ -38,12 +20,13 @@ char				*get_fractld(long exp, t_ldouble db, t_fmt *format)
 {
 	int				len_b;
 	unsigned int	size;
-	char			*tab;
-	char			*res;
+	char			*binary;
 	long			v[2];
+	t_icase			*icase;
 
-	tab = NULL;
 	size = 0;
+	icase = NULL;
+	binary = NULL;
 	v[0] = (exp == 0) ? 1 - LD_BIAS : exp - LD_BIAS;
 	v[1] = db.zone.mantissa;
 	len_b = ABS(63 - v[0] - 1);
@@ -51,14 +34,15 @@ char				*get_fractld(long exp, t_ldouble db, t_fmt *format)
 		return (ft_strdup("0"));
 	while (len_b >= 0)
 	{
-		if (fill_tabld(&tab, &size, &v[0], exp))
-			((v[1] >> len_b) & 1) ? int_add(&tab, &size, 1) :
-									int_add(&tab, &size, 0);
+		if (fill_tab(&icase, &v[0], exp))
+			((v[1] >> len_b) & 1) ? ic_pushnode(&icase, 1) :
+									ic_pushnode(&icase, 0);
+		size++;
 		len_b--;
 	}
-	res = calcul_fract(tab, size, format);
-	free(tab);
-	return (res);
+	binary = ic_joinstr(&icase, size);
+	calcul_fract(&binary, size, format);
+	return (binary);
 }
 
 /*
