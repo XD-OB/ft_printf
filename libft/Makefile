@@ -5,58 +5,32 @@
 #                                                     +:+ +:+         +:+      #
 #    By: obelouch <OB-96@hotmail.com>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/06/14 17:30:18 by obelouch          #+#    #+#              #
-#    Updated: 2019/06/14 17:50:42 by obelouch         ###   ########.fr        #
+#    Created: 2018/10/06 14:55:40 by obelouch          #+#    #+#              #
+#    Updated: 2019/04/06 00:29:57 by obelouch         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-LIBFT  = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr ft_printhex\
-		 ft_memcmp ft_memalloc ft_memdel ft_strnew ft_strdel ft_strclr ft_putnbr\
-		 ft_striter ft_striteri ft_strmap ft_strmapi ft_strequ ft_strnequ ft_utoa\
-		 ft_strsub ft_strjoin ft_strtrim ft_strsplit ft_itoa ft_itoa_base ft_trimstr\
-		 ft_utoa_base ft_putchar ft_putstr ft_putendl get_next_line copy_char2\
-		 ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd ft_strlen len_tab\
-		 ft_strcpy ft_strncpy ft_strcat ft_strncat ft_strlcat ft_strstr ft_strcombin\
-		 ft_strnstr ft_strcmp ft_strncmp ft_strchr ft_strrchr ft_strpbrk free_tabstr\
-		 ft_strdup ft_strndup ft_atoi ft_isalpha ft_isdigit ft_isalnum ft_intlen\
-		 ft_isascii ft_isprint ft_toupper ft_tolower add_2_tab ft_prime ft_ultoa\
-		 ft_strlowcase ft_strupcase ft_swap ft_strrev ft_isblank ft_isxdigit ft_sqrt\
-		 ft_strnjoin ft_atoi_base ft_strswap ft_strsum ft_str_pushback ft_ulltoa\
-		 ft_lltoa ft_ulltoa_base ft_strpower ft_strmult ft_strcnew ft_ltoa ft_maxmin\
-		 ft_poslltoa copy_2_char ft_epurstr join_from_tab add_2_tab\
+SRCS = *.c
 
-LIBFT_SRC = $(addprefix srcs/, $(addsuffix .c, $(LIBFT)))
-LIBFT_OBJ = $(addsuffix .o, $(LIBFT))
+HEAD = libft.h
 
+OUTO = *.o
 
+OPT = -Wall -Wextra -Werror
 
-LIB_STRUCTS = qt_enqueue qt_dequeue qt_isempty qt_free qt_front qt_print qt_new_queue\
-			  bt_apply_infix bt_apply_revinfix bt_apply_prefix bt_apply_suffix bt_free\
-			  bt_create_node bt_insert_item bt_search_item bt_size_count bt_level_count\
-		 	  ft_lstnew ft_lstdelone ft_lstdel ft_lstadd ft_lstiter ft_lstmap ft_lstprint\
-			  sk_push sk_pop sk_top sk_free sk_isempty ic_addnode ic_pushnode ic_joinstr\
+all: $(NAME)
 
-LIB_STRUCTS_SRC = $(addprefix srcs/data_structs/, $(addsuffix .c, $(LIB_STRUCTS)))
-LIB_STRUCTS_OBJ = $(addsuffix .o, $(LIB_STRUCTS))
+$(NAME): $(HEAD)
+	@gcc -c $(SRCS) $(OPT)
+	@ar rc $(NAME) $(OUTO)
+	@ranlib $(NAME)
 
+clean:
+	@/bin/rm -f $(OUTO)
 
-FLAGS = -Wall -Wextra -Werror
+fclean: clean
+	@/bin/rm -f $(NAME)
 
-all : $(NAME)
-
-$(NAME) :
-		@gcc -c  $(FLAGS) -I . $(LIB_STRUCTS_SRC) $(LIBFT_SRC)
-		@ar rc $(NAME) $(LIBFT_OBJ) $(LIB_STRUCTS_OBJ)
-		@ranlib	$(NAME)
-
-clean :
-		@/bin/rm -rf $(LIBFT_OBJ) $(LIB_STRUCTS_OBJ)
-
-fclean : clean
-		@/bin/rm -rf $(NAME)
-
-re : fclean all
-
-.PHONY : all clean fclean re
+re: fclean all

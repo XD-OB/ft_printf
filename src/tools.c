@@ -12,9 +12,9 @@
 
 #include "ft_printf.h"
 
-t_fmt		*add_node(t_fmt *head, t_fmt *node)
+t_lst		*add_node(t_lst *head, t_lst *node)
 {
-	t_fmt	*current;
+	t_lst	*current;
 
 	current = head;
 	if (!head)
@@ -32,13 +32,13 @@ void		init_chr(t_chr **chr)
 	(*chr)->next = NULL;
 }
 
-int			fmtlen(t_fmt *fmt)
+int			lstlen(t_lst *lst)
 {
-	t_fmt	*curr;
+	t_lst	*curr;
 	int		size;
 
 	size = 0;
-	curr = fmt;
+	curr = lst;
 	while (curr)
 	{
 		size++;
@@ -64,21 +64,25 @@ void		free_chr(t_chr **chr)
 	*chr = NULL;
 }
 
-void		free_fmt(t_fmt **fmt)
+void		free_lst(t_lst **lst)
 {
-	t_fmt	*curr;
-	t_fmt	*next;
+	t_lst	*curr;
+	t_lst	*next;
 
-	curr = *fmt;
+	curr = *lst;
 	while (curr)
 	{
 		next = curr->next;
-		if (curr->color)
-			free(curr->color);
+		if (curr->format)
+		{
+			if (curr->format->flag)
+				free(curr->format->flag);
+			free(curr->format);
+		}
 		if (curr->arglist)
 			free(curr->arglist);
 		free(curr);
 		curr = next;
 	}
-	*fmt = NULL;
+	*lst = NULL;
 }
